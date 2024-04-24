@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
 function Main({children}) {
-    const [openNavbar,setOpenNavbar] = useState(false);
+    const [openNavbar,setOpenNavbar] = useState(true);
   return (
     <main>
         <Sidebar openNavbar={openNavbar} />
