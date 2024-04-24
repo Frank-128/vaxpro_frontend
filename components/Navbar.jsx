@@ -10,7 +10,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   return (
     <nav
       className={`bg-white sticky left-0 top-0 p-2  h-20 z-10  flex items-center w-screen justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
-        openSidebar ? 'md:left-[300px] md:w-[calc(100vw-300px)] ' : 'md:left-0  '
+        openSidebar ? 'md:left-[280px] md:w-[calc(100vw-280px)] ' : 'md:left-0  '
       }`}
     >
       <div className='flex gap-2 items-center '>
