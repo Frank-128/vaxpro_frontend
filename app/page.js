@@ -4,7 +4,7 @@ import React from 'react'
 function Home() {
   return (
     <div className=''>
-      <HomeMax />
+      {Array(100).fill().map((index)=>(<div key={index}>lorem50</div>))}
     </div>
   )
 }
