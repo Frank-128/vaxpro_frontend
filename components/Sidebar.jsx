@@ -1,16 +1,27 @@
 "use client";
 import { navlinks } from "@/constants";
-import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useGlobal from "@/store/user";
+import { Spinner } from "@material-tailwind/react";
 
 function Sidebar({ openSidebar, setOpenSidebar }) {
   const pathname = usePathname();
   const [openSublinks, setOpenSublinks] = useState("");
+  const loggedInUser = useGlobal((state) => state.loggedInUser);
+  const [filteredNavlinks, setFilteredlinks] = useState([]);
 
+  useEffect(() => {
+    const filteredNavlinks = navlinks.filter((navlink) => {
+      return (
+        navlink.role.includes(loggedInUser.role_id) || navlink.role.includes( "default")
+      );
+    });
+    setFilteredlinks(filteredNavlinks);
+  }, [loggedInUser]);
   return (
-    <div className="w-screen   top-0 left-0">
+    <div className="w-screen  top-0 left-0">
       <div
         className={`w-[90%] md:w-[280px] z-50 transition-all duration-300  fixed h-screen bg-[#212b36] ${
           openSidebar ? "left-0" : "-left-[90%] "
@@ -19,56 +30,67 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
         <div>
           <h1
             onClick={() => setOpenSidebar(false)}
-            className="font-monte-1 text-white text-3xl h-20 text-center p-2"
+            className="font-monte-1 text-white text-2xl h-20 text-center p-2"
           >
             VaxPro
           </h1>
 
-          <div className="flex flex-col gap-8 items-start justify-around">
-            {navlinks.map(
-              ({ name, link, icon, sublinks, suffixIcon }, index) => (
-                <Link
-                  className={`${
-                    link === pathname ? "text-white" : "text-[#8e8888]"
-                  } p-2 w-full hover:text-white`}
-                  key={index}
-                  href={link || "#"}
-                >
-                  <div
-                    className="flex gap-x-2 items-center justify-between bg-yellow-30 w-full"
-                    onClick={() => {
-                      openSublinks == ""
-                        ? setOpenSublinks(name)
-                        : setOpenSublinks("");
-                    }}
+          {loggedInUser ? (
+            <div className="flex flex-col gap-8 items-start justify-around">
+              {filteredNavlinks.map(
+                ({ name, link, icon, sublinks, suffixIcon, role }, index) => (
+                  // (loggedInUser.role_id === role) & (role === "default") && (
+                  <Link
+                    className={`${
+                      link === pathname ? "text-white" : "text-[#8e8888]"
+                    } p-2 w-full hover:text-white`}
+                    key={index}
+                    href={link || "#"}
                   >
-                    <div className="flex gap-3">
-                      {icon}
-                      <span>{name}</span>
+                    <div
+                      className="flex gap-x-2 items-center justify-between bg-yellow-30 w-full"
+                      onClick={() => {
+                        openSublinks == ""
+                          ? setOpenSublinks(name)
+                          : setOpenSublinks("");
+                      }}
+                    >
+                      <div className="flex gap-3">
+                        {icon}
+                        <span>{name}</span>
+                      </div>
+                      <div className="">{suffixIcon}</div>
                     </div>
-                    <div className="">{suffixIcon}</div>
-                  </div>
-                  {sublinks &&
-                    openSublinks == name &&
-                    sublinks.map((item, i) => (
-                      <Link
-                        className={`${
-                          item.link === pathname
-                            ? "text-white"
-                            : "text-[#8e8888]"
-                        } p-2 flex justify-center hover:text-white`}
-                        key={i}
-                        href={item.link}
-                      >
-                        <div className="flex gap-x-2 items-center">
-                          <span>{item.name}</span>
-                        </div>
-                      </Link>
-                    ))}
-                </Link>
-              )
-            )}
-          </div>
+                    {sublinks &&
+                      openSublinks === name &&
+                      sublinks.map(
+                        (item, i) =>
+                        item.role.includes(loggedInUser.role_id)  && (
+                            <Link
+                              className={`${
+                                item.link === pathname
+                                  ? "text-white"
+                                  : "text-[#8e8888]"
+                              } p-2 flex justify-center hover:text-white`}
+                              key={i}
+                              href={item.link}
+                            >
+                              <div className="flex gap-x-2 items-center">
+                                <span>{item.name}</span>
+                              </div>
+                            </Link>
+                          )
+                      )}
+                  </Link>
+                )
+                // )
+              )}
+            </div>
+          ) : (
+            <div className="flex h-[34rem] justify-center items-center">
+              <Spinner />
+            </div>
+          )}
         </div>
       </div>
       <div
