@@ -13,7 +13,10 @@ import {
   Typography,
   Tooltip,
   IconButton,
-  Avatar,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
   Chip,
   Input,
   Tabs,
@@ -28,14 +31,20 @@ import {
   UnfoldMore,
   VisibilityOutlined,
 } from "@mui/icons-material";
-import useAllUserGlobal from "@/store/all_users";
+import globalAllUsers from "@/store/all_users";
+import axios from "axios";
+import globalUser from "@/store/user";
+import { useInitial } from "@/constants/functions";
 
 function UserManagement() {
+  const { initialRequest } = useInitial();
+  const [selectedRow, setSelectedRow] = useState({ id: "", action: "" });
   const pathname = usePathname();
   const [subPathname, setSubPathname] = useState();
   const [addUserForm, setAddUserForm] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  var TABLE_ROWS = useAllUserGlobal((state) => state.allUsers);
+  const TABLE_ROWS = globalAllUsers((state) => state.allUsers);
+  const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const [responseMessage, setResponseMessage] = useState({
     responseMessage: "",
     success: true,
@@ -62,20 +71,22 @@ function UserManagement() {
   ];
 
   const TABLE_HEAD = ["Role", "Account type", "Contacts", "Created", "Actions"];
-  console.log(TABLE_ROWS);
+
+  const userHandler = async (user_id) => {
+    await axios
+      .delete(`api/user/${user_id}`, {
+        headers: {
+          Authorization: `Bearer ${authenticatedToken}`,
+        },
+      })
+      .then(async (res) => {
+        initialRequest();
+      })
+      .catch((err) => console.log(err, "THIS IS FAILING"));
+  };
 
   return (
     <main>
-      {/* <div className="flex justify-between">
-        <span>User Management</span>
-        <Button
-          className="font-monte-1"
-          onClick={() => setAddUserForm(!addUserForm)}
-        >
-          Add user
-        </Button>
-      </div> */}
-
       <div>
         <Card className="h-ful w-full font-monte p-6 border-t">
           <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -149,11 +160,14 @@ function UserManagement() {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.map(
+                {TABLE_ROWS.filter(
+                  (row) => row.role.account_type === subPathname
+                ).map(
                   (
                     {
+                      id,
                       role,
-                      role_id,
+
                       contacts,
                       email,
                       job,
@@ -184,9 +198,9 @@ function UserManagement() {
                         <td className={"classes"}>
                           <div className="flex flex-col">
                             <Typography
+                              className="font-monte"
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
                             >
                               {role.account_type}
                             </Typography>
@@ -195,7 +209,7 @@ function UserManagement() {
                               color="blue-gray"
                               className="font-normal opacity-70"
                             >
-                              {org}
+                              {/* {role_id} */}
                             </Typography>
                           </div>
                         </td>
@@ -212,18 +226,23 @@ function UserManagement() {
                           </Typography>
                         </td>
                         <td className={" flex justify-between"}>
-                          <Tooltip content="Edit User">
+                          <Tooltip content="Edit Account">
                             <IconButton variant="text">
                               <Edit />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip content="View User">
+                          <Tooltip content="View Account">
                             <IconButton variant="text">
                               <VisibilityOutlined />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip content="Delete User">
-                            <IconButton variant="text">
+                          <Tooltip content="Delete Account">
+                            <IconButton
+                              variant="text"
+                              onClick={() =>
+                                setSelectedRow({ id: id, action: "delete" })
+                              }
+                            >
                               <Delete />
                             </IconButton>
                           </Tooltip>
@@ -257,6 +276,8 @@ function UserManagement() {
 
       {addUserForm && (
         <AddUser
+        addUserForm={addUserForm}
+        setAddUserForm={setAddUserForm}
           subPathname={subPathname}
           responeMessage={responseMessage}
           setResponseMessage={setResponseMessage}
@@ -277,6 +298,36 @@ function UserManagement() {
       >
         {responseMessage.responseMessage}
       </Alert>
+
+      <Dialog
+        className="flex flex-col items-center"
+        size="xs"
+        open={selectedRow.action === "delete"}
+        handler={() => setSelectedRow({ id: "", action: "" })}
+      >
+        <DialogBody className="font-monte-1 text-black">
+          Confirm to delete this account
+        </DialogBody>
+        <DialogFooter className="flex gap-8">
+          <Button
+            color=""
+            className="font-monte-1"
+            onClick={() => setSelectedRow({ id: "", action: "" })}
+          >
+            Cancel
+          </Button>
+          <Button
+            color="green"
+            className="font-monte-1"
+            onClick={() => {
+              userHandler(selectedRow.id);
+              setSelectedRow({ action: "" });
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </main>
   );
 }

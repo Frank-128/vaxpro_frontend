@@ -3,25 +3,27 @@ import { navlinks } from "@/constants";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import useGlobal from "@/store/user";
+import globalUser from "@/store/user";
 import { Spinner } from "@material-tailwind/react";
 
 function Sidebar({ openSidebar, setOpenSidebar }) {
   const pathname = usePathname();
   const [openSublinks, setOpenSublinks] = useState("");
-  const loggedInUser = useGlobal((state) => state.loggedInUser);
+  const loggedInUser = globalUser((state) => state.loggedInUser);
   const [filteredNavlinks, setFilteredlinks] = useState([]);
 
   useEffect(() => {
     const filteredNavlinks = navlinks.filter((navlink) => {
       return (
-        navlink.role.includes(loggedInUser.role_id) || navlink.role.includes( "default")
+        (navlink.role.includes(loggedInUser.role?.role) &&
+          navlink.account_type.includes(loggedInUser.role.account_type)) ||
+        navlink.account_type.includes("default")
       );
     });
     setFilteredlinks(filteredNavlinks);
   }, [loggedInUser]);
   return (
-    <div className="w-screen  top-0 left-0">
+    <div className="w-screen top-0 left-0 font-giest">
       <div
         className={`w-[90%] md:w-[280px] z-50 transition-all duration-300  fixed h-screen bg-[#212b36] ${
           openSidebar ? "left-0" : "-left-[90%] "
@@ -39,7 +41,6 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
             <div className="flex flex-col gap-8 items-start justify-around">
               {filteredNavlinks.map(
                 ({ name, link, icon, sublinks, suffixIcon, role }, index) => (
-                  // (loggedInUser.role_id === role) & (role === "default") && (
                   <Link
                     className={`${
                       link === pathname ? "text-white" : "text-[#8e8888]"
@@ -65,13 +66,15 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
                       openSublinks === name &&
                       sublinks.map(
                         (item, i) =>
-                        item.role.includes(loggedInUser.role_id)  && (
+                          item.account_type.includes(
+                            loggedInUser.role.account_type
+                          ) && (
                             <Link
                               className={`${
                                 item.link === pathname
                                   ? "text-white"
                                   : "text-[#8e8888]"
-                              } p-2 flex justify-center hover:text-white`}
+                              } p-2 flex justify-center hover:text-white capitalize`}
                               key={i}
                               href={item.link}
                             >
@@ -83,7 +86,6 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
                       )}
                   </Link>
                 )
-                // )
               )}
             </div>
           ) : (

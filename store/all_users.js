@@ -1,7 +1,9 @@
 import { create } from "zustand";
 
-const useAllUserGlobal = create((set, get) => ({
+const globalAllUsers = create((set, get) => ({
   allUsers: [],
   setAllUsers: (data) => set(() => ({ allUsers: data })),
 }));
-export default useAllUserGlobal;
+export default globalAllUsers;
+
+

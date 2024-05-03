@@ -10,6 +10,10 @@ module.exports = withMT({
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
+      },
      
     },
     fontFamily: {

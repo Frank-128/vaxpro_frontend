@@ -3,51 +3,28 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import clsx from "clsx";
-import useGlobal from "@/store/user";
-import axios from "../axios";
-import useAllUserGlobal from "@/store/all_users";
+import { useInitial } from "@/constants/functions";
+import { useIdle } from "react-use";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 function Main({ children }) {
+  const {initialRequest} = useInitial();
   const [openSidebar, setOpenSidebar] = useState(true);
-  const setLoggedInUser = useGlobal((state) => state.setLoggedInUser);
-  const setAuthenticatedToken = useGlobal(
-    (state) => state.setAuthenticatedToken
-  );
-  const setAllUsers = useAllUserGlobal((state) => state.setAllUsers);
-
+  const isIdle = useIdle(1000*60*60*2)
+  const route = useRouter()
+  
   useEffect(() => {
-    const requestUser = async () => {
-      const user_token = sessionStorage.getItem("USER_TOKEN");
-      if (user_token) {
-        const user_token2 = JSON.parse(user_token);
-        setAuthenticatedToken(user_token2);
-        
-        await axios
-          .get(`/api/user`, {
-            headers: {
-              Authorization: `Bearer ${user_token2}`,
-            },
-          })
-          .then((res) => {
-            setLoggedInUser(res.data[0]);
-          });
+    
+    initialRequest();
+  }, [ initialRequest]);
 
-        await axios
-          .get(`api/all_users`, {
-            headers: {
-              Authorization: `Bearer ${user_token2}`,
-            },
-          })
-          .then((res) => {
-            setAllUsers(res.data);
-          });
-      } else {
-        console.log("wrong credentials");
-      }
-    };
-
-    requestUser();
-  }, []);
+  useEffect(()=>{
+    if(isIdle){
+      Cookies.remove('USER_TOKEN')
+      route.push('/signin')
+    }
+  },[isIdle,route])
   return (
     <main>
       <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
@@ -59,6 +36,7 @@ function Main({ children }) {
         })}
       >
         {children}
+        
       </section>
     </main>
   );

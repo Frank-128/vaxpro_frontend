@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import Main from "@/components/Main";
