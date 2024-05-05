@@ -39,9 +39,9 @@ const AddUser = ({
   const regions = globalAddress((state) => state.regions);
   const roles = globalRoles((state) => state.roles);
   const { initialRequest } = useInitial();
-  const districts = globalAddress((state)=>state.districts)
+  const districts = globalAddress((state) => state.districts);
+  const wards = globalAddress((state) => state.wards);
 
-  const [region, setRegion] = useState();
 
   const {
     register,
@@ -51,7 +51,7 @@ const AddUser = ({
     formState: { errors },
   } = useForm();
 
-  const hospitals = [ {name:"Mlalakua"}, {name:"Mpakani"}, {name:"others"}];
+  
 
   const handleClose = () => {
     setAddUserForm(false);
@@ -60,47 +60,59 @@ const AddUser = ({
 
   const registerUser = (data) => {
     setLoading(true);
-    if (loggedInUser.uid ) {
-      const data2 = { ...data, account_type: subPathname };
-      console.log(data2, "the data to be submitted")
-      try {
-        axios
-          .post(`/api/register`, data2, {
-            headers: {
-              Authorization: `Bearer ${authenticatedToken}`,
-            },
-          })
-          .then(async (res) => {
-            console.log(res.data, "datasssss");
-            initialRequest();
-            setLoading(false);
-            if (res.data.status === 200) {
-              setResponseMessage({
-                responseMessage: res.data.message,
-                success: true,
-              });
-              setShowAlert(true);
-              handleClose();
-            } else if (res.data.status === 401) {
-              setResponseMessage({
-                responseMessage: res.data.message,
-                success: false,
-              });
-              setShowAlert(true);
-            } else if (res.data.status == 409) {
-              setExistingUser({ message: res.data.message, error: true });
-            }
-          });
-      } catch (err) {
-        setLoading(false);
-        setResponseMessage({
-          responseMessage: "Unknown error occured",
-          success: false,
-        });
-        setShowAlert(true);
-      }
-      setLoading(false);
+    var data2 = [];
+
+      data2 = { ...data, account_type: subPathname };
+     if (loggedInUser.role.account_type === "regional") {
+      data2 = {
+        ...data2,
+        region_id: loggedInUser.region_id,
+      };
+    } else if (loggedInUser.role.account_type === "district") {
+      data2 = {
+        ...data2,
+        district_id: loggedInUser.district_id,
+      };
     }
+
+    console.log(data2, "the data to be submitted");
+    try {
+      axios
+        .post(`/api/register`, data2, {
+          headers: {
+            Authorization: `Bearer ${authenticatedToken}`,
+          },
+        })
+        .then(async (res) => {
+          console.log(res.data, "datasssss");
+          initialRequest();
+          setLoading(false);
+          if (res.data.status === 200) {
+            setResponseMessage({
+              responseMessage: res.data.message,
+              success: true,
+            });
+            setShowAlert(true);
+            handleClose();
+          } else if (res.data.status === 401) {
+            setResponseMessage({
+              responseMessage: res.data.message,
+              success: false,
+            });
+            setShowAlert(true);
+          } else if (res.data.status == 409) {
+            setExistingUser({ message: res.data.message, error: true });
+          }
+        });
+    } catch (err) {
+      setLoading(false);
+      setResponseMessage({
+        responseMessage: "Unknown error occured",
+        success: false,
+      });
+      setShowAlert(true);
+    }
+    setLoading(false);
   };
   return (
     <Dialog
@@ -170,7 +182,7 @@ const AddUser = ({
 
                         */
                         if (
-                          account_type === subPathname &&
+                          account_type === subPathname ||
                           loggedInUser.role.account_type == subPathname
                         ) {
                           return loggedInUser.role?.role !== role;
@@ -194,7 +206,7 @@ const AddUser = ({
 
                   {error && (
                     <p className="text-red-900 text-xs font-monte">
-                      This field is required
+                      {error.message}
                     </p>
                   )}
                 </div>
@@ -239,7 +251,7 @@ const AddUser = ({
 
                     {error && (
                       <p className="text-red-900 text-xs font-monte">
-                        This field is required
+                        {error.message}
                       </p>
                     )}
                   </div>
@@ -284,7 +296,7 @@ const AddUser = ({
 
                     {error && (
                       <p className="text-red-900 text-xs font-monte">
-                        This field is required
+                        {error.message}
                       </p>
                     )}
                   </div>
@@ -292,50 +304,49 @@ const AddUser = ({
               />
             )}
 
-          {/* {loggedInUser.role.account_type === "district" && (
-             <Controller
-             control={control}
-             rules={{ required: "This field is required" }}
-             name="facility_id"
-             render={({
-               field: { onChange, onBlur, value, ref },
-               fieldState: { error },
-             }) => (
-               <div className="font-monte-1 text-black">
-                 <Select
-                   className="text-black font-monte-1"
-                   onChange={onChange}
-                   onBlur={onBlur}
-                   selected={value}
-                   value={value}
-                   size="lg"
-                   label="Facility"
-                   animate={{
-                     mount: { y: 0 },
-                     unmount: { y: 25 },
-                   }}
-                 >
-                   {hospitals.map(({ name, id }, index) => (
-                     <Option
-                       key={index}
-                       className="text-black font-monte-1"
-                       value={id}
-                     >
-                       {name}
-                     </Option>
-                   ))}
-                 </Select>
+          {loggedInUser.role.account_type === "district" && (
+            <Controller
+              control={control}
+              rules={{ required: "This field is required" }}
+              name="ward_id"
+              render={({
+                field: { onChange, onBlur, value, ref },
+                fieldState: { error },
+              }) => (
+                <div className="font-monte-1 text-black">
+                  <Select
+                    className="text-black font-monte-1"
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    selected={value}
+                    value={value}
+                    size="lg"
+                    label="Ward"
+                    animate={{
+                      mount: { y: 0 },
+                      unmount: { y: 25 },
+                    }}
+                  >
+                    {wards.map(({ ward_name, id }, index) => (
+                      <Option
+                        key={index}
+                        className="text-black font-monte-1"
+                        value={id}
+                      >
+                        {ward_name}
+                      </Option>
+                    ))}
+                  </Select>
 
-                 {error && (
-                   <p className="text-red-900 text-xs font-monte">
-                     This field is required
-                   </p>
-                 )}
-               </div>
-             )}
-           />
-          
-          )} */}
+                  {error && (
+                    <p className="text-red-900 text-xs font-monte">
+                      {error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          )}
           <div className="font-monte-1">
             <Input
               className="text-black font-monte-1"

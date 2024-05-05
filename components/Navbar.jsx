@@ -27,7 +27,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             {loggedInUser.role?.account_type}
           </h1>
         </div>
-        {loggedInUser.region_id && (
+        {loggedInUser.region_id && loggedInUser.role.account_type ==="regional" && (
           <div className="flex gap-2">
             <p>Region:</p>
             <h1 className=" md:block hidden font-monte-1">
@@ -35,18 +35,18 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             </h1>
           </div>
         )}
-        {loggedInUser.district_id && (
+        {loggedInUser.district_id  && (
           <div className="text-sm">
             <div className="flex gap-2">
               <p>District:</p>
               <h1 className=" md:block hidden font-monte-1">
-                {loggedInUser.district.district_name}
+                {loggedInUser.district?.district_name}
               </h1>
             </div>
             <div className="flex gap-2">
               <p> Region:</p>
               <h1 className=" md:block hidden font-monte-1">  
-                {loggedInUser.district.region.region_name}
+                {loggedInUser.district?.region.region_name}
               </h1>
             </div>
           </div>
@@ -57,7 +57,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             {loggedInUser.role?.role}
           </h1>
         </div>
-        <Button className="bg-white p-2 text-black border border-black font-monte-3">
+        <Button className="bg-white p-3 text-black border border-black font-monte-3">
           sign out
         </Button>
       </div>

@@ -37,7 +37,7 @@ import globalUser from "@/store/user";
 import { useInitial } from "@/constants/functions";
 
 function UserManagement() {
-  const { initialRequest } = useInitial();
+  const { getInitialUsers } = useInitial();
   const [selectedRow, setSelectedRow] = useState({ id: "", action: "" });
   const pathname = usePathname();
   const [subPathname, setSubPathname] = useState();
@@ -45,6 +45,8 @@ function UserManagement() {
   const [showAlert, setShowAlert] = useState(false);
   const TABLE_ROWS = globalAllUsers((state) => state.allUsers);
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
+  const loggedInUser = globalUser((state) => state.loggedInUser);
+  const [TABLE_HEAD3, setTABLE_HEAD3] = useState([]);
   const [responseMessage, setResponseMessage] = useState({
     responseMessage: "",
     success: true,
@@ -70,7 +72,27 @@ function UserManagement() {
     },
   ];
 
-  const TABLE_HEAD = ["Role", "Account type", "Contacts", "Created", "Actions"];
+  const TABLE_HEAD = React.useMemo(
+    () => [
+      { name: "Role", accounts: ["default"] },
+      { name: "Region", accounts: ["ministry"] },
+      { name: "District", accounts: ["regional"] },
+      { name: "Ward", accounts: ["district",] },
+      { name: "Contacts", accounts: ["default"] },
+      { name: "Actions", accounts: ["default"] },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const TABLE_HEAD2 = TABLE_HEAD.filter(
+      (head) =>
+      head.accounts.includes(subPathname) && ( head.accounts.includes("default") ||
+        head.accounts.includes(loggedInUser?.role?.account_type))
+    );
+    setTABLE_HEAD3(TABLE_HEAD2);
+  }, [TABLE_HEAD, loggedInUser, subPathname]);
+
 
   const userHandler = async (user_id) => {
     await axios
@@ -80,7 +102,7 @@ function UserManagement() {
         },
       })
       .then(async (res) => {
-        initialRequest();
+        getInitialUsers();
       })
       .catch((err) => console.log(err, "THIS IS FAILING"));
   };
@@ -100,7 +122,7 @@ function UserManagement() {
                   Members list
                 </Typography>
                 <Typography color="gray" className="mt-1 font-monte">
-                  See information about all members
+                  Table for <span className="font-monte-1 capitalize">{subPathname +"s"}</span> 
                 </Typography>
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row ">
@@ -140,117 +162,99 @@ function UserManagement() {
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
-                  {TABLE_HEAD.map((head, index) => (
-                    <th
-                      key={head}
-                      className="cursor-pointer border-y border-blue-gray-100 text-ellipsis
+                  {TABLE_HEAD3
+                   
+                    .map(({ name, accounts }, index) => (
+                      <th
+                        key={name}
+                        className="cursor-pointer border-y border-blue-gray-100 text-ellipsis
                        bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="flex items-center   font-monte-1
-                        justify-between gap-2  leading-none opacity-70"
                       >
-                        {head}
-                        {index !== TABLE_HEAD.length - 1 && <UnfoldMore />}
-                      </Typography>
-                    </th>
-                  ))}
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="flex items-center   font-monte-1
+                        justify-between gap-2  leading-none opacity-70"
+                        >
+                          {name}
+                          {index !== TABLE_HEAD.length - 1 && <UnfoldMore />}
+                        </Typography>
+                      </th>
+                    ))}
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.filter(
-                  (row) => row.role.account_type === subPathname
-                ).map(
-                  (
-                    {
-                      id,
-                      role,
+                {TABLE_ROWS.filter((row) => {
+                  // row.role.account_type === subPathname;
+                  if (
+                    loggedInUser?.region_id !== null &&
+                    row.role.account_type === subPathname &&
+                    (loggedInUser?.region_id === row?.region_id ||
+                      loggedInUser.region_id === row.district?.region_id)
+                  ) {
+                    return true;
+                  } else if (
+                    loggedInUser.district_id !== null &&
+                    row.role.account_type === subPathname &&
+                    loggedInUser.district_id === row.district_id
+                  ) {
+                    return true;
+                  }
+                }).map(({ id, role, contacts, ward, created_at }, index) => {
+                  // const isLast = index === TABLE_ROWS.length - 1;
+                  // const classes = isLast
+                  // ? "p-4"
+                  // : "p-4 border-b border-blue-gray-50";
 
-                      contacts,
-                      email,
-                      job,
-                      org,
-                      created_at,
-                      date,
-                    },
-                    index
-                  ) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
-
-                    return (
-                      <tr key={name} className="border-b p-8 border-black">
-                        <td className={""}>
-                          <div className="flex items-center gap-3">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-monte"
-                            >
-                              {role.role}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={"classes"}>
-                          <div className="flex flex-col">
-                            <Typography
-                              className="font-monte"
-                              variant="small"
-                              color="blue-gray"
-                            >
-                              {role.account_type}
-                            </Typography>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal opacity-70"
-                            >
-                              {/* {role_id} */}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={"classes"}>
-                          <div className="w-max">{contacts}</div>
-                        </td>
-                        <td className={"classes"}>
+                  return (
+                    <tr
+                      key={id}
+                      className="border-b capitalize px-8 border-black"
+                    >
+                      <td className={""}>
+                        <div className="flex items-center gap-3">
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-monte"
                           >
-                            {created_at}
+                            {role.role}
                           </Typography>
-                        </td>
-                        <td className={" flex justify-between"}>
-                          <Tooltip content="Edit Account">
-                            <IconButton variant="text">
-                              <Edit />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip content="View Account">
-                            <IconButton variant="text">
-                              <VisibilityOutlined />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip content="Delete Account">
-                            <IconButton
-                              variant="text"
-                              onClick={() =>
-                                setSelectedRow({ id: id, action: "delete" })
-                              }
-                            >
-                              <Delete />
-                            </IconButton>
-                          </Tooltip>
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
+                        </div>
+                      </td>
+
+                      { subPathname === "community_health_worker" &&<td className={"classes"}>
+                        <div className="w-max">{ward.ward_name}</div>
+                      </td>}
+                      <td>
+                        <div>{contacts}</div>
+                      </td>
+
+                      <td className={" flex justify-between"}>
+                        <Tooltip content="Edit Account">
+                          <IconButton variant="text">
+                            <Edit />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip content="View Account">
+                          <IconButton variant="text">
+                            <VisibilityOutlined />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip content="Delete Account">
+                          <IconButton
+                            variant="text"
+                            onClick={() =>
+                              setSelectedRow({ id: id, action: "delete" })
+                            }
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </CardBody>
@@ -276,8 +280,8 @@ function UserManagement() {
 
       {addUserForm && (
         <AddUser
-        addUserForm={addUserForm}
-        setAddUserForm={setAddUserForm}
+          addUserForm={addUserForm}
+          setAddUserForm={setAddUserForm}
           subPathname={subPathname}
           responeMessage={responseMessage}
           setResponseMessage={setResponseMessage}

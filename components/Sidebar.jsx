@@ -23,7 +23,7 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
     setFilteredlinks(filteredNavlinks);
   }, [loggedInUser]);
   return (
-    <div className="w-screen top-0 left-0 font-giest">
+    <div className="w-screen top-0 left-0 ">
       <div
         className={`w-[90%] md:w-[280px] z-50 transition-all duration-300  fixed h-screen bg-[#212b36] ${
           openSidebar ? "left-0" : "-left-[90%] "
@@ -74,12 +74,12 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
                                 item.link === pathname
                                   ? "text-white"
                                   : "text-[#8e8888]"
-                              } p-2 flex justify-center hover:text-white capitalize`}
+                              } py-2 pr-2 pl-16 flex flex-start hover:text-white capitalize`}
                               key={i}
                               href={item.link}
                             >
-                              <div className="flex gap-x-2 items-center">
-                                <span>{item.name}</span>
+                              <div className="flex gap-2 ">
+                                <span className="text-ellipsis overflow-hidden ...">{item.name}</span>
                               </div>
                             </Link>
                           )
