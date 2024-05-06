@@ -122,3 +122,4 @@ export const navlinks = [
     account_type: ["default"],
   },
 ];
+
