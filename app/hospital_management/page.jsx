@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 
-import { Edit, Error, LocalHospital, PersonAdd, Search, Verified } from '@mui/icons-material';
+import { Edit, Error, HouseSharp, LocalHospital, PersonAdd, Search, Verified } from '@mui/icons-material';
 
 import { FACILITY_ROWS } from '@/constants';
 import {
@@ -20,6 +20,7 @@ import {
 import FacilityDialog from '@/components/facility/FacilityDialog';
 import { useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
  
 const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", ""];
  
@@ -66,7 +67,16 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
               onChange={(e)=>setSearchTerm(e.target.value)}
               
             />
-           <FacilityDialog setShowAlert={setShowAlert} />
+         <Link href={'/hospital_management/add_facility'}>
+         <Button
+        
+        className="flex items-center sm:w-72 w-48 justify-items-center gap-3 bg-[#1d3472]"
+        size="sm"
+      >
+        <HouseSharp />
+        Add Facility
+      </Button>
+         </Link>
           </div>
         </div>
        
