@@ -1,4 +1,4 @@
-import { ArrowDownward, ArrowDropDown, Book, HealthAndSafety, Home, KeyboardArrowDown, Medication, Note, Person, Report } from "@mui/icons-material";
+import { ArrowDownward, ArrowDropDown, Book, ChildCare, HealthAndSafety, Home, KeyboardArrowDown, Medication, Note, Person, Report } from "@mui/icons-material";
 
 export const navlinks = [
     {
@@ -45,6 +45,24 @@ export const navlinks = [
         name:'Vaccination',
         link:'/vaccination',
         icon:<Medication/>
+        
+    },
+    {
+        name:'OverallDash',
+        link:'/overalldash',
+        icon:<Medication/>
+        
+    },
+    {
+        name:'Children',
+        link:'/children',
+        icon:<ChildCare/>
+        
+    },
+    {
+        name:'ChildDetails',
+        link:'/childdetails',
+        icon:<ChildCare/>
         
     },
     {

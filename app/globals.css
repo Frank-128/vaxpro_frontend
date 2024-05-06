@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
 @font-face {
   font-family: 'monte-1';
   src: url('/fonts/Montserrat-Bold.ttf') format('truetype');
