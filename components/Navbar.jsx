@@ -1,26 +1,65 @@
-"use client"
-import React from 'react';
-import { Menu } from '@mui/icons-material';
-import { Input } from '@material-tailwind/react';
-// import { usePathname } from 'next/navigation';
+"use client";
+import React, { useEffect } from "react";
+import { Menu } from "@mui/icons-material";
+import { Button, Input } from "@material-tailwind/react";
+import globalUser from "@/store/user";
 
 function Navbar({ openSidebar, setOpenSidebar }) {
-//   const pathname = usePathname();
+  const loggedInUser = globalUser((state) => state.loggedInUser);
 
   return (
     <nav
       className={`bg-white sticky left-0 top-0 p-2  h-20 z-10  flex items-center w-screen justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
-        openSidebar ? 'md:left-[280px] md:w-[calc(100vw-280px)] ' : 'md:left-0  '
+        openSidebar
+          ? "md:left-[280px] md:w-[calc(100vw-280px)] "
+          : "md:left-0  "
       }`}
     >
-      <div className='flex gap-2 items-center '>
+      <div className="flex gap-2 items-center ">
         <Menu onClick={() => setOpenSidebar(!openSidebar)} />
-        <Input label='search' />
+        <Input label="search" />
       </div>
-      
-        <div >
-          <h1 className=' md:block hidden'>Welcome, Chief Doctor</h1>
-        
+      <div className="flex gap-6 justify-center items-center capitalize">
+        <div className="flex gap-2">
+          <p>Level:</p>
+          <h1 className=" md:block hidden font-monte-1">
+            {" "}
+            {loggedInUser.role?.account_type}
+          </h1>
+        </div>
+        {loggedInUser.region_id && loggedInUser.role.account_type ==="regional" && (
+          <div className="flex gap-2">
+            <p>Region:</p>
+            <h1 className=" md:block hidden font-monte-1">
+              {loggedInUser.region.region_name}
+            </h1>
+          </div>
+        )}
+        {loggedInUser.district_id  && (
+          <div className="text-sm">
+            <div className="flex gap-2">
+              <p>District:</p>
+              <h1 className=" md:block hidden font-monte-1">
+                {loggedInUser.district?.district_name}
+              </h1>
+            </div>
+            <div className="flex gap-2">
+              <p> Region:</p>
+              <h1 className=" md:block hidden font-monte-1">  
+                {loggedInUser.district?.region.region_name}
+              </h1>
+            </div>
+          </div>
+        )}
+        <div className="flex gap-2">
+          <p>Role:</p>
+          <h1 className=" md:block hidden font-monte-1">
+            {loggedInUser.role?.role}
+          </h1>
+        </div>
+        <Button className="bg-white py-2 px-3 text-black border border-black font-monte-3">
+          sign out
+        </Button>
       </div>
     </nav>
   );
