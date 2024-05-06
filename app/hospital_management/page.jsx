@@ -92,7 +92,7 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
             </tr>
           </thead>
           <tbody>
-            {facilities == null ? <div><Spinner /> </div>: filteredArray?.length == 0 ? <i className='p-2'>There are no records available</i> : filteredArray?.splice(interval,5).map(
+            {facilities == null ? <tr><Spinner /> </tr>: filteredArray?.length == 0 ? <i className='p-2'>There are no records available</i> : filteredArray?.splice(interval,5).map(
               ({  facility_reg_no,facility_name,contacts,region,district }, index) => {
                 const isLast = index === FACILITY_ROWS.length - 1;
                 const classes = isLast

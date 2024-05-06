@@ -53,17 +53,7 @@ export default function FacilityDialog({setShowAlert}) {
         },3000)
   };
 
-  useEffect(()=>{
-    const fetchWards = async()=>{
-      await axios.get("http://localhost:8000/api/district_wards/13").then((res)=>{
-        setWards(res.data)
-       
-      }).catch((err)=>{
-        console.log(err)
-      })
-    }
-    fetchWards()
-  },[])
+ 
 
   
 
