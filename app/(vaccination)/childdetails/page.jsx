@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardBody, Typography } from "@material-tailwind/react";
-import axios from "../axios";
+import axios from "../../axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

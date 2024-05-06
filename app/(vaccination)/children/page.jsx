@@ -8,7 +8,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import axios from "../axios";
+import axios from "../../axios";
 import { useForm } from "react-hook-form";
 
 const Children = () => {
