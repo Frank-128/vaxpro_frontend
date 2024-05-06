@@ -42,7 +42,6 @@ const AddUser = ({
   const districts = globalAddress((state) => state.districts);
   const wards = globalAddress((state) => state.wards);
 
-
   const {
     register,
     handleSubmit,
@@ -50,8 +49,6 @@ const AddUser = ({
     control,
     formState: { errors },
   } = useForm();
-
-  
 
   const handleClose = () => {
     setAddUserForm(false);
@@ -62,8 +59,8 @@ const AddUser = ({
     setLoading(true);
     var data2 = [];
 
-      data2 = { ...data, account_type: subPathname };
-     if (loggedInUser.role.account_type === "regional") {
+    data2 = { ...data, account_type: subPathname };
+    if (loggedInUser.role.account_type === "regional") {
       data2 = {
         ...data2,
         region_id: loggedInUser.region_id,
@@ -182,8 +179,10 @@ const AddUser = ({
 
                         */
                         if (
-                          account_type === subPathname ||
-                          loggedInUser.role.account_type == subPathname
+                          loggedInUser.role.account_type !== "district"
+                            ? account_type === subPathname &&
+                              loggedInUser.role.account_type === subPathname
+                            : account_type === subPathname
                         ) {
                           return loggedInUser.role?.role !== role;
                         } else if (

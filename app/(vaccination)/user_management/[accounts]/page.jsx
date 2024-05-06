@@ -24,6 +24,7 @@ import {
   TabsHeader,
 } from "@material-tailwind/react";
 import {
+  Close,
   Delete,
   Edit,
   Person,
@@ -35,10 +36,15 @@ import globalAllUsers from "@/store/all_users";
 import axios from "axios";
 import globalUser from "@/store/user";
 import { useInitial } from "@/constants/functions";
+import { useForm } from "react-hook-form";
 
 function UserManagement() {
   const { getInitialUsers } = useInitial();
-  const [selectedRow, setSelectedRow] = useState({ id: "", action: "" });
+  const [selectedRow, setSelectedRow] = useState({
+    id: "",
+    action: "",
+    contacts: "",
+  });
   const pathname = usePathname();
   const [subPathname, setSubPathname] = useState();
   const [addUserForm, setAddUserForm] = useState(false);
@@ -47,6 +53,13 @@ function UserManagement() {
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const [TABLE_HEAD3, setTABLE_HEAD3] = useState([]);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
   const [responseMessage, setResponseMessage] = useState({
     responseMessage: "",
     success: true,
@@ -77,7 +90,7 @@ function UserManagement() {
       { name: "Role", accounts: ["default"] },
       { name: "Region", accounts: ["ministry"] },
       { name: "District", accounts: ["regional"] },
-      { name: "Ward", accounts: ["district",] },
+      { name: "Ward", accounts: ["district"] },
       { name: "Contacts", accounts: ["default"] },
       { name: "Actions", accounts: ["default"] },
     ],
@@ -87,12 +100,12 @@ function UserManagement() {
   useEffect(() => {
     const TABLE_HEAD2 = TABLE_HEAD.filter(
       (head) =>
-      head.accounts.includes(subPathname) && ( head.accounts.includes("default") ||
-        head.accounts.includes(loggedInUser?.role?.account_type))
+        head.accounts.includes("default") ||
+        (head.accounts.includes(loggedInUser.role?.account_type) &&
+          loggedInUser.role?.account_type !== subPathname)
     );
     setTABLE_HEAD3(TABLE_HEAD2);
   }, [TABLE_HEAD, loggedInUser, subPathname]);
-
 
   const userHandler = async (user_id) => {
     await axios
@@ -107,6 +120,39 @@ function UserManagement() {
       .catch((err) => console.log(err, "THIS IS FAILING"));
   };
 
+  const handleUpdateChange = (e) => {
+    const value = e.target.value;
+
+    setSelectedRow({
+      ...selectedRow,
+      contacts: e.target.value,
+    });
+  };
+
+  const submitUpdatedData = () => {
+    axios
+      .patch(
+        `api/update_user/${selectedRow.id}`,
+        {
+          contacts: selectedRow.contacts,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authenticatedToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        getInitialUsers();
+        console.log(res.data);
+        setSelectedRow({
+          ...selectedRow,
+          id: "",
+          action: "",
+          contacts: "",
+        });
+      });
+  };
   return (
     <main>
       <div>
@@ -122,7 +168,10 @@ function UserManagement() {
                   Members list
                 </Typography>
                 <Typography color="gray" className="mt-1 font-monte">
-                  Table for <span className="font-monte-1 capitalize">{subPathname +"s"}</span> 
+                  Table for
+                  <span className="font-monte-1 capitalize">
+                    {subPathname + "s"}
+                  </span>
                 </Typography>
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row ">
@@ -162,25 +211,23 @@ function UserManagement() {
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
-                  {TABLE_HEAD3
-                   
-                    .map(({ name, accounts }, index) => (
-                      <th
-                        key={name}
-                        className="cursor-pointer border-y border-blue-gray-100 text-ellipsis
+                  {TABLE_HEAD3.map(({ name, accounts }, index) => (
+                    <th
+                      key={name}
+                      className="cursor-pointer border-y border-blue-gray-100 text-ellipsis
                        bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
-                      >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="flex items-center   font-monte-1
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="flex items-center   font-monte-1
                         justify-between gap-2  leading-none opacity-70"
-                        >
-                          {name}
-                          {index !== TABLE_HEAD.length - 1 && <UnfoldMore />}
-                        </Typography>
-                      </th>
-                    ))}
+                      >
+                        {name}
+                        {index !== TABLE_HEAD.length - 1 && <UnfoldMore />}
+                      </Typography>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -199,62 +246,136 @@ function UserManagement() {
                     loggedInUser.district_id === row.district_id
                   ) {
                     return true;
+                  } else if (row.role.account_type === subPathname) {
+                    return true;
                   }
-                }).map(({ id, role, contacts, ward, created_at }, index) => {
-                  // const isLast = index === TABLE_ROWS.length - 1;
-                  // const classes = isLast
-                  // ? "p-4"
-                  // : "p-4 border-b border-blue-gray-50";
+                }).map(
+                  ({ id, role, contacts, ward, region, district }, index) => {
+                    // const isLast = index === TABLE_ROWS.length - 1;
+                    // const classes = isLast
+                    // ? "p-4"
+                    // : "p-4 border-b border-blue-gray-50";
 
-                  return (
-                    <tr
-                      key={id}
-                      className="border-b capitalize px-8 border-black"
-                    >
-                      <td className={""}>
-                        <div className="flex items-center gap-3">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-monte"
-                          >
-                            {role.role}
-                          </Typography>
-                        </div>
-                      </td>
+                    return (
+                      <>
+                        <tr
+                          key={id}
+                          className="border-b capitalize px-8 border-black"
+                        >
+                          <td className={""}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-monte"
+                            >
+                              {role.role}
+                            </Typography>
+                          </td>
+                          {loggedInUser.role.account_type === "ministry" &&
+                            subPathname === "regional" && (
+                              <td>{region.region_name}</td>
+                            )}
 
-                      { subPathname === "community_health_worker" &&<td className={"classes"}>
-                        <div className="w-max">{ward.ward_name}</div>
-                      </td>}
-                      <td>
-                        <div>{contacts}</div>
-                      </td>
+                          {loggedInUser.role.account_type === "regional" &&
+                            subPathname === "district" && (
+                              <td>{district.district_name}</td>
+                            )}
 
-                      <td className={" flex justify-between"}>
-                        <Tooltip content="Edit Account">
-                          <IconButton variant="text">
-                            <Edit />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip content="View Account">
-                          <IconButton variant="text">
-                            <VisibilityOutlined />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip content="Delete Account">
-                          <IconButton
-                            variant="text"
-                            onClick={() =>
-                              setSelectedRow({ id: id, action: "delete" })
-                            }
-                          >
-                            <Delete />
-                          </IconButton>
-                        </Tooltip>
-                      </td>
-                    </tr>
-                  );
-                })}
+                          {subPathname === "community_health_worker" && (
+                            <td className={""}>
+                              <div className="w-max">{ward.ward_name}</div>
+                            </td>
+                          )}
+                          <td>
+                            <div>{contacts}</div>
+                          </td>
+
+                          <td className="flex justify-between">
+                            <Tooltip content="Edit Account">
+                              <IconButton
+                                variant="text"
+                                onClick={() => {
+                                  setSelectedRow({
+                                    id: id,
+                                    action: "update",
+                                    contacts: contacts,
+                                  });
+                                }}
+                              >
+                                <Edit />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip content="View Account">
+                              <IconButton
+                                variant="text"
+                                onClick={() =>
+                                  setSelectedRow({ id: id, action: "view" })
+                                }
+                              >
+                                <VisibilityOutlined />
+                              </IconButton>
+                            </Tooltip>
+                            {loggedInUser.id !== id ? (
+                              <Tooltip content="Delete Account">
+                                <IconButton
+                                  variant="text"
+                                  onClick={() =>
+                                    setSelectedRow({ id: id, action: "delete" })
+                                  }
+                                >
+                                  <Delete />
+                                </IconButton>
+                              </Tooltip>
+                            ) : (
+                              <div className="w-10"></div>
+                            )}
+                          </td>
+                        </tr>
+                        {selectedRow.id === id &&
+                          selectedRow.action === "update" && (
+                            <tr
+                              key={id}
+                              className="capitalize w-full shadow-xl border border-1 bg-white py-3
+                              rounded-xl flex justify-evenly items-center absolute left-0 z-50"
+                            >
+                              <td className="border-transparent">
+                                <Input
+                                  color="black"
+                                  className="bg-gray-200 border border-transparent outline-none focus:border-transparent"
+                                  value={selectedRow?.contacts}
+                                  onChange={handleUpdateChange}
+                                />
+                              </td>
+
+                              <td className="flex ">
+                                <Button
+                                  className="py-2 px-12 bg-black font-monte-1"
+                                  onClick={() => {
+                                    submitUpdatedData();
+                                  }}
+                                >
+                                  edit
+                                </Button>
+                              </td>
+                              <td
+                                onClick={() => {
+                                  setSelectedRow({
+                                    ...selectedRow,
+                                    id: "",
+                                    action: "",
+                                    contacts: "",
+                                  });
+                                }}
+                                className="text-black hover:border hover:bg-gray-300 hover:rounded-xl hover:p-1 hover:cursor-pointer"
+                              >
+                                <Close fontSize="large" />
+                              </td>
+                            </tr>
+                          )}
+                      </>
+                    );
+                  }
+                )}
               </tbody>
             </table>
           </CardBody>

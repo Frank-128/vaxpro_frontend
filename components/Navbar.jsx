@@ -57,7 +57,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             {loggedInUser.role?.role}
           </h1>
         </div>
-        <Button className="bg-white p-3 text-black border border-black font-monte-3">
+        <Button className="bg-white py-2 px-3 text-black border border-black font-monte-3">
           sign out
         </Button>
       </div>
