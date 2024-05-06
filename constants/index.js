@@ -1,3 +1,4 @@
+
 import {
   ArrowDownward,
   ArrowDropDown,
@@ -10,6 +11,7 @@ import {
   Person,
   Report,
 } from "@mui/icons-material";
+
 
 export const navlinks = [
   {
@@ -25,6 +27,7 @@ export const navlinks = [
     suffixIcon: <KeyboardArrowDown />,
     role: ["IT admin"],
     account_type: ["default"],
+
 
     sublinks: [
       {
@@ -77,7 +80,26 @@ export const navlinks = [
     icon: <Medication />,
     role: [""],
     account_type: ["ministry"],
-  },
+  }
+,
+    {
+        name:'OverallDash',
+        link:'/overalldash',
+        icon:<Medication/>
+        
+    },
+    {
+        name:'Children',
+        link:'/children',
+        icon:<ChildCare/>
+        
+    },
+    {
+        name:'ChildDetails',
+        link:'/childdetails',
+        icon:<ChildCare/>
+        
+    },
   {
     name: "Bookings",
     link: "/bookings",
