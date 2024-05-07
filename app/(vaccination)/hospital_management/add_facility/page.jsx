@@ -14,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import globalUser from "@/store/user";
 
 export default function DefaultStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -23,6 +24,7 @@ export default function DefaultStepper() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [wards, setWards] = useState([]);
   const [wardName, setWardName] = useState("");
+  const authenticatedToken = globalUser((state)=>state.authenticatedToken)
 
   const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
@@ -45,18 +47,26 @@ export default function DefaultStepper() {
   const { register, handleSubmit, getValues } = useForm();
 
   const submitForm = (data) => {
-     try {
-      const res = async () => {
-        const res = await axios.post(
-          "http://localhost:8000/api/facility",data
-        );
-       console.log(res.data)
-      };
+     
+         axios.post(
+          "http://localhost:8000/api/facility",{"facility_reg_no":data.facility_reg_no,"facility_name":data.facility_name,"contacts":data.contacts,"ward_id":data.ward_id}
+        ).then((res)=>{
+          axios.post('http://localhost:8000/api/register',{contacts:data.contacts,role_id:10,account_type:"branch_manager",facility_id:res.data.facility.facility_reg_no}, {
+            headers: {
+              Authorization: `Bearer ${authenticatedToken}`,
+            }}).then((res2)=>{
 
-      res();
-    } catch (err) {
-      console.log(err);
-    }
+          console.log(res2)
+          }).catch((err)=>{
+             console.log("error occured when creating user",err)
+
+          })
+        }).catch((er)=>{
+          console.log("error occurred when creating hospital facility",er)
+
+        })
+    
+    
   };
 
   return (
@@ -91,7 +101,7 @@ export default function DefaultStepper() {
       <form onSubmit={handleSubmit(submitForm)}>
         
           <Card  className={activeStep !== 0? "hidden" :"flex flex-col gap-8 p-5"}>
-            <Input label="Facility Name" {...register("facility_id")} />
+            <Input label="Facility Name" {...register("facility_name")} />
             <Input
               label="Facility Registration No"
               {...register("facility_reg_no")}
@@ -122,6 +132,7 @@ export default function DefaultStepper() {
               >
                 {wards?.map((ward, i) => (
                   <span
+                    key={i}
                     className="hover:bg-gray-300 p-2 cursor-pointer "
                     onClick={() => {
                       setShowWard(false);

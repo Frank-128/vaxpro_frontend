@@ -1,7 +1,7 @@
 "use client";
 
 import AddUser from "@/modules/user/AddUser";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Button,
@@ -37,6 +37,7 @@ import axios from "axios";
 import globalUser from "@/store/user";
 import { useInitial } from "@/constants/functions";
 import { useForm } from "react-hook-form";
+import globalAlert from "@/store/alert";
 
 function UserManagement() {
   const { getInitialUsers } = useInitial();
@@ -48,10 +49,11 @@ function UserManagement() {
   const pathname = usePathname();
   const [subPathname, setSubPathname] = useState();
   const [addUserForm, setAddUserForm] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
   const TABLE_ROWS = globalAllUsers((state) => state.allUsers);
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const loggedInUser = globalUser((state) => state.loggedInUser);
+  const setAlert = globalAlert(state=>state.setAlert)
+
   const [TABLE_HEAD3, setTABLE_HEAD3] = useState([]);
   const {
     register,
@@ -107,17 +109,21 @@ function UserManagement() {
     setTABLE_HEAD3(TABLE_HEAD2);
   }, [TABLE_HEAD, loggedInUser, subPathname]);
 
-  const userHandler = async (user_id) => {
-    await axios
+  const userHandler =  (user_id) => {
+     axios
       .delete(`api/user/${user_id}`, {
         headers: {
           Authorization: `Bearer ${authenticatedToken}`,
         },
       })
-      .then(async (res) => {
+      .then( (res) => {
+        console.log(res.data)
+        setAlert({visible:true,message:"user deleted successfully",type:"success"})
         getInitialUsers();
       })
-      .catch((err) => console.log(err, "THIS IS FAILING"));
+      .catch((err) => {
+      setAlert({visible:true,message:err.data.message,type:"error"})}
+    );
   };
 
   const handleUpdateChange = (e) => {
@@ -232,7 +238,7 @@ function UserManagement() {
               </thead>
               <tbody>
                 {TABLE_ROWS.filter((row) => {
-                  // row.role.account_type === subPathname;
+                  row.role.account_type === subPathname;
                   if (
                     loggedInUser?.region_id !== null &&
                     row.role.account_type === subPathname &&
@@ -249,17 +255,14 @@ function UserManagement() {
                   } else if (row.role.account_type === subPathname) {
                     return true;
                   }
+                 
                 }).map(
                   ({ id, role, contacts, ward, region, district }, index) => {
-                    // const isLast = index === TABLE_ROWS.length - 1;
-                    // const classes = isLast
-                    // ? "p-4"
-                    // : "p-4 border-b border-blue-gray-50";
-
+                   
                     return (
-                      <>
+                      <Fragment key={id}>
                         <tr
-                          key={id}
+                          
                           className="border-b capitalize px-8 border-black"
                         >
                           <td className={""}>
@@ -273,17 +276,17 @@ function UserManagement() {
                           </td>
                           {loggedInUser.role.account_type === "ministry" &&
                             subPathname === "regional" && (
-                              <td>{region.region_name}</td>
+                              <td>{region?.region_name}</td>
                             )}
 
                           {loggedInUser.role.account_type === "regional" &&
                             subPathname === "district" && (
-                              <td>{district.district_name}</td>
+                              <td>{district?.district_name}</td>
                             )}
 
                           {subPathname === "community_health_worker" && (
                             <td className={""}>
-                              <div className="w-max">{ward.ward_name}</div>
+                              <div className="w-max">{ward?.ward_name}</div>
                             </td>
                           )}
                           <td>
@@ -372,7 +375,7 @@ function UserManagement() {
                               </td>
                             </tr>
                           )}
-                      </>
+                      </Fragment>
                     );
                   }
                 )}
@@ -406,23 +409,10 @@ function UserManagement() {
           subPathname={subPathname}
           responeMessage={responseMessage}
           setResponseMessage={setResponseMessage}
-          setShowAlert={setShowAlert}
+          
         />
       )}
-      <Alert
-        className="z-50"
-        open={showAlert}
-        onClose={() => {
-          setShowAlert(false);
-        }}
-        animate={{
-          mount: { y: 0 },
-          unmount: { y: 100 },
-        }}
-        color={responseMessage.success ? "green" : "red"}
-      >
-        {responseMessage.responseMessage}
-      </Alert>
+      
 
       <Dialog
         className="flex flex-col items-center"

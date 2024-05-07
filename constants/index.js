@@ -1,8 +1,8 @@
 
 import {
-  ArrowDownward,
-  ArrowDropDown,
+  
   Book,
+  ChildCare,
   HealthAndSafety,
   Home,
   KeyboardArrowDown,
@@ -11,6 +11,8 @@ import {
   Person,
   Report,
 } from "@mui/icons-material";
+
+
 
 
 export const navlinks = [
@@ -52,11 +54,11 @@ export const navlinks = [
         account_type: ["regional", "district"],
       },
       {
-        name: "branch admin",
-        link: "/user_management/branch_admin",
+        name: "health worker",
+        link: "/user_management/health_worker",
         icon: <HealthAndSafety />,
         role: [""],
-        account_type: ["district"],
+        account_type: ["branch_admin"],
       },
       {
         name: "community health worker",
@@ -82,12 +84,6 @@ export const navlinks = [
     account_type: ["ministry"],
   }
 ,
-    {
-        name:'OverallDash',
-        link:'/overalldash',
-        icon:<Medication/>
-        
-    },
     {
         name:'Children',
         link:'/children',

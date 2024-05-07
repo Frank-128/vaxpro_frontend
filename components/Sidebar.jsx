@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import globalUser from "@/store/user";
 import { Spinner } from "@material-tailwind/react";
+import {Loading} from '../app/(vaccination)/loading';
+import LoadingComponent from "./LoadingComponent";
 
 function Sidebar({ openSidebar, setOpenSidebar }) {
   const pathname = usePathname();
@@ -15,9 +17,9 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
   useEffect(() => {
     const filteredNavlinks = navlinks.filter((navlink) => {
       return (
-        (navlink.role.includes(loggedInUser.role?.role) &&
+        (navlink.role?.includes(loggedInUser.role?.role) &&
           navlink.account_type.includes(loggedInUser.role.account_type)) ||
-        navlink.account_type.includes("default")
+        navlink.account_type?.includes("default")
       );
     });
     setFilteredlinks(filteredNavlinks);
@@ -32,7 +34,7 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
         <div>
           <h1
             onClick={() => setOpenSidebar(false)}
-            className="font-monte-1 text-white text-2xl h-20 text-center p-2"
+            className="font-monte-1 text-white text-xl h-20 text-center p-2"
           >
             VaxPro
           </h1>
@@ -79,7 +81,7 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
                               href={item.link}
                             >
                               <div className="flex gap-2 ">
-                                <span className="text-ellipsis overflow-hidden ...">{item.name}</span>
+                                <span className="overflow-hidden ">{item.name}</span>
                               </div>
                             </Link>
                           )
@@ -90,7 +92,7 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
             </div>
           ) : (
             <div className="flex h-[34rem] justify-center items-center">
-              <Spinner />
+              <LoadingComponent/>
             </div>
           )}
         </div>

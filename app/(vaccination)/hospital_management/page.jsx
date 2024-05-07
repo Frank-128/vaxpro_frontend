@@ -104,7 +104,7 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
           <tbody>
             {facilities == null ? <tr><Spinner /> </tr>: filteredArray?.length == 0 ? <i className='p-2'>There are no records available</i> : filteredArray?.splice(interval,5).map(
               ({  facility_reg_no,facility_name,contacts,region,district }, index) => {
-                const isLast = index === FACILITY_ROWS.length - 1;
+                const isLast = index === FACILITY_ROWS?.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
@@ -178,7 +178,7 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
           Page 1 of {
-            FACILITY_ROWS.length % 5 == 0 ? FACILITY_ROWS.length/ 5 : Math.ceil(FACILITY_ROWS.length / 5)
+            FACILITY_ROWS?.length % 5 == 0 ? FACILITY_ROWS?.length/ 5 : Math.ceil(FACILITY_ROWS?.length / 5)
           } 
          
         </Typography>
@@ -195,18 +195,7 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
      
     </Card>
 
-    <Alert
-      open={showAlert.status}
-      icon={showAlert.type == "success" ?<Verified /> : <Error />} 
-      animate={{
-        mount: { y: 0 },
-        unmount: { y: 100 },
-      }}
-      color={showAlert.type=="success"?'green':"red"}
-      className={"rounded-sm  absolute top-1 right-1 z-[90] opacity-  w-1/3 font-medium text-white"}
-    >
-      {showAlert.message}
-    </Alert>
+  
    </section>
   );
 }
