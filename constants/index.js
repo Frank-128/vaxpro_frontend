@@ -58,7 +58,7 @@ export const navlinks = [
         link: "/user_management/health_worker",
         icon: <HealthAndSafety />,
         role: [""],
-        account_type: ["branch_admin"],
+        account_type: ["branch_manager"],
       },
       {
         name: "community health worker",
@@ -80,27 +80,31 @@ export const navlinks = [
     name: "Vaccination",
     link: "/vaccination",
     icon: <Medication />,
-    role: [""],
+    role: ["IT admin"],
     account_type: ["ministry"],
   }
 ,
     {
         name:'Children',
         link:'/children',
-        icon:<ChildCare/>
+        icon:<ChildCare/>,
+        role: ["Nurse"],
+    account_type: ["health_worker"],
         
     },
     {
         name:'ChildDetails',
         link:'/childdetails',
-        icon:<ChildCare/>
+        icon:<ChildCare/>,
+        role: ["Nurse"],
+    account_type: ["health_worker"],
         
     },
   {
     name: "Bookings",
     link: "/bookings",
     icon: <Book />,
-    role: ["5000-1-1"],
+    role: ["Nurse"],
     account_type: ["health_worker"],
   },
   {

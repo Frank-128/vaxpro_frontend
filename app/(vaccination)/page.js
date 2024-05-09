@@ -55,13 +55,8 @@ export function TeamSection12() {
   return (
     <section className="min-h-screen py-8 px-8 lg:py-12">      
       <div className="container mx-auto">
-        <div className="flex flex-col">
-          <Link href={'/children'}>
-            <button className="bg-[#212B36] text-white p-2 flex self-end rounded-md uppercase mb-10 float-end font-bold">
-              add child
-            </button>
-          </Link>
-          <div className="mb-10 text-center ">
+        
+          <div className="mb-3 text-center ">
             <Typography
               variant="h1"
               color="blue-gray"
@@ -70,7 +65,7 @@ export function TeamSection12() {
               VaxPro
             </Typography>
           </div>
-        </div>
+        
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {members.map((props, key) => (
             <TeamCard key={key} {...props} />
