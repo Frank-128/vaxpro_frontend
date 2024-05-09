@@ -10,7 +10,6 @@ import {
   Note,
   Person,
   Report,
-  ChildCare
 } from "@mui/icons-material";
 
 
@@ -59,7 +58,7 @@ export const navlinks = [
         link: "/user_management/health_worker",
         icon: <HealthAndSafety />,
         role: [""],
-        account_type: ["branch_admin"],
+        account_type: ["branch_manager"],
       },
       {
         name: "community health worker",
@@ -81,7 +80,7 @@ export const navlinks = [
     name: "Vaccination",
     link: "/vaccination",
     icon: <Medication />,
-    role: [""],
+    role: ["IT admin"],
     account_type: ["ministry"],
   }
 ,
@@ -99,9 +98,9 @@ export const navlinks = [
     },
   {
     name: "Bookings",
-    link: "/bookings",
+    link: "/booking",
     icon: <Book />,
-    role: ["5000-1-1"],
+    role: ["Nurse"],
     account_type: ["health_worker"],
   },
   {

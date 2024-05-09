@@ -4,7 +4,9 @@ import React from "react";
 
 const Loading = () => {
   return (
-   <LoadingComponent />
+    <div className="flex justify-center items-center h-screen">
+      <LoadingComponent />
+    </div>
   );
 };
 

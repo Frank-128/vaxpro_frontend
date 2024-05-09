@@ -11,24 +11,32 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/(vaccination)/loading";
 
 function Navbar({ openSidebar, setOpenSidebar }) {
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const [logoutDiolog, setLogoutDialog] = useState(false);
-  const router = useRouter()
-  const authenticatedToken = globalUser((state)=>state.authenticatedToken)
+  const router = useRouter();
+  const authenticatedToken = globalUser((state) => state.authenticatedToken);
+  const [loading, setLoading] = useState(false);
 
-  const  logout = () =>{
-      axios
-        .post(`/api/logout`, {
-          headers: {
-            Authorization: `Bearer ${authenticatedToken}`,
-          },
-        }).then(res => {
-          router.push('/signin')
-        })
+  const logout = () => {
+    setLoading(true);
+    axios
+      .post(`/api/logout`, null, {
+        headers: {
+          Authorization: `Bearer ${authenticatedToken}`,
+        },
+      })
+      .then((res) => {
+        setTimeout(() => {
+          router.push("/signin");
+          setLoading(false);
+        }, 2000);
 
-  }
+        console.log(res.data, "LOGOUT ERROR");
+      });
+  };
 
   return (
     <nav
@@ -46,7 +54,6 @@ function Navbar({ openSidebar, setOpenSidebar }) {
         <div className="flex gap-2">
           <p>Level:</p>
           <h1 className=" md:block hidden font-monte-1">
-            {loggedInUser.facility?.facility_name}
             {loggedInUser.role?.account_type}
           </h1>
         </div>
@@ -75,11 +82,24 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             </div>
           </div>
         )}
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
+          {loggedInUser.facility && (
+            <div className="flex gap-3">
+              {" "}
+              <p>Facility:</p>
+              <h1 className=" md:block hidden font-monte-1">
+              {loggedInUser.facility?.facility_name}
+
+              </h1>
+            </div>
+          )}
+          <div className="flex gap-3">
+
           <p>Role:</p>
           <h1 className=" md:block hidden font-monte-1">
             {loggedInUser.role?.role}
           </h1>
+          </div>
         </div>
         <Button
           className="bg-white py-2 px-3 text-black border border-black font-monte-3"
@@ -110,12 +130,14 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             cancel
           </Button>
           <Button
+            loading={loading}
+            disabled={loading}
             className="bg-red-900"
             onClick={() => {
-              logout()
+              logout();
             }}
           >
-            logout
+            {loading ? <span>logging out</span> : <span>logout</span>}
           </Button>
         </DialogFooter>
       </Dialog>
