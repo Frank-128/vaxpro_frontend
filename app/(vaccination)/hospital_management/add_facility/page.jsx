@@ -15,6 +15,8 @@ import {
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import globalUser from "@/store/user";
+import globalAlert from "@/store/alert";
+import { useRouter } from "next/navigation";
 
 export default function DefaultStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -25,6 +27,9 @@ export default function DefaultStepper() {
   const [wards, setWards] = useState([]);
   const [wardName, setWardName] = useState("");
   const authenticatedToken = globalUser((state)=>state.authenticatedToken)
+  const setAlert = globalAlert(state=>state.setAlert)
+  const router = useRouter()
+
 
   const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
@@ -56,9 +61,11 @@ export default function DefaultStepper() {
               Authorization: `Bearer ${authenticatedToken}`,
             }}).then((res2)=>{
 
-          console.log(res2)
+              setAlert({message:"Facility created successfully",visible:true,type:"success"});
+              router.push('/hospital_management')
+              
           }).catch((err)=>{
-             console.log("error occured when creating user",err)
+            setAlert({message:"Facility not created, please try again",visible:true,type:"error"});
 
           })
         }).catch((er)=>{

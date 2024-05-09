@@ -70,6 +70,12 @@ const AddUser = ({
         district_id: loggedInUser.district_id,
       };
     }
+    else if (loggedInUser.role.account_type === "branch_manager") {
+      data2 = {
+        ...data2,
+        facility_id: loggedInUser.facility_id,
+      };
+    }
 
     console.log(data2, "the data to be submitted");
     try {
@@ -350,14 +356,14 @@ const AddUser = ({
             />
           )}
 
-{loggedInUser.role.account_type === "branch_admin" && (
+{loggedInUser.role.account_type === "branch_manager" && (
             <>
             <div className="font-monte-1">
             <Input
               className="text-black font-monte-1"
               size="lg"
               label="Staff Id"
-              {...register("contacts", { required: true })}
+              {...register("staff_id", { required: true })}
             />
             {errors.staff_id && (
               <p className="text-red-900 text-xs font-monte">

@@ -10,9 +10,12 @@ import {
 } from "@material-tailwind/react";
 import axios from "../../axios";
 import { useForm } from "react-hook-form";
+import globalUser from "@/store/user";
 
 const Children = () => {
   const { register, handleSubmit, setValue } = useForm();
+  const loggedInUser = globalUser(state=>state.loggedInUser)
+
   const data = [
     {
       label: "Child",
@@ -27,17 +30,19 @@ const Children = () => {
   ];  
 
   const submitFunction = (data) => {
-    console.log(data)
     
-    // axios.post(`/parentChildData`).then((res)=>{
-    //   if(res.data.status == 200){
-    //     console.log(res.data.message)
-    //   }else{
-    //     console.log(res.data.message)
-    //   }
-    // })
+    
+    axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
+      if(res.data.status == 200){
+        console.log(res.data.message)
+      }else{
+        console.log(res.data.message)
+      }
+    })
     
   };
+
+  console.log(loggedInUser)
 
   return (
     <Tabs className="mt-5" value="child">
