@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import axios from "../app/axios";
+import axios from "../axios";
 
 const VaccinationDel = ({
   openDeleteVaccine,
@@ -22,7 +22,7 @@ const VaccinationDel = ({
   const handleDeleteVaccine = (e, id) => {
     e.preventDefault();
 
-    axios.delete(`/deleteVaccine/` + id).then((res) => {
+    axios.delete(`/api/deleteVaccine/` + id).then((res) => {
       if (res.data.status === 200) {
         console.log(res.data.message);
         handleCloseDelete();

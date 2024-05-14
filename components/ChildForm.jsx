@@ -1,6 +1,6 @@
 import { Card, Typography } from "@material-tailwind/react";
 import { TextField } from "@mui/material";
-import axios from "../app/axios";
+import axios from "../axios";
 import { useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useRouter } from "next/navigation";
@@ -9,14 +9,14 @@ import Link from "next/link";
 const ChildRegistrationForm = ({ register }) => {
   const [wards, setWards] = useState([]);
   const [children, setChildren] = useState([]);
-  const [cardNoInput, setCardNoInput] = useState(""); // Added state for card number input
+  const [cardNoInput, setCardNoInput] = useState(""); 
   const router = useRouter();
   const [selectedCard, setSelectedCard] = useState();
 
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
     if (searchQuery) {
-      axios.get(`/wards?searchQuery=${searchQuery}`).then((res) => {
+      axios.get(`/api/wards?searchQuery=${searchQuery}`).then((res) => {
         if (res.status === 200) {
           setWards(res.data);
         }
@@ -27,9 +27,11 @@ const ChildRegistrationForm = ({ register }) => {
   const handleCardNoChange = (cardNo) => {
     setCardNoInput(cardNo);
     if (cardNo) {
-      axios.get(`/children?cardNo=${cardNo}`).then((res) => {
+      axios.get(`/api/children?cardNo=${cardNo}`).then((res) => {
         if (res.status === 200) {
           setChildren(res.data);
+          
+
 
        
 

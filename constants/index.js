@@ -3,6 +3,7 @@ import {
   ArrowDownward,
   ArrowDropDown,
   Book,
+  ChildCare,
   HealthAndSafety,
   Home,
   KeyboardArrowDown,

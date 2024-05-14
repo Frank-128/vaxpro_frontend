@@ -8,11 +8,13 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import axios from "../../axios";
+import axios from "../../../axios";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 const Children = () => {
   const { register, handleSubmit, setValue } = useForm();
+  const router = useRouter();
   const data = [
     {
       label: "Child",
@@ -27,15 +29,14 @@ const Children = () => {
   ];  
 
   const submitFunction = (data) => {
-    console.log(data)
-    
-    // axios.post(`/parentChildData`).then((res)=>{
-    //   if(res.data.status == 200){
-    //     console.log(res.data.message)
-    //   }else{
-    //     console.log(res.data.message)
-    //   }
-    // })
+    axios.post(`/api/parentChildData`, data).then((res)=>{
+      if(res.data.status == 200){
+        console.log(res.data.cardNo)
+        router.push(`/childdetails?cardNo=${res.data.cardNo}`)
+      }else{
+        console.log(res.data.message)
+      }
+    })
     
   };
 

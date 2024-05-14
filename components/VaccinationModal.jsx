@@ -8,27 +8,39 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import axios from "../app/axios";
+import axios from "../axios";
 
-const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine }) => {
+const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine, birthDate, cardNo }) => {
   const [vaccines, setVaccines] = useState([]);
+  const [selectedVaccines, setSelectedVaccines] = useState([]);
+  
 
   useEffect(() => {
-    axios.get(`/getVaccines`).then((res) => {
+    axios.get(`/api/getChildVaccines`).then((res) => {
       if (res.data.status == 200) {
         console.log(res.data.vaccines)
         setVaccines(res.data.vaccines)
       }
     })
-  }, [])
+
+   
+  },[])
 
 
+  const handleCheckboxChange = (event) => {
+    if (event.target.checked) {
+      setSelectedVaccines([...selectedVaccines, event.target.value]);
+    } else {
+      setSelectedVaccines(selectedVaccines.filter(id => id !== event.target.value));
+    }
+  };
+  
   const submitAddedVaccine = (e) => {
     e.preventDefault();
-    axios.post(`/addChildVaccinnes`, formData).then((res) => {
+    axios.post(`/api/addNewChildVaccinnes`, { vaccines: selectedVaccines, date: birthDate, card_no: cardNo }).then((res) => {
       if (res.data.status === 200) {
-        notifyAddVaccine(res.data.vaccine);
-
+        console.log(res.data.vaccineSchedule);
+        // notifyAddVaccine(res.data.vaccine);
       }
     });
   };
@@ -50,7 +62,7 @@ const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVa
             {vaccines.map((vaccine, index) => {
               return (
                 <div key={vaccine.id} className="flex flex-col">
-                <Checkbox label={vaccine.name} value={vaccine.id} />
+                <Checkbox label={vaccine.name} value={vaccine.id}  onChange={handleCheckboxChange} />
               </div>
               )
             })}

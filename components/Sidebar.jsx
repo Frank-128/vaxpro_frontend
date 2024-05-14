@@ -15,9 +15,9 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
   useEffect(() => {
     const filteredNavlinks = navlinks.filter((navlink) => {
       return (
-        (navlink.role.includes(loggedInUser.role?.role) &&
-          navlink.account_type.includes(loggedInUser.role.account_type)) ||
-        navlink.account_type.includes("default")
+        (navlink?.role?.includes(loggedInUser.role?.role) &&
+          navlink.account_type.includes(loggedInUser?.role?.account_type)) ||
+        navlink.account_type?.includes("default")
       );
     });
     setFilteredlinks(filteredNavlinks);

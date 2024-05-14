@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardBody, Typography } from "@material-tailwind/react";
-import axios from "../../axios";
+import axios from "../../../axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,8 +8,7 @@ import VaccinationModal from "@/components/VaccinationModal";
 
 
 
-
-function ChildCard({ firstname, middlename, surname, ward, date_of_birth, card_no }) {
+function ChildCard({ ward, date_of_birth, card_no }) {
   return (
     <Card className="rounded-lg shadow-lg bg-[#ffffff]" shadow={true}>
       <CardBody className="text-left flex flex-col gap-3">
@@ -127,6 +126,10 @@ export default function TeamSection12() {
   const searchParams = useSearchParams();
   const card_no = searchParams.get('cardNo');
   const [openAddVaccine, setOpenAddVaccine] = useState(false);
+  const [vacShdls, setVacScheds] = useState([]);
+  
+
+
 
   const handleClickCloseAddVacc = () => {
     setOpenAddVaccine(false);
@@ -141,13 +144,29 @@ export default function TeamSection12() {
   };
 
   useEffect(() => {
-    axios.get(`/getChildData/${card_no}`).then((res) => {
+    axios.get(`/api/getChildData/${card_no}`).then((res) => {
       if (res.status === 200) {
         console.log(res.data)
         setChildData(res.data)
       }
     })
+
+    axios.get(`/api/getVacSchedules/${card_no}`).then((res) => {
+      if (res.data.status == 200) {
+        console.log(res.data.vacScheds);
+        setVacScheds(res.data.vacScheds);
+      }
+    })
   }, [card_no])
+
+  const handleVacSchedUpdate = ($vac_id, $date_of_birth) => {
+    axios.post(`/api/updateChildVacSchedule`, { child_id: card_no, vac_id: $vac_id, curr_date: $date_of_birth }).then((res) => {
+      if (res.data.status == 200) {
+        console.log(res.data)
+      }
+    })
+  }
+
 
   return (
     <section className="min-h-screen py-8 px-8 lg:py-12">
@@ -163,7 +182,7 @@ export default function TeamSection12() {
               <div> VaxPro</div>
               <div className="flex gap-2">
                 <button className="bg-[#212B36] text-white p-2 flex rounded-md  text-lg float-end font-bold">
-                  Update 
+                  Update
                 </button>
 
                 <button onClick={handleClickOpenAddVacc} className="bg-[#212B36] text-white p-2 flex rounded-md  text-lg float-end font-bold">Add Vaccine</button>
@@ -192,10 +211,99 @@ export default function TeamSection12() {
         </div>
 
 
+
+        <div className="flex gap-8 ">
+          {vacShdls.map((vaccine, index) => (
+            <div className="" key={index}>
+              <Card className="rounded-lg shadow-lg bg-[#ffffff]" shadow={true}>
+                <CardBody className="text-left flex flex-col gap-3">
+                  <div>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black font-bold lg:text-xl"
+                    >
+                      Vaccine:
+                    </Typography>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black lg:text-xl"
+                    >
+                      {vaccine.vacName}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black font-bold lg:text-xl"
+                    >
+                      Last Vaccination:
+                    </Typography>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black lg:text-xl"
+                    >
+                      {vaccine.vaccination_date}
+                    </Typography>
+                  </div>
+
+
+                  <div>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black font-bold lg:text-xl"
+                    >
+                      Next Vaccination:
+                    </Typography>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black lg:text-xl" t
+                    >
+                      {vaccine.next_vaccination_date}
+                    </Typography>
+                  </div>
+
+                  <div>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black font-bold lg:text-xl"
+                    >
+                      Frequency:
+                    </Typography>
+                    <Typography
+                      color="blue-gray"
+                      className="text-black lg:text-xl" t
+                    >
+                      {vaccine.frequency}
+                    </Typography>
+                  </div>
+                  {childData.map((child, index) => (
+                    <div key={index}>
+                      <button onClick={() => handleVacSchedUpdate(vaccine.child_vaccination_id, child.date_of_birth)}>Go to next</button>
+                    </div>
+                  ))}
+
+
+                </CardBody>
+              </Card>
+            </div>
+
+          ))}
+        </div>
+
+
+
       </div>
-      <VaccinationModal openAddVaccine={openAddVaccine}
-        handleClickCloseAddVacc={handleClickCloseAddVacc}
-        notifyAddVaccine={notifyAddVaccine} />
+      {childData.map((child, index) => (
+        <div key={index}>
+          <VaccinationModal
+            cardNo={child.card_no}
+            birthDate={child.date_of_birth}
+            openAddVaccine={openAddVaccine}
+            handleClickCloseAddVacc={handleClickCloseAddVacc}
+            notifyAddVaccine={notifyAddVaccine}
+          />
+        </div>
+      ))}
     </section>
   );
 }
