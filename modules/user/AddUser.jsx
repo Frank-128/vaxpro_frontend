@@ -21,11 +21,7 @@ import globalRoles from "@/store/roles";
 import { useInitial } from "@/constants/functions";
 import globalAlert from "@/store/alert";
 
-const AddUser = ({
-  addUserForm,
-  setAddUserForm,
-  subPathname,
-}) => {
+const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
   // const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [existingUser, setExistingUser] = useState({
@@ -38,7 +34,7 @@ const AddUser = ({
   const roles = globalRoles((state) => state.roles);
   const { initialRequest } = useInitial();
   const districts = globalAddress((state) => state.districts);
-  const setAlert = globalAlert(state=>state.setAlert)
+  const setAlert = globalAlert((state) => state.setAlert);
   const wards = globalAddress((state) => state.wards);
 
   const {
@@ -69,7 +65,13 @@ const AddUser = ({
         ...data2,
         district_id: loggedInUser.district_id,
       };
+    }else if(loggedInUser.role.account_type === "branch_manager") {
+      data2 = {
+        ...data2, facility_id:loggedInUser.facility_id
+      }
+         
     }
+
     else if (loggedInUser.role.account_type === "branch_manager") {
       data2 = {
         ...data2,
@@ -85,22 +87,30 @@ const AddUser = ({
             Authorization: `Bearer ${authenticatedToken}`,
           },
         })
-        .then( (res) => {
+        .then((res) => {
           console.log(res.data, "datasssss");
           initialRequest();
           setLoading(false);
           if (res.data.status === 200) {
-            setAlert({visible:true,message:res.data.message,type:"success"})
+            setAlert({
+              visible: true,
+              message: res.data.message,
+              type: "success",
+            });
             handleClose();
           } else if (res.data.status === 401) {
-            setAlert({visible:true,message:"Unauthenticated please log in",type:"error"})
+            setAlert({
+              visible: true,
+              message: "Unauthenticated please log in",
+              type: "error",
+            });
           } else if (res.data.status == 409) {
             setExistingUser({ message: res.data.message, error: true });
           }
         });
     } catch (err) {
       setLoading(false);
-      setAlert({visible:true,message:err.data.message,type:"error"})
+      setAlert({ visible: true, message: err.data.message, type: "error" });
     }
     setLoading(false);
   };
@@ -173,31 +183,28 @@ const AddUser = ({
                         */
                         if (
                           // loggedInUser.role.account_type !== "district"
-                            // ?
-                             account_type === subPathname &&
-                              loggedInUser.role.account_type === subPathname
-                            // : 
-                            // account_type === subPathname
+                          // ?
+                          account_type === subPathname &&
+                          loggedInUser.role.account_type === subPathname
+                          // :
+                          // account_type === subPathname
                         ) {
                           return loggedInUser.role?.role !== role;
                         } else if (
                           account_type === subPathname &&
                           loggedInUser.role.role === role
                         ) {
-                          console.log("entered here so wasup")
+                          console.log("entered here so wasup");
                           return true;
-                        }else if (
+                        } else if (
                           account_type === "community_health_worker" &&
-                          subPathname === "community_health_worker" 
+                          subPathname === "community_health_worker"
                         ) {
-                          
                           return true;
-                        }
-                        else if (
-                          account_type == "health_worker"&&
-                          subPathname === "health_worker" 
+                        } else if (
+                          account_type == "health_worker" &&
+                          subPathname === "health_worker"
                         ) {
-                          
                           return true;
                         }
                       })
@@ -398,7 +405,6 @@ const AddUser = ({
             )}
           </div>
             </>
-            
           )}
           <div className="font-monte-1">
             <Input

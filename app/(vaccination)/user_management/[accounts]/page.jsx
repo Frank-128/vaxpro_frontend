@@ -52,7 +52,7 @@ function UserManagement() {
   const TABLE_ROWS = globalAllUsers((state) => state.allUsers);
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const loggedInUser = globalUser((state) => state.loggedInUser);
-  const setAlert = globalAlert(state=>state.setAlert)
+  const setAlert = globalAlert((state) => state.setAlert);
 
   const [TABLE_HEAD3, setTABLE_HEAD3] = useState([]);
   const {
@@ -109,21 +109,25 @@ function UserManagement() {
     setTABLE_HEAD3(TABLE_HEAD2);
   }, [TABLE_HEAD, loggedInUser, subPathname]);
 
-  const userHandler =  (user_id) => {
-     axios
+  const userHandler = (user_id) => {
+    axios
       .delete(`api/user/${user_id}`, {
         headers: {
           Authorization: `Bearer ${authenticatedToken}`,
         },
       })
-      .then( (res) => {
-        console.log(res.data)
-        setAlert({visible:true,message:"user deleted successfully",type:"success"})
+      .then((res) => {
+        console.log(res.data);
+        setAlert({
+          visible: true,
+          message: "user deleted successfully",
+          type: "success",
+        });
         getInitialUsers();
       })
       .catch((err) => {
-      setAlert({visible:true,message:err.data.message,type:"error"})}
-    );
+        setAlert({ visible: true, message: err.data.message, type: "error" });
+      });
   };
 
   const handleUpdateChange = (e) => {
@@ -176,7 +180,21 @@ function UserManagement() {
                 <Typography color="gray" className="mt-1 font-monte">
                   Table for
                   <span className="font-monte-1 capitalize">
-                    {subPathname + "s"}
+                    {subPathname === "regional" ? (
+                      <span>&nbsp;&nbsp;Regional Accounts</span>
+                    ) : subPathname === "ministry" ? (
+                      <span>&nbsp;&nbsp;Ministry Accounts</span>
+                    ) : subPathname === "district" ? (
+                      <span>&nbsp;&nbsp;District Accounts</span>
+                    ) : subPathname === "community_health_worker" ? (
+                      <span>&nbsp;&nbsp;Community Health Worker AccountS </span>
+                    ) : subPathname === "branch_admin" ? (
+                      <span>&nbsp;&nbsp;Branch Adminstrator AccountS</span>
+                    ) : subPathname === "health_worker" ? (
+                      <span>&nbsp;&nbsp;Health Worker Accounts</span>
+                    ) : (
+                      ""
+                    )}
                   </span>
                 </Typography>
               </div>
@@ -194,8 +212,8 @@ function UserManagement() {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <Tabs value="all" className="w-full md:w-max">
+            <div className="flex flex-col items-center justify-end gap-4 md:flex-row">
+              {/* <Tabs value="all" className="w-full md:w-max">
                 <TabsHeader>
                   {TABS.map(({ label, value }) => (
                     <Tab key={value} value={value}>
@@ -203,7 +221,7 @@ function UserManagement() {
                     </Tab>
                   ))}
                 </TabsHeader>
-              </Tabs>
+              </Tabs> */}
               <div className="w-full md:w-72">
                 <Input
                   className="font-monte"
@@ -255,16 +273,11 @@ function UserManagement() {
                   } else if (row.role.account_type === subPathname) {
                     return true;
                   }
-                 
                 }).map(
                   ({ id, role, contacts, ward, region, district }, index) => {
-                   
                     return (
                       <Fragment key={id}>
-                        <tr
-                          
-                          className="border-b capitalize px-8 border-black"
-                        >
+                        <tr className="border-b capitalize px-8 border-black">
                           <td className={""}>
                             <Typography
                               variant="small"
@@ -343,8 +356,7 @@ function UserManagement() {
                             >
                               <td className="border-transparent">
                                 <Input
-                                  color="black"
-                                  className="bg-gray-200 border border-transparent outline-none focus:border-transparent"
+                                  className="bg-gray-400 border border-transparent outline-none focus:outline-none "
                                   value={selectedRow?.contacts}
                                   onChange={handleUpdateChange}
                                 />
@@ -409,10 +421,8 @@ function UserManagement() {
           subPathname={subPathname}
           responeMessage={responseMessage}
           setResponseMessage={setResponseMessage}
-          
         />
       )}
-      
 
       <Dialog
         className="flex flex-col items-center"

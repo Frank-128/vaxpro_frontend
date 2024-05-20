@@ -7,7 +7,8 @@ import {
 } from "@material-tailwind/react";
 import ChartGraph from "@/components/chart";
 import Link from "next/link";
-// import {Loading} from "./loading";
+import globalUser from "@/store/user";
+import { Fragment } from "react";
 
 function TeamCard({ name, title }) {
   return (
@@ -26,7 +27,6 @@ function TeamCard({ name, title }) {
         >
           {title}
         </Typography>
-      
       </CardBody>
     </Card>
   );
@@ -52,6 +52,7 @@ const members = [
 ];
 
 export function TeamSection12() {
+
   return (
     <section className="min-h-screen py-8 px-8 lg:py-12">      
       <div className="container mx-auto">
@@ -78,6 +79,7 @@ export function TeamSection12() {
         </div>
       </div>
     </section>
+
   );
 }
 

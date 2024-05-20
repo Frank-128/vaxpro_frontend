@@ -9,7 +9,8 @@ import {
   Medication,
   Note,
   Person,
-  Report
+  Report,
+
 } from "@mui/icons-material";
 
 
@@ -102,7 +103,7 @@ export const navlinks = [
     },
   {
     name: "Bookings",
-    link: "/bookings",
+    link: "/booking",
     icon: <Book />,
     role: ["Nurse"],
     account_type: ["health_worker"],

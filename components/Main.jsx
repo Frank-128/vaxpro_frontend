@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import globalAlert from "@/store/alert";
 import { Alert } from "@material-tailwind/react";
 import { Error, Verified } from "@mui/icons-material";
+import globalAddress from "@/store/address";
+import globalUser from "@/store/user";
 
 
 function Main({ children }) {
@@ -18,6 +20,9 @@ function Main({ children }) {
   const isIdle = useIdle(1000*60*60*2)
   const route = useRouter()
   const alertObj = globalAlert((state)=>state.alert)
+  const wards = globalAddress((state)=> state.wards)
+  const user = globalUser ((state)=> state.loggedInUser)
+
   
   
   
@@ -39,7 +44,7 @@ function Main({ children }) {
     }
   },[isIdle,route])
 
-  console.log(alertObj)
+ 
   return (
     <main>
       <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />

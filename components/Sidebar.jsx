@@ -92,7 +92,8 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
             </div>
           ) : (
             <div className="flex h-[34rem] justify-center items-center">
-              <LoadingComponent/>
+              {/* <LoadingComponent/> */}
+              <Spinner/>
             </div>
           )}
         </div>
