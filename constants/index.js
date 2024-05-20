@@ -9,8 +9,7 @@ import {
   Medication,
   Note,
   Person,
-  Report,
-  ChildCare
+  Report
 } from "@mui/icons-material";
 
 
