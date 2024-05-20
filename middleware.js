@@ -9,9 +9,7 @@ export async function middleware(request) {
     return NextResponse.next();
   }
   return NextResponse.redirect(new URL("/signin", request.url));
-  await axios.get('is_auth')
 
-  return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more

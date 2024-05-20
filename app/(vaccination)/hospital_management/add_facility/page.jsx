@@ -27,7 +27,7 @@ export default function DefaultStepper() {
   const [showWard, setShowWard] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const wards = globalAddress((state) => state.wards);
-  const [wards, setWards] = useState([]);
+ 
   const [wardName, setWardName] = useState("");
   const authenticatedToken = globalUser((state)=>state.authenticatedToken)
   const setAlert = globalAlert(state=>state.setAlert)
@@ -47,7 +47,7 @@ export default function DefaultStepper() {
             headers: {
               Authorization: `Bearer ${authenticatedToken}`,
             }}).then((res2)=>{
-
+              console.log(res2.data)
               setAlert({message:"Facility created successfully",visible:true,type:"success"});
               router.push('/hospital_management')
               

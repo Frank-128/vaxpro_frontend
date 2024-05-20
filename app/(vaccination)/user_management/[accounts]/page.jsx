@@ -142,7 +142,7 @@ function UserManagement() {
   const submitUpdatedData = () => {
     axios
       .patch(
-        `api/update_user/${selectedRow.id}`,
+        `update_user/${selectedRow.id}`,
         {
           contacts: selectedRow.contacts,
         },
