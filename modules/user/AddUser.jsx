@@ -71,7 +71,14 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
       }
          
     }
-   console.log(loggedInUser,"logged  used")
+
+    else if (loggedInUser.role.account_type === "branch_manager") {
+      data2 = {
+        ...data2,
+        facility_id: loggedInUser.facility_id,
+      };
+    }
+
     console.log(data2, "the data to be submitted");
     try {
       axios
@@ -356,47 +363,47 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
             />
           )}
 
-          {loggedInUser.role.account_type === "branch_manager" && (
+{loggedInUser.role.account_type === "branch_manager" && (
             <>
-              <div className="font-monte-1">
-                <Input
-                  className="text-black font-monte-1"
-                  size="lg"
-                  label="Staff Id"
-                  {...register("staff_id", { required: true })}
-                />
-                {errors.staff_id && (
-                  <p className="text-red-900 text-xs font-monte">
-                    This field is required
-                  </p>
-                )}
-              </div>
-              <div className="font-monte-1">
-                <Input
-                  className="text-black font-monte-1"
-                  size="lg"
-                  label="First Name"
-                  {...register("first_name", { required: true })}
-                />
-                {errors.first_name && (
-                  <p className="text-red-900 text-xs font-monte">
-                    This field is required
-                  </p>
-                )}
-              </div>
-              <div className="font-monte-1">
-                <Input
-                  className="text-black font-monte-1"
-                  size="lg"
-                  label="Last Name"
-                  {...register("last_name", { required: true })}
-                />
-                {errors.last_name && (
-                  <p className="text-red-900 text-xs font-monte">
-                    This field is required
-                  </p>
-                )}
-              </div>
+            <div className="font-monte-1">
+            <Input
+              className="text-black font-monte-1"
+              size="lg"
+              label="Staff Id"
+              {...register("staff_id", { required: true })}
+            />
+            {errors.staff_id && (
+              <p className="text-red-900 text-xs font-monte">
+                This field is required
+              </p>
+            )}
+          </div>
+          <div className="font-monte-1">
+            <Input
+              className="text-black font-monte-1"
+              size="lg"
+              label="First Name"
+              {...register("first_name", { required: true })}
+            />
+            {errors.first_name && (
+              <p className="text-red-900 text-xs font-monte">
+                This field is required
+              </p>
+            )}
+          </div>
+          <div className="font-monte-1">
+            <Input
+              className="text-black font-monte-1"
+              size="lg"
+              label="Last Name"
+              {...register("last_name", { required: true })}
+            />
+            {errors.last_name && (
+              <p className="text-red-900 text-xs font-monte">
+                This field is required
+              </p>
+            )}
+          </div>
             </>
           )}
           <div className="font-monte-1">

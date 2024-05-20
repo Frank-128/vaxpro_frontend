@@ -37,6 +37,13 @@
 }
 
 
+/* background image */
+
+.backPic {
+  background-image: url('../public/vaccine.jpeg');
+  background-size: cover;
+  
+}
 
 /* loader */
 

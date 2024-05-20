@@ -10,6 +10,7 @@ import {
   Note,
   Person,
   Report,
+
 } from "@mui/icons-material";
 
 
@@ -87,13 +88,17 @@ export const navlinks = [
     {
         name:'Children',
         link:'/children',
-        icon:<ChildCare/>
+        icon:<ChildCare/>,
+        role: ["Nurse"],
+    account_type: ["health_worker"],
         
     },
     {
         name:'ChildDetails',
         link:'/childdetails',
-        icon:<ChildCare/>
+        icon:<ChildCare/>,
+        role: ["Nurse"],
+    account_type: ["health_worker"],
         
     },
   {

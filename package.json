@@ -26,6 +26,7 @@
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18",
     "react-hook-form": "^7.51.3",
+    "react-sarufi-chatbox": "^0.4.7",
     "react-use": "^17.5.0",
     "zustand": "^4.5.2"
   },

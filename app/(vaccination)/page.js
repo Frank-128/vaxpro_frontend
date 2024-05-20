@@ -52,43 +52,34 @@ const members = [
 ];
 
 export function TeamSection12() {
-  // const loggedInUser = globalUser((state) => state.loggedInUser);
 
   return (
-    <Fragment>
-      
-        <section className="min-h-screen py-8 px-8 lg:py-12">
-          <div className="container mx-auto">
-            <div className="flex flex-col">
-              <Link href={"/children"}>
-                <button className="bg-[#212B36] text-white p-2 flex self-end rounded-md uppercase mb-10 float-end font-bold">
-                  add child
-                </button>
-              </Link>
-              <div className="mb-10 text-center ">
-                <Typography
-                  variant="h1"
-                  color="blue-gray"
-                  className="my-2 !text-2xl lg:!text-4xl"
-                >
-                  VaxPro
-                </Typography>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {members.map((props, key) => (
-                <TeamCard key={key} {...props} />
-              ))}
-            </div>
-            <div className="grid grid-cols-1 mt-20 gap-6 md:grid-cols-2 lg:grid-cols-2">
-              <ChartGraph vaccineName="Vaccine: Polio" />
-              <ChartGraph vaccineName="Vaccine: BCG" />
-              <ChartGraph vaccineName="Vaccine: MR" />
-            </div>
+    <section className="min-h-screen py-8 px-8 lg:py-12">      
+      <div className="container mx-auto">
+        
+          <div className="mb-3 text-center ">
+            <Typography
+              variant="h1"
+              color="blue-gray"
+              className="my-2 !text-2xl lg:!text-4xl"
+            >
+              VaxPro
+            </Typography>
           </div>
-        </section>
-      
-    </Fragment>
+        
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {members.map((props, key) => (
+            <TeamCard key={key} {...props} />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 mt-20 gap-6 md:grid-cols-2 lg:grid-cols-2">
+          <ChartGraph vaccineName="Vaccine: Polio" />
+          <ChartGraph vaccineName="Vaccine: BCG" />
+          <ChartGraph vaccineName="Vaccine: MR" />
+        </div>
+      </div>
+    </section>
+
   );
 }
 

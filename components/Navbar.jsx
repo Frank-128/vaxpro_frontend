@@ -34,6 +34,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           setLoading(false);
         }, 2000);
 
+
         console.log(res.data, "LOGOUT ERROR");
       });
   };
@@ -113,7 +114,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
 
       <Dialog
         open={logoutDiolog}
-        handler={() => setLogoutDialog(false)}
+        handler={() =>{ setLogoutDialog(false)}}
         size="xs"
       >
         <DialogHeader></DialogHeader>
