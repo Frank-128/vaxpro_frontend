@@ -19,14 +19,14 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   const authenticatedToken = globalUser((state)=>state.authenticatedToken)
 
   const  logout = () =>{
-      axios
-        .post(`/api/logout`, {
-          headers: {
-            Authorization: `Bearer ${authenticatedToken}`,
-          },
-        }).then(res => {
-          router.push('/signin')
-        })
+      // axios
+      //   .post(`/api/logout`, {
+      //     headers: {
+      //       Authorization: `Bearer ${authenticatedToken}`,
+      //     },
+      //   }).then(res => {
+      //   })
+        router.push('/signin')
 
   }
 
@@ -93,7 +93,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
 
       <Dialog
         open={logoutDiolog}
-        handler={() => setLogoutDialog(false)}
+        handler={() =>{ setLogoutDialog(false)}}
         size="xs"
       >
         <DialogHeader></DialogHeader>
