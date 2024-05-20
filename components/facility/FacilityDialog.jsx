@@ -16,7 +16,7 @@ import {
 } from "@material-tailwind/react";
 import { HouseSharp } from "@mui/icons-material";
 import { api_facilities, district_wards } from "@/constants";
-import axios from "axios";
+import axios from "../../axios";
 
 export default function FacilityDialog({setShowAlert}) {
   const [open, setOpen] = React.useState(false);
@@ -25,11 +25,11 @@ export default function FacilityDialog({setShowAlert}) {
   const [facilityObject,setFacilityObject] = useState({});
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const handleSubmit = async () => {
+  const handleSubmit =  () => {
     setLoading(true);
     console.log(facilityObject)
-    await axios
-      .post("http://localhost:8000/api/facility", facilityObject)
+     axios
+      .post("facility", facilityObject)
       .then((res) => {
         console.log(res.data);
         setShowAlert({status:true,type:"success",message:"Hospital facility created successfully"})

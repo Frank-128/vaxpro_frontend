@@ -8,7 +8,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import axios from "../../axios";
+import axios from "../../../axios";
 import { useForm } from "react-hook-form";
 import globalUser from "@/store/user";
 
@@ -34,7 +34,7 @@ const Children = () => {
     
     axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
       if(res.data.status == 200){
-        console.log(res.data.message)
+        console.log(res.data)
       }else{
         console.log(res.data.message)
       }

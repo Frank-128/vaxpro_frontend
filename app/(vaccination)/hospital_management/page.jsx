@@ -19,8 +19,9 @@ import {
 } from "@material-tailwind/react";
 import FacilityDialog from '@/components/facility/FacilityDialog';
 import { useEffect } from 'react';
-import axios from 'axios';
+import axios from "../../../axios";
 import Link from 'next/link';
+import globalUser from '@/store/user';
  
 const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", ""];
  
@@ -33,11 +34,12 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
     const [facilities,setFacilities] = useState(null)
     const [showAlert,setShowAlert] = useState({status:false,type:"",message:""})
     const [interval,setInterval] = useState(0)
+    const loggedInUser = globalUser(state=>loggedInUser)
     const filteredArray = facilities?.filter((item)=>item.facility_name.toLowerCase().replace(/\s/g, "").includes(searchTerm.toLowerCase()) || searchTerm == "" )
 
     useEffect(()=>{
       const fetchDistrictFacilites = async()=>{
-        await axios.get('http://localhost:8000/api/district_facilities/13').then((res)=>{
+        await axios.get('district_facilities/'+loggedInUser?.district_id).then((res)=>{
         console.log(res.data) 
         setFacilities(res.data)
         }).catch((err)=>{

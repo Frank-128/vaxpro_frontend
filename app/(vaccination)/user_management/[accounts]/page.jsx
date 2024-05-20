@@ -33,7 +33,7 @@ import {
   VisibilityOutlined,
 } from "@mui/icons-material";
 import globalAllUsers from "@/store/all_users";
-import axios from "axios";
+import axios from "../../../../axios";
 import globalUser from "@/store/user";
 import { useInitial } from "@/constants/functions";
 import { useForm } from "react-hook-form";
@@ -111,7 +111,7 @@ function UserManagement() {
 
   const userHandler = (user_id) => {
     axios
-      .delete(`api/user/${user_id}`, {
+      .delete(`user/${user_id}`, {
         headers: {
           Authorization: `Bearer ${authenticatedToken}`,
         },
@@ -213,15 +213,7 @@ function UserManagement() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-end gap-4 md:flex-row">
-              {/* <Tabs value="all" className="w-full md:w-max">
-                <TabsHeader>
-                  {TABS.map(({ label, value }) => (
-                    <Tab key={value} value={value}>
-                      &nbsp;&nbsp;{label}&nbsp;&nbsp;
-                    </Tab>
-                  ))}
-                </TabsHeader>
-              </Tabs> */}
+             
               <div className="w-full md:w-72">
                 <Input
                   className="font-monte"

@@ -37,7 +37,7 @@ export const useInitial = () => {
       setAuthenticatedToken(decrypted_token2);
 
       axios
-        .get(`/api/user`, {
+        .get(`user`, {
           headers: {
             Authorization: `Bearer ${decrypted_token2}`,
           },
@@ -47,7 +47,7 @@ export const useInitial = () => {
         });
 
       axios
-        .get(`api/regions`, {
+        .get(`regions`, {
           headers: {
             Authorization: `Bearer ${decrypted_token2}`,
           },
@@ -57,7 +57,7 @@ export const useInitial = () => {
         });
       if (loggedInUser.role?.account_type === "regional") {
         axios
-          .get(`api/region_districts/${loggedInUser.region.id}`, {
+          .get(`region_districts/${loggedInUser.region.id}`, {
             headers: {
               Authorization: `Bearer ${decrypted_token2}`,
             },
@@ -68,7 +68,7 @@ export const useInitial = () => {
       }
       if (loggedInUser.role?.account_type === "district") {
         axios
-          .get(`api/districts_wards/${loggedInUser.district?.id}`, {
+          .get(`districts_wards/${loggedInUser.district?.id}`, {
             headers: {
               Authorization: `Bearer ${decrypted_token2}`,
             },
@@ -79,13 +79,13 @@ export const useInitial = () => {
           });
       }
       if(loggedInUser.role?.account_type === "health_worker"){
-        axios.get(`api/hospital_bookings/123705-1`).then((res)=>{
+        axios.get(`hospital_bookings/123705-1`).then((res)=>{
             setBookings(res.data);
         })
       }
 
       axios
-        .get(`api/roles`, {
+        .get(`roles`, {
           headers: {
             Authorization: `Bearer ${decrypted_token2}`,
           },
@@ -112,7 +112,7 @@ export const useInitial = () => {
     const decrypted_token2 = initialToken();
 
     axios
-      .get(`api/all_users/${loggedInUser?.id}`, {
+      .get(`all_users/${loggedInUser?.id}`, {
         headers: {
           Authorization: `Bearer ${decrypted_token2}`,
         },

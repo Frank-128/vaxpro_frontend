@@ -13,7 +13,7 @@ import {
 import VaccinationReg from "@/components/VaccinationReg";
 import VaccinationEdit from "@/components/VaccinationEdit";
 import VaccinationDel from "@/components/VaccinationDel";
-import axios from "../../axios";
+import axios from "../../../axios";
 
 const Vaccinaions = () => {
   const [openEdit, setOpenEdit] = useState(false);
@@ -24,7 +24,7 @@ const Vaccinaions = () => {
   const [childVaccines, setVaccineFetch] = useState([]);
 
   useEffect(() => {
-    axios.get(`/getVaccines`).then((res) => {
+    axios.get(`getVaccines`).then((res) => {
       if (res.data.status === 200) {
         setVaccineFetch(res.data.vaccines);
       }

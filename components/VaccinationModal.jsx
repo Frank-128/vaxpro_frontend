@@ -8,13 +8,13 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import axios from "../app/axios";
+import axios from "../axios";
 
 const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine }) => {
   const [vaccines, setVaccines] = useState([]);
 
   useEffect(() => {
-    axios.get(`/getVaccines`).then((res) => {
+    axios.get(`getVaccines`).then((res) => {
       if (res.data.status == 200) {
         console.log(res.data.vaccines)
         setVaccines(res.data.vaccines)
@@ -25,7 +25,7 @@ const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVa
 
   const submitAddedVaccine = (e) => {
     e.preventDefault();
-    axios.post(`/addChildVaccinnes`, formData).then((res) => {
+    axios.post(`addChildVaccinnes`, formData).then((res) => {
       if (res.data.status === 200) {
         notifyAddVaccine(res.data.vaccine);
 

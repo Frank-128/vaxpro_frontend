@@ -13,7 +13,7 @@ import {
   PopoverContent,
 } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../../axios";
 import globalUser from "@/store/user";
 import globalAddress from "@/store/address";
 import globalAlert from "@/store/alert";
@@ -41,9 +41,9 @@ export default function DefaultStepper() {
 
   const submitForm = (data) => {
             axios.post(
-          "http://localhost:8000/api/facility",{"facility_reg_no":data.facility_reg_no,"facility_name":data.facility_name,"contacts":data.contacts,"ward_id":data.ward_id}
+          "facility",{"facility_reg_no":data.facility_reg_no,"facility_name":data.facility_name,"contacts":data.contacts,"ward_id":data.ward_id}
         ).then((res)=>{
-          axios.post('http://localhost:8000/api/register',{contacts:data.contacts,role_id:10,account_type:"branch_manager",facility_id:res.data.facility.facility_reg_no}, {
+          axios.post('register',{contacts:data.contacts,role_id:10,account_type:"branch_manager",facility_id:res.data.facility.facility_reg_no}, {
             headers: {
               Authorization: `Bearer ${authenticatedToken}`,
             }}).then((res2)=>{

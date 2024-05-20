@@ -9,7 +9,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-import axios from "axios";
+import axios from "../axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(vaccination)/loading";
 
@@ -23,7 +23,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   const logout = () => {
     setLoading(true);
     axios
-      .post(`/api/logout`, null, {
+      .post(`logout`, null, {
         headers: {
           Authorization: `Bearer ${authenticatedToken}`,
         },
