@@ -24,7 +24,9 @@ const Vaccinaions = () => {
   const [childVaccines, setVaccineFetch] = useState([]);
 
   useEffect(() => {
+
     axios.get(`getVaccines`).then((res) => {
+
       if (res.data.status === 200) {
         setVaccineFetch(res.data.vaccines);
       }

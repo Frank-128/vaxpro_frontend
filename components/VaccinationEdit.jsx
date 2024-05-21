@@ -37,7 +37,9 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
   }
 
   useEffect(()=>{
+
     axios.get(`getVaccine/` + vaccineId).then((res)=>{
+
       if(res.data.status === 200){
         console.log(res.data.vaccine);
         setVaccineInputs(res.data.vaccine);
@@ -47,7 +49,9 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
 
   const updateVaccine = (e) =>{
     e.preventDefault();
+
     axios.put(`updateVaccine/` + vaccineId, vaccineInputs).then((res)=>{
+
       if(res.data.status === 200){
         handleCloseEdit()
         notifyEditVaccine(res.data.vaccine)

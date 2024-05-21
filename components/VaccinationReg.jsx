@@ -9,6 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+
 import axios from "../axios";
 
 const VaccinationReg = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine }) => {
@@ -39,7 +40,9 @@ const VaccinationReg = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVacc
     formData.append("admin_via", admin_via);
     formData.append("side_effects", side_effects);
 
+
     axios.post(`createVaccine`, formData).then((res) => {
+
       if (res.data.status === 200) {
         setVaccineName('')
         setVaccineAgainst('')
