@@ -7,14 +7,24 @@ import { useInitial } from "@/constants/functions";
 import { useIdle } from "react-use";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import globalAlert from "@/store/alert";
+import { Alert } from "@material-tailwind/react";
+import { Error, Verified } from "@mui/icons-material";
+import globalAddress from "@/store/address";
 import globalUser from "@/store/user";
+
 
 function Main({ children }) {
   const {initialRequest,getInitialUsers} = useInitial();
   const [openSidebar, setOpenSidebar] = useState(true);
   const isIdle = useIdle(1000*60*60*2)
   const route = useRouter()
-  const loggedInUser = globalUser(state=>state.loggedInUser)
+  const alertObj = globalAlert((state)=>state.alert)
+  const wards = globalAddress((state)=> state.wards)
+  const user = globalUser ((state)=> state.loggedInUser)
+
+  
+  
   
   useEffect(() => {
       
@@ -34,7 +44,7 @@ function Main({ children }) {
     }
   },[isIdle,route])
 
-  // console.log(loggedInUser)
+ 
   return (
     <main>
       <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
@@ -48,6 +58,19 @@ function Main({ children }) {
         {children}
         
       </section>
+      <Alert
+      open={alertObj.visible}
+      icon={alertObj.type == "success" ?<Verified /> : <Error />} 
+      animate={{
+        mount: { y: 0 },
+        unmount: { y: 100 },
+      }}
+      color={alertObj.type =="success"?'green':"red"}
+      className={"rounded-sm  absolute top-1 right-1 z-[90]   w-1/3 font-medium text-white"}
+    >
+      {alertObj.message}
+     
+    </Alert>
     </main>
   );
 }

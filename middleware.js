@@ -1,4 +1,4 @@
-import axios from "axios";
+
 
 import { NextResponse } from "next/server";
 
@@ -9,7 +9,7 @@ export async function middleware(request) {
     return NextResponse.next();
   }
   return NextResponse.redirect(new URL("/signin", request.url));
-  // await axios.get('is_auth')
+
 }
 
 // See "Matching Paths" below to learn more

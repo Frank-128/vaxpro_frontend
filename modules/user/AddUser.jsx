@@ -15,19 +15,13 @@ import { Close } from "@mui/icons-material";
 import React, { useState } from "react";
 import globalUser from "@/store/user";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axios";
 import globalAddress from "@/store/address";
 import globalRoles from "@/store/roles";
 import { useInitial } from "@/constants/functions";
+import globalAlert from "@/store/alert";
 
-const AddUser = ({
-  addUserForm,
-  setAddUserForm,
-  subPathname,
-  responseMessage,
-  setResponseMessage,
-  setShowAlert,
-}) => {
+const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
   // const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [existingUser, setExistingUser] = useState({
@@ -40,6 +34,7 @@ const AddUser = ({
   const roles = globalRoles((state) => state.roles);
   const { initialRequest } = useInitial();
   const districts = globalAddress((state) => state.districts);
+  const setAlert = globalAlert((state) => state.setAlert);
   const wards = globalAddress((state) => state.wards);
 
   const {
@@ -70,44 +65,52 @@ const AddUser = ({
         ...data2,
         district_id: loggedInUser.district_id,
       };
+    }else if(loggedInUser.role.account_type === "branch_manager") {
+      data2 = {
+        ...data2, facility_id:loggedInUser.facility_id
+      }
+         
+    }
+
+    else if (loggedInUser.role.account_type === "branch_manager") {
+      data2 = {
+        ...data2,
+        facility_id: loggedInUser.facility_id,
+      };
     }
 
     console.log(data2, "the data to be submitted");
     try {
       axios
-        .post(`/api/register`, data2, {
+        .post(`register`, data2, {
           headers: {
             Authorization: `Bearer ${authenticatedToken}`,
           },
         })
-        .then(async (res) => {
+        .then((res) => {
           console.log(res.data, "datasssss");
           initialRequest();
           setLoading(false);
           if (res.data.status === 200) {
-            setResponseMessage({
-              responseMessage: res.data.message,
-              success: true,
+            setAlert({
+              visible: true,
+              message: res.data.message,
+              type: "success",
             });
-            setShowAlert(true);
             handleClose();
           } else if (res.data.status === 401) {
-            setResponseMessage({
-              responseMessage: res.data.message,
-              success: false,
+            setAlert({
+              visible: true,
+              message: "Unauthenticated please log in",
+              type: "error",
             });
-            setShowAlert(true);
           } else if (res.data.status == 409) {
             setExistingUser({ message: res.data.message, error: true });
           }
         });
     } catch (err) {
       setLoading(false);
-      setResponseMessage({
-        responseMessage: "Unknown error occured",
-        success: false,
-      });
-      setShowAlert(true);
+      setAlert({ visible: true, message: err.data.message, type: "error" });
     }
     setLoading(false);
   };
@@ -179,15 +182,28 @@ const AddUser = ({
 
                         */
                         if (
-                          loggedInUser.role.account_type !== "district"
-                            ? account_type === subPathname &&
-                              loggedInUser.role.account_type === subPathname
-                            : account_type === subPathname
+                          // loggedInUser.role.account_type !== "district"
+                          // ?
+                          account_type === subPathname &&
+                          loggedInUser.role.account_type === subPathname
+                          // :
+                          // account_type === subPathname
                         ) {
                           return loggedInUser.role?.role !== role;
                         } else if (
                           account_type === subPathname &&
                           loggedInUser.role.role === role
+                        ) {
+                          console.log("entered here so wasup");
+                          return true;
+                        } else if (
+                          account_type === "community_health_worker" &&
+                          subPathname === "community_health_worker"
+                        ) {
+                          return true;
+                        } else if (
+                          account_type == "health_worker" &&
+                          subPathname === "health_worker"
                         ) {
                           return true;
                         }
@@ -345,6 +361,50 @@ const AddUser = ({
                 </div>
               )}
             />
+          )}
+
+{loggedInUser.role.account_type === "branch_manager" && (
+            <>
+            <div className="font-monte-1">
+            <Input
+              className="text-black font-monte-1"
+              size="lg"
+              label="Staff Id"
+              {...register("staff_id", { required: true })}
+            />
+            {errors.staff_id && (
+              <p className="text-red-900 text-xs font-monte">
+                This field is required
+              </p>
+            )}
+          </div>
+          <div className="font-monte-1">
+            <Input
+              className="text-black font-monte-1"
+              size="lg"
+              label="First Name"
+              {...register("first_name", { required: true })}
+            />
+            {errors.first_name && (
+              <p className="text-red-900 text-xs font-monte">
+                This field is required
+              </p>
+            )}
+          </div>
+          <div className="font-monte-1">
+            <Input
+              className="text-black font-monte-1"
+              size="lg"
+              label="Last Name"
+              {...register("last_name", { required: true })}
+            />
+            {errors.last_name && (
+              <p className="text-red-900 text-xs font-monte">
+                This field is required
+              </p>
+            )}
+          </div>
+            </>
           )}
           <div className="font-monte-1">
             <Input

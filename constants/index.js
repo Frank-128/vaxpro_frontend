@@ -1,7 +1,6 @@
 
 import {
-  ArrowDownward,
-  ArrowDropDown,
+  
   Book,
   ChildCare,
   HealthAndSafety,
@@ -11,7 +10,10 @@ import {
   Note,
   Person,
   Report,
+
 } from "@mui/icons-material";
+
+
 
 
 export const navlinks = [
@@ -53,11 +55,11 @@ export const navlinks = [
         account_type: ["regional", "district"],
       },
       {
-        name: "branch admin",
-        link: "/user_management/branch_admin",
+        name: "health worker",
+        link: "/user_management/health_worker",
         icon: <HealthAndSafety />,
         role: [""],
-        account_type: ["district"],
+        account_type: ["branch_manager"],
       },
       {
         name: "community health worker",
@@ -79,33 +81,31 @@ export const navlinks = [
     name: "Vaccination",
     link: "/vaccination",
     icon: <Medication />,
-    role: [""],
+    role: ["IT admin"],
     account_type: ["ministry"],
   }
 ,
     {
-        name:'OverallDash',
-        link:'/overalldash',
-        icon:<Medication/>
-        
-    },
-    {
         name:'Children',
         link:'/children',
-        icon:<ChildCare/>
+        icon:<ChildCare/>,
+        role: ["Nurse"],
+    account_type: ["health_worker"],
         
     },
     {
         name:'ChildDetails',
         link:'/childdetails',
-        icon:<ChildCare/>
+        icon:<ChildCare/>,
+        role: ["Nurse"],
+    account_type: ["health_worker"],
         
     },
   {
     name: "Bookings",
-    link: "/bookings",
+    link: "/booking",
     icon: <Book />,
-    role: ["5000-1-1"],
+    role: ["Nurse"],
     account_type: ["health_worker"],
   },
   {

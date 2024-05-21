@@ -22,7 +22,9 @@ const VaccinationDel = ({
   const handleDeleteVaccine = (e, id) => {
     e.preventDefault();
 
-    axios.delete(`/api/deleteVaccine/` + id).then((res) => {
+
+    axios.delete(`deleteVaccine/` + id).then((res) => {
+
       if (res.data.status === 200) {
         console.log(res.data.message);
         handleCloseDelete();

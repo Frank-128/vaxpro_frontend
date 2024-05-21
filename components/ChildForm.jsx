@@ -16,7 +16,9 @@ const ChildRegistrationForm = ({ register }) => {
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
     if (searchQuery) {
-      axios.get(`/api/wards?searchQuery=${searchQuery}`).then((res) => {
+
+      axios.get(`wards?searchQuery=${searchQuery}`).then((res) => {
+
         if (res.status === 200) {
           setWards(res.data);
         }
@@ -27,7 +29,9 @@ const ChildRegistrationForm = ({ register }) => {
   const handleCardNoChange = (cardNo) => {
     setCardNoInput(cardNo);
     if (cardNo) {
-      axios.get(`/api/children?cardNo=${cardNo}`).then((res) => {
+
+      axios.get(`children?cardNo=${cardNo}`).then((res) => {
+
         if (res.status === 200) {
           setChildren(res.data);
           

@@ -29,7 +29,7 @@ const Login = () => {
 
   const login = async (data) => {
     setLoading({ loading: true });
-    await axios.post(`/api/login`, data).then(async (res) => {
+    await axios.post(`login`, data).then(async (res) => {
       if (res.data.status === 200) {
         const encryptionKey = "vaxpro_tanzania";
 
@@ -41,7 +41,7 @@ const Login = () => {
         Cookies.set("USER_TOKEN", encryptedData);
         setAuthenticatedToken(res.data.token);
         await axios
-          .get(`/api/user`, {
+          .get(`user`, {
             headers: {
               Authorization: `Bearer ${res.data.token}`,
             },
@@ -58,12 +58,12 @@ const Login = () => {
   };
 
   return (
-    <main className="h-screen w-screen flex flex-col gap-6 pt-60 items-center">
-      <span className="font-monte-1 text-xl md:text-3xl">Vaccination</span>
+    <main className="h-screen w-screen flex flex-col bg-blue-gray-100 gap-6 pt-60 items-center">
       <form
         onSubmit={handleSubmit(login)}
-        className="md:w-[30%] w-[80%] flex flex-col gap-3"
+        className="md:w-[30%] w-[80%] bg-white flex flex-col gap-3 shadow rounded-md border-black border-[0.2px] px-4 py-3"
       >
+      <span className="font-monte-1 text-xl md:text-3xl text-center">VaxPro</span>
         {loading.error && (
           <p
             className="text-red-800 bg-gradient-to-r from-red-100 text-xs

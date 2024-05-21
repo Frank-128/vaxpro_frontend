@@ -10,11 +10,18 @@ import {
 } from "@material-tailwind/react";
 import axios from "../../../axios";
 import { useForm } from "react-hook-form";
+import globalUser from "@/store/user";
 import { useRouter } from "next/navigation";
+
+ 
+
+
 
 const Children = () => {
   const { register, handleSubmit, setValue } = useForm();
-  const router = useRouter();
+  const loggedInUser = globalUser(state=>state.loggedInUser)
+   const router = useRouter();
+
   const data = [
     {
       label: "Child",
@@ -29,16 +36,22 @@ const Children = () => {
   ];  
 
   const submitFunction = (data) => {
-    axios.post(`/api/parentChildData`, data).then((res)=>{
+
+    
+    
+    axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
       if(res.data.status == 200){
-        console.log(res.data.cardNo)
+        console.log(res.data)
         router.push(`/childdetails?cardNo=${res.data.cardNo}`)
+
       }else{
         console.log(res.data.message)
       }
     })
     
   };
+
+  console.log(loggedInUser)
 
   return (
     <Tabs className="mt-5" value="child">

@@ -40,7 +40,9 @@ const VaccinationReg = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVacc
     formData.append("admin_via", admin_via);
     formData.append("side_effects", side_effects);
 
-    axios.post(`/api/createVaccine`, formData).then((res) => {
+
+    axios.post(`createVaccine`, formData).then((res) => {
+
       if (res.data.status === 200) {
         setVaccineName('')
         setVaccineAgainst('')
