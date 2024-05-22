@@ -10,23 +10,27 @@ import {
 } from "@mui/material";
 import axios from "../axios";
 
-const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine, birthDate, cardNo }) => {
+const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine, birthDate, cardNo, onVacSchedsChange }) => {
   const [vaccines, setVaccines] = useState([]);
   const [selectedVaccines, setSelectedVaccines] = useState([]);
+  const [vacscheds, setVacScheds] = useState();
   
 
   useEffect(() => {
 
     axios.get(`getVaccines`).then((res) => {
-n
       if (res.data.status == 200) {
         console.log(res.data.vaccines)
         setVaccines(res.data.vaccines)
       }
     })
 
+    if (onVacSchedsChange) {
+      onVacSchedsChange(vacscheds);
+    }
+
    
-  },[])
+  },[onVacSchedsChange, vacscheds])
 
 
   const handleCheckboxChange = (event) => {
@@ -40,10 +44,11 @@ n
   const submitAddedVaccine = (e) => {
     e.preventDefault();
 
-    axios.post(`addChildVaccinnes`, formData).then((res) => {
+    axios.post(`addNewChildVaccinnes`, {vaccines:selectedVaccines, date:birthDate, card_no:cardNo }).then((res) => {
 
       if (res.data.status === 200) {
         console.log(res.data.vaccineSchedule);
+        setVacScheds(res.data.vacItems);
         // notifyAddVaccine(res.data.vaccine);
       }
     });
@@ -65,7 +70,7 @@ n
           <form onSubmit={submitAddedVaccine}>
             {vaccines.map((vaccine, index) => {
               return (
-                <div key={vaccine.id} className="flex flex-col">
+                <div key={index} className="flex flex-col">
                 <Checkbox label={vaccine.name} value={vaccine.id}  onChange={handleCheckboxChange} />
               </div>
               )

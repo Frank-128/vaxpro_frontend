@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import VaccinationModal from "@/components/VaccinationModal";
+import DateCalendarComp from "@/components/DateCalendar";
 
 
 
@@ -125,9 +126,12 @@ export default function TeamSection12() {
   const [childData, setChildData] = useState([]);
   const searchParams = useSearchParams();
   const card_no = searchParams.get('cardNo');
+  const birth_date = searchParams.get('birth_date');
   const [openAddVaccine, setOpenAddVaccine] = useState(false);
+  const [open_date_viewer, setOpenDateViewer] = useState(false);
   const [vacShdls, setVacScheds] = useState([]);
-  
+  const [scheds, setScheds] = useState([]);
+  const [allVaccines, setAllVaccines] = useState([]);
 
 
 
@@ -135,23 +139,43 @@ export default function TeamSection12() {
     setOpenAddVaccine(false);
   };
 
+
+  const handleClickCloseDateViewer = () => {
+    setOpenDateViewer(false);
+  };
+
+  const handleClickOpenDateViewer = () => {
+    axios.get(`/fetchVaccineIds`).then((res)=>{
+      
+      setAllVaccines(res.data.vaccineIds);
+      console.log(res.data.vaccineIds);
+
+      axios.get(`/getAllChildSchedules`, {vaccines:allVaccines, date:birth_date }).then((res)=>{
+        setScheds(scheds);
+      })
+    })
+    
+    setOpenDateViewer(true);
+  };
+
   const notifyAddVaccine = (newVaccine) => {
     setVaccineFetch([...childVaccines, newVaccine]);
   };
 
   const handleClickOpenAddVacc = () => {
+    
     setOpenAddVaccine(true);
   };
 
   useEffect(() => {
-    axios.get(`/api/getChildData/${card_no}`).then((res) => {
+    axios.get(`/getChildData/${card_no}`).then((res) => {
       if (res.status === 200) {
         console.log(res.data)
         setChildData(res.data)
       }
     })
 
-    axios.get(`/api/getVacSchedules/${card_no}`).then((res) => {
+    axios.get(`/getVacSchedules/${card_no}`).then((res) => {
       if (res.data.status == 200) {
         console.log(res.data.vacScheds);
         setVacScheds(res.data.vacScheds);
@@ -160,12 +184,17 @@ export default function TeamSection12() {
   }, [card_no])
 
   const handleVacSchedUpdate = ($vac_id, $date_of_birth) => {
-    axios.post(`/api/updateChildVacSchedule`, { child_id: card_no, vac_id: $vac_id, curr_date: $date_of_birth }).then((res) => {
+    axios.post(`updateChildVacSchedule`, { child_id: card_no, vac_id: $vac_id, curr_date: $date_of_birth }).then((res) => {
       if (res.data.status == 200) {
         console.log(res.data)
       }
     })
   }
+
+  const handleVacScheds = (vacscheds) => {
+    setScheds(vacscheds);
+
+  };
 
 
   return (
@@ -207,86 +236,19 @@ export default function TeamSection12() {
 
 
         <div className="!text-2xl font-bold mt-8 lg:!text-2xl self-center flex mb-1 ml-6">
-          Vaccination Schedules:
+          <div>Vaccination Schedules:</div>
+        </div>
+        <button onClick={handleClickOpenDateViewer} className="bg-[#212B36] text-white rounded-md p-2 ml-6">Click to View Schedule</button>
+        <div>
+          <DateCalendarComp handleClickCloseDateViewer={handleClickCloseDateViewer} openDateViewer={open_date_viewer} />
         </div>
 
 
-
         <div className="flex gap-8 ">
-          {vacShdls.map((vaccine, index) => (
-            <div className="" key={index}>
-              <Card className="rounded-lg shadow-lg bg-[#ffffff]" shadow={true}>
-                <CardBody className="text-left flex flex-col gap-3">
-                  <div>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black font-bold lg:text-xl"
-                    >
-                      Vaccine:
-                    </Typography>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black lg:text-xl"
-                    >
-                      {vaccine.vacName}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black font-bold lg:text-xl"
-                    >
-                      Last Vaccination:
-                    </Typography>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black lg:text-xl"
-                    >
-                      {vaccine.vaccination_date}
-                    </Typography>
-                  </div>
-
-
-                  <div>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black font-bold lg:text-xl"
-                    >
-                      Next Vaccination:
-                    </Typography>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black lg:text-xl" t
-                    >
-                      {vaccine.next_vaccination_date}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black font-bold lg:text-xl"
-                    >
-                      Frequency:
-                    </Typography>
-                    <Typography
-                      color="blue-gray"
-                      className="text-black lg:text-xl" t
-                    >
-                      {vaccine.frequency}
-                    </Typography>
-                  </div>
-                  {childData.map((child, index) => (
-                    <div key={index}>
-                      <button onClick={() => handleVacSchedUpdate(vaccine.child_vaccination_id, child.date_of_birth)}>Go to next</button>
-                    </div>
-                  ))}
-
-
-                </CardBody>
-              </Card>
-            </div>
-
+        {vacShdls && vacShdls.map((sched, index) => (
+           <div key={index}>
+            <div></div>
+           </div>
           ))}
         </div>
 
@@ -296,6 +258,7 @@ export default function TeamSection12() {
       {childData.map((child, index) => (
         <div key={index}>
           <VaccinationModal
+            onVacSchedsChange={handleVacScheds}
             cardNo={child.card_no}
             birthDate={child.date_of_birth}
             openAddVaccine={openAddVaccine}

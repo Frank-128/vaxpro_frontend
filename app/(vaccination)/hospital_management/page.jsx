@@ -34,7 +34,7 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
     const [facilities,setFacilities] = useState(null)
     const [showAlert,setShowAlert] = useState({status:false,type:"",message:""})
     const [interval,setInterval] = useState(0)
-    const loggedInUser = globalUser(state=>loggedInUser)
+    const loggedInUser = globalUser(state=>state.loggedInUser)
     const filteredArray = facilities?.filter((item)=>item.facility_name.toLowerCase().replace(/\s/g, "").includes(searchTerm.toLowerCase()) || searchTerm == "" )
 
     useEffect(()=>{

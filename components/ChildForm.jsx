@@ -29,16 +29,9 @@ const ChildRegistrationForm = ({ register }) => {
   const handleCardNoChange = (cardNo) => {
     setCardNoInput(cardNo);
     if (cardNo) {
-
       axios.get(`children?cardNo=${cardNo}`).then((res) => {
-
         if (res.status === 200) {
           setChildren(res.data);
-          
-
-
-       
-
         }
       });
     }
@@ -70,7 +63,7 @@ const ChildRegistrationForm = ({ register }) => {
            <Link
            href={{
              pathname: '/childdetails',
-             query: { cardNo: selectedCard.card_no },
+             query: { cardNo: selectedCard.card_no, birth_date: selectedCard.birth_date },
            }}
          >
            Go to Child
