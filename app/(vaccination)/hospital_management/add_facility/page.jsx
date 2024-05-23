@@ -13,7 +13,7 @@ import {
   PopoverContent,
 } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
-import axios from "../../../axios";
+import axios from "../../../../axios";
 import globalUser from "@/store/user";
 import globalAddress from "@/store/address";
 import globalAlert from "@/store/alert";
