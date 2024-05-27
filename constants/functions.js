@@ -8,8 +8,6 @@ import CryptoJS from "crypto-js";
 import { useCallback } from "react";
 import globalBookings from "@/store/bookings";
 
-
-
 export const useInitial = () => {
   const setLoggedInUser = globalUser((state) => state.setLoggedInUser);
   const setAuthenticatedToken = globalUser(
@@ -21,11 +19,10 @@ export const useInitial = () => {
   const setDistricts = globalAddress((state) => state.setDistricts);
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const setWards = globalAddress((state) => state.setWards);
-  const setBookings = globalBookings((state)=>state.setBookings);
+  const setBookings = globalBookings((state) => state.setBookings);
 
   const initialToken = () => {
     const user_token = Cookies.get("USER_TOKEN");
-
     const decrypted_token = CryptoJS.AES.decrypt(user_token, "vaxpro_tanzania");
     const decrypted_token2 = decrypted_token.toString(CryptoJS.enc.Utf8);
     return decrypted_token2;
@@ -75,13 +72,13 @@ export const useInitial = () => {
           })
           .then((res) => {
             setWards(res.data);
-            console.log(res.data, "RESPONSE DATA")
+            console.log(res.data, "RESPONSE DATA");
           });
       }
-      if(loggedInUser.role?.account_type === "health_worker"){
-        axios.get(`hospital_bookings/123705-1`).then((res)=>{
-            setBookings(res.data);
-        })
+      if (loggedInUser.role?.account_type === "health_worker") {
+        axios.get(`hospital_bookings/123705-1`).then((res) => {
+          setBookings(res.data);
+        });
       }
 
       axios
@@ -128,3 +125,18 @@ export const useInitial = () => {
   return { initialRequest, getInitialUsers };
 };
 
+export const verifyToken = async (token) => {
+  try {
+    const response = await fetch("http://localhost:8000/api/user", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    // const data = await response.json();
+    return response.status;
+  } catch (err) {
+    return err;
+  }
+};

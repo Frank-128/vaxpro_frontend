@@ -20,13 +20,13 @@ const Login = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const route = useRouter();
+  const router = useRouter();
   const [loading, setLoading] = React.useState({ loading: false, error: "" });
   const setLoggedInUser = globalUser((state) => state.setLoggedInUser);
   const setAuthenticatedToken = globalUser(
     (state) => state.setAuthenticatedToken
   );
-
+  
   const login = async (data) => {
     setLoading({ loading: true });
     await axios.post(`login`, data).then(async (res) => {
@@ -49,7 +49,7 @@ const Login = () => {
           .then((res) => {
             setLoggedInUser(res.data[0]);
             setLoading({ loading: false });
-            route.push("/");
+            router.push("/");
           });
       } else {
         setLoading({ loading: false, error: "Wrong Credentials" });
