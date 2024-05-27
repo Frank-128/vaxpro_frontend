@@ -1,4 +1,5 @@
 "use client";
+import axios from '../axios'
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
@@ -18,11 +19,9 @@ function Main({ children }) {
   const {initialRequest,getInitialUsers} = useInitial();
   const [openSidebar, setOpenSidebar] = useState(true);
   const isIdle = useIdle(1000*60*60*2)
-  const route = useRouter()
+  const router = useRouter()
   const alertObj = globalAlert((state)=>state.alert)
-  const wards = globalAddress((state)=> state.wards)
-  const user = globalUser ((state)=> state.loggedInUser)
-
+  const authenticatedToken = globalUser((state) => state.authenticatedToken);
   
   
   
@@ -40,9 +39,21 @@ function Main({ children }) {
   useEffect(()=>{
     if(isIdle){
       Cookies.remove('USER_TOKEN')
-      route.push('/signin')
-    }
-  },[isIdle,route])
+      axios
+      .post(`logout`, null, {
+        headers: {
+          Authorization: `Bearer ${authenticatedToken}`,
+        },
+      })
+      .then((res) => {
+        
+        return router.push("/signin");
+        
+
+     
+    })}
+   
+  },[isIdle,router])
 
  
   return (

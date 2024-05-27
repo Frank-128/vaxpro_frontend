@@ -14,6 +14,7 @@ export const useInitial = () => {
     (state) => state.setAuthenticatedToken
   );
   const setAllUsers = globalAllUsers((state) => state.setAllUsers);
+  const setChildren = globalAllUsers((state) => state.setAllChildren);
   const setRegions = globalAddress((state) => state.setRegions);
   const setRoles = globalRoles((state) => state.setRoles);
   const setDistricts = globalAddress((state) => state.setDistricts);
@@ -75,10 +76,12 @@ export const useInitial = () => {
             console.log(res.data, "RESPONSE DATA");
           });
       }
-      if (loggedInUser.role?.account_type === "health_worker") {
-        axios.get(`hospital_bookings/123705-1`).then((res) => {
-          setBookings(res.data);
-        });
+
+      if(loggedInUser.role?.account_type === "health_worker"){
+        axios.get(`hospital_bookings/${loggedInUser?.facility_id}`).then((res)=>{
+            setBookings(res.data);
+        })
+
       }
 
       axios

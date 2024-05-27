@@ -5,7 +5,7 @@ import {
   LockOutlined,
   LockOpenOutlined,
 } from "@mui/icons-material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "../../../axios";
 import { useRouter } from "next/navigation";
@@ -48,14 +48,21 @@ const Login = () => {
           })
           .then((res) => {
             setLoggedInUser(res.data[0]);
-            setLoading({ loading: false });
-            router.push("/");
+            route.push("/");
+
           });
       } else {
         setLoading({ loading: false, error: "Wrong Credentials" });
       }
     });
   };
+
+  useEffect(()=>{
+
+    return ()=>{
+      setLoading({ loading: false })
+    }
+  },[])
 
   return (
     <main className="h-screen w-screen flex flex-col bg-blue-gray-100 gap-6 pt-60 items-center">
@@ -73,7 +80,7 @@ const Login = () => {
           </p>
         )}
         <Input
-          label="Role"
+          label="Profile Id"
           icon={<PermIdentityOutlined />}
           {...register("uid", {
             required: true,
