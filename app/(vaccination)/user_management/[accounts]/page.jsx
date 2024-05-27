@@ -1,7 +1,7 @@
 "use client";
 
 import AddUser from "@/modules/user/AddUser";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Button,
@@ -38,6 +38,8 @@ import globalUser from "@/store/user";
 import { useInitial } from "@/constants/functions";
 import { useForm } from "react-hook-form";
 import globalAlert from "@/store/alert";
+import clsx from "clsx";
+import { document } from "postcss";
 
 function UserManagement() {
   const { getInitialUsers } = useInitial();
@@ -53,19 +55,26 @@ function UserManagement() {
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const setAlert = globalAlert((state) => state.setAlert);
+  const [isFocused, setIsFocused] = useState();
+
+  const formRef = useRef(null);
 
   const [TABLE_HEAD3, setTABLE_HEAD3] = useState([]);
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    getValues,
+    setError,
+    clearErrors,
+    formState: { errors, isLoading },
   } = useForm();
 
   const [responseMessage, setResponseMessage] = useState({
     responseMessage: "",
     success: true,
   });
+
 
   useEffect(() => {
     pathname.split("/");
@@ -117,7 +126,6 @@ function UserManagement() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setAlert({
           visible: true,
           message: "user deleted successfully",
@@ -130,21 +138,12 @@ function UserManagement() {
       });
   };
 
-  const handleUpdateChange = (e) => {
-    const value = e.target.value;
-
-    setSelectedRow({
-      ...selectedRow,
-      contacts: e.target.value,
-    });
-  };
-
-  const submitUpdatedData = () => {
+  const submitUpdatedData = (data) => {
     axios
       .patch(
         `update_user/${selectedRow.id}`,
         {
-          contacts: selectedRow.contacts,
+          contacts: "+255" + data.contacts,
         },
         {
           headers: {
@@ -154,15 +153,33 @@ function UserManagement() {
       )
       .then((res) => {
         getInitialUsers();
-        console.log(res.data);
+
         setSelectedRow({
           ...selectedRow,
           id: "",
           action: "",
           contacts: "",
         });
+        setAlert({ visible: true, message: res.data.message, type: "success" });
+
+      })
+      .catch((err) => {
+        // setLoading(false);
+        if (
+          err?.response?.status == 400 &&
+          err?.response?.data.error == "contacts"
+        ) {
+          setError("contacts", {
+            type: err.status,
+            message: err.response.data.message,
+          });
+        } else {
+          // handleClose();
+          setAlert({ visible: true, message: err.message, type: "error" });
+        }
       });
   };
+
   return (
     <main>
       <div>
@@ -213,7 +230,6 @@ function UserManagement() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-end gap-4 md:flex-row">
-             
               <div className="w-full md:w-72">
                 <Input
                   className="font-monte"
@@ -266,7 +282,7 @@ function UserManagement() {
                     return true;
                   }
                 }).map(
-                  ({ id, role, contacts, ward, region, district }, index) => {
+                  ({ id, role, contacts, ward, region, district }) => {
                     return (
                       <Fragment key={id}>
                         <tr className="border-b capitalize px-8 border-black">
@@ -303,11 +319,16 @@ function UserManagement() {
                               <IconButton
                                 variant="text"
                                 onClick={() => {
+                                  clearErrors("contacts");
                                   setSelectedRow({
                                     id: id,
                                     action: "update",
                                     contacts: contacts,
                                   });
+                                  setValue(
+                                    "contacts",
+                                    contacts.split("+255")[1]
+                                  );
                                 }}
                               >
                                 <Edit />
@@ -347,18 +368,80 @@ function UserManagement() {
                               rounded-xl flex justify-evenly items-center absolute left-0 z-50"
                             >
                               <td className="border-transparent">
-                                <Input
-                                  className="bg-gray-400 border border-transparent outline-none focus:outline-none "
-                                  value={selectedRow?.contacts}
-                                  onChange={handleUpdateChange}
-                                />
+                                <form
+                                  ref={formRef}
+                                  className=""
+                                  onSubmit={handleSubmit(submitUpdatedData)}
+                                >
+                                  <div className="flex font-monte-1 relative">
+                                    <span
+                                      className={clsx(
+                                        " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300",
+                                        {
+                                          "border-r-2 border-black": isFocused,
+                                          "border-r border-gray-500":
+                                            !isFocused,
+                                        }
+                                      )}
+                                    >
+                                      +255
+                                    </span>
+
+                                    <Input
+                                      labelProps={{
+                                        className:
+                                          "before:content-none after:content-none",
+                                      }}
+                                      onFocus={() => setIsFocused(true)}
+                                      autoComplete="off"
+                                      className="text-black font-monte-1 pl-16 border focus:border-2 rounded-l-none !border-t-blue-gray-200 focus:!border-t-gray-900"
+                                      size="lg"
+                                      placeholder="Contacts"
+                                      {...register("contacts", {
+                                        onBlur: () => setIsFocused(false),
+                                        required: "This field is required",
+                                        maxLength: {
+                                          value: 9,
+                                          message:
+                                            "Phone number should be exactly 9 digits",
+                                        },
+                                        minLength: {
+                                          value: 9,
+                                          message:
+                                            "Phone number should be exactly 9 digits",
+                                        },
+                                        pattern: {
+                                          value: /^[67][12345789][0-9]+$/,
+                                          message: "Please enter valid number",
+                                        },
+                                      })}
+                                      defaultValue={getValues("contacts")}
+                                      onChange={(e) => {
+                                        // console.log(errors)
+                                        setValue("contacts", e.target.value, {shouldValidate:true})
+                                        
+                                      }}
+                                    />
+                                  </div>
+                                  {errors.contacts && (
+                                    <p className="text-red-900 text-xs font-monte">
+                                      {errors.contacts.message}
+                                    </p>
+                                  )}
+                                </form>
                               </td>
 
                               <td className="flex ">
                                 <Button
-                                  className="py-2 px-12 bg-black font-monte-1"
-                                  onClick={() => {
-                                    submitUpdatedData();
+                                  className="py-2 px-12 bg-black font-monte-1 "
+                                  onClick={(e) => {
+                                    if (formRef.current) {
+                                      const event = new Event("submit", {
+                                        cancelable: true,
+                                        bubbles: true,
+                                      });
+                                      formRef.current.dispatchEvent(event);
+                                    }
                                   }}
                                 >
                                   edit
@@ -372,6 +455,7 @@ function UserManagement() {
                                     action: "",
                                     contacts: "",
                                   });
+                                 
                                 }}
                                 className="text-black hover:border hover:bg-gray-300 hover:rounded-xl hover:p-1 hover:cursor-pointer"
                               >

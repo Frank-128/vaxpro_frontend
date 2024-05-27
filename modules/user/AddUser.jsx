@@ -8,7 +8,6 @@ import {
   Option,
   DialogFooter,
   Button,
-  Alert,
   Typography,
 } from "@material-tailwind/react";
 import { Close } from "@mui/icons-material";
@@ -20,9 +19,9 @@ import globalAddress from "@/store/address";
 import globalRoles from "@/store/roles";
 import { useInitial } from "@/constants/functions";
 import globalAlert from "@/store/alert";
+import clsx from "clsx";
 
 const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
-  // const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [existingUser, setExistingUser] = useState({
     error: false,
@@ -36,12 +35,13 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
   const districts = globalAddress((state) => state.districts);
   const setAlert = globalAlert((state) => state.setAlert);
   const wards = globalAddress((state) => state.wards);
+  const [isFocused, setIsFocused] = useState(false);
 
   const {
     register,
     handleSubmit,
-    watch,
     control,
+    setError,
     formState: { errors },
   } = useForm();
 
@@ -54,7 +54,12 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
     setLoading(true);
     var data2 = [];
 
-    data2 = { ...data, account_type: subPathname };
+    data2 = {
+      ...data,
+      account_type: subPathname,
+      contacts: "+255" + data.contacts,
+    };
+
     if (loggedInUser.role.account_type === "regional") {
       data2 = {
         ...data2,
@@ -65,22 +70,20 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
         ...data2,
         district_id: loggedInUser.district_id,
       };
-    }else if(loggedInUser.role.account_type === "branch_manager") {
+    } else if (loggedInUser.role.account_type === "branch_manager") {
       data2 = {
-        ...data2, facility_id:loggedInUser.facility_id
-      }
-         
-    }
-
-    else if (loggedInUser.role.account_type === "branch_manager") {
+        ...data2,
+        facility_id: loggedInUser.facility_id,
+      };
+    } else if (loggedInUser.role.account_type === "branch_manager") {
       data2 = {
         ...data2,
         facility_id: loggedInUser.facility_id,
       };
     }
 
-    console.log(data2, "the data to be submitted");
-    try {
+    // console.log(data2, "the data to be submitted");
+   
       axios
         .post(`register`, data2, {
           headers: {
@@ -107,13 +110,24 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
           } else if (res.data.status == 409) {
             setExistingUser({ message: res.data.message, error: true });
           }
-        });
-    } catch (err) {
-      setLoading(false);
-      setAlert({ visible: true, message: err.data.message, type: "error" });
+        }).catch((err)=>{
+          
+          setLoading(false);
+          console.log(err)
+          if(err?.response?.status == 400 && err?.response?.data.error == "contacts"){
+            setError('contacts',{type:err.status,message:err.response.data.message});
+          }
+          else{
+            handleClose();
+            setAlert({ visible: true, message: err.message, type: "error" });
+          }
+        }
+       
+        );
     }
-    setLoading(false);
-  };
+
+ 
+console.log(errors)
   return (
     <Dialog
       className={`font-monte`}
@@ -127,8 +141,8 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
     >
       <form onSubmit={handleSubmit(registerUser)}>
         <DialogHeader className="flex justify-between items-center">
-          <Typography className="text-black text-3xl font-monte-1">
-            Add User
+          <Typography className="text-black text-2xl font-bold">
+            Create New Account
           </Typography>
           <Close fontSize="large" onClick={() => handleClose()} />
         </DialogHeader>
@@ -363,59 +377,93 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
             />
           )}
 
-{loggedInUser.role.account_type === "branch_manager" && (
+          {loggedInUser.role.account_type === "branch_manager" && (
             <>
-            <div className="font-monte-1">
-            <Input
-              className="text-black font-monte-1"
-              size="lg"
-              label="Staff Id"
-              {...register("staff_id", { required: true })}
-            />
-            {errors.staff_id && (
-              <p className="text-red-900 text-xs font-monte">
-                This field is required
-              </p>
-            )}
-          </div>
-          <div className="font-monte-1">
-            <Input
-              className="text-black font-monte-1"
-              size="lg"
-              label="First Name"
-              {...register("first_name", { required: true })}
-            />
-            {errors.first_name && (
-              <p className="text-red-900 text-xs font-monte">
-                This field is required
-              </p>
-            )}
-          </div>
-          <div className="font-monte-1">
-            <Input
-              className="text-black font-monte-1"
-              size="lg"
-              label="Last Name"
-              {...register("last_name", { required: true })}
-            />
-            {errors.last_name && (
-              <p className="text-red-900 text-xs font-monte">
-                This field is required
-              </p>
-            )}
-          </div>
+              <div className="font-monte-1">
+                <Input
+                  className="text-black font-monte-1"
+                  size="lg"
+                  label="Staff Id"
+                  {...register("staff_id", { required: true })}
+                />
+                {errors.staff_id && (
+                  <p className="text-red-900 text-xs font-monte">
+                    This field is required
+                  </p>
+                )}
+              </div>
+              <div className="font-monte-1">
+                <Input
+                  className="text-black font-monte-1"
+                  size="lg"
+                  label="First Name"
+                  {...register("first_name", { required: true })}
+                />
+                {errors.first_name && (
+                  <p className="text-red-900 text-xs font-monte">
+                    This field is required
+                  </p>
+                )}
+              </div>
+              <div className="font-monte-1">
+                <Input
+                  className="text-black font-monte-1"
+                  size="lg"
+                  label="Last Name"
+                  {...register("last_name", { required: true })}
+                />
+                {errors.last_name && (
+                  <p className="text-red-900 text-xs font-monte">
+                    This field is required
+                  </p>
+                )}
+              </div>
             </>
           )}
-          <div className="font-monte-1">
-            <Input
-              className="text-black font-monte-1"
-              size="lg"
-              label="Contacts"
-              {...register("contacts", { required: true })}
-            />
+          <div className="">
+            <div className="flex font-monte-1 relative">
+              <span
+                className={clsx(
+                  " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300",
+                  {
+                    "border-r-2 border-black": isFocused,
+                    "border-r border-gray-500": !isFocused,
+                  }
+                )}
+              >
+                +255
+              </span>
+
+              <Input
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                onFocus={() => setIsFocused(true)}
+                autoComplete="off"
+                className="text-black font-monte-1 pl-16 border focus:border-2 rounded-l-none !border-t-blue-gray-200 focus:!border-t-gray-900"
+                size="lg"
+                placeholder="Contacts"
+                {...register("contacts", {
+                  onBlur: ()=>setIsFocused(false),
+                  required: "This field is required",
+                  maxLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  minLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  pattern: {
+                    value: /^[67][12345789][0-9]+$/,
+                    message: "Please enter valid number",
+                  },
+                })}
+              />
+            </div>
             {errors.contacts && (
               <p className="text-red-900 text-xs font-monte">
-                This field is required
+                {errors.contacts.message}
               </p>
             )}
           </div>
