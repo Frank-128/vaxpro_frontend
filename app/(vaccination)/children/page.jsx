@@ -40,9 +40,10 @@ const Children = () => {
     
     
     axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
-      if(res.data.status == 200){
+      console.log(res.status)
+      if(res.status == 200){
         console.log(res.data)
-        router.push(`/childdetails?cardNo=${res.data.cardNo}`)
+        router.push(`/childdetails?cardNo=${res.data.cardNo}&birthDate=${res.data.birthDate}`)
 
       }else{
         console.log(res.data.message)
