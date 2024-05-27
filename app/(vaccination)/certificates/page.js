@@ -2,8 +2,7 @@
 import {
   Button,
   Dialog,
-  DialogBody,
-  DialogHeader,
+  
 } from "@material-tailwind/react";
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
