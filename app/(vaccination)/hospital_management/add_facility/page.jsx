@@ -6,19 +6,13 @@ import {
   Button,
   Card,
   Input,
-  Select,
-  MenuItem,
-  Popover,
-  PopoverHandler,
-  PopoverContent,
 } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../../../axios";
 import globalUser from "@/store/user";
 import globalAddress from "@/store/address";
 import globalAlert from "@/store/alert";
 import { useRouter } from "next/navigation";
-
 export default function DefaultStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [isLastStep, setIsLastStep] = React.useState(false);
@@ -26,8 +20,6 @@ export default function DefaultStepper() {
   const [showWard, setShowWard] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const wards = globalAddress((state) => state.wards);
-  // const [wards, setWards] = useState([]);
-  const [wardName, setWardName] = useState("");
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const setAlert = globalAlert((state) => state.setAlert);
   const router = useRouter();
@@ -42,43 +34,20 @@ export default function DefaultStepper() {
   } = useForm();
 
   const submitForm = (data) => {
-    axios
-      .post("http://localhost:8000/api/facility", {
-        facility_reg_no: data.facility_reg_no,
-        facility_name: data.facility_name,
-        contacts: data.contacts,
-        ward_id: data.ward_id,
-      })
-      .then((res) => {
-        axios
-          .post(
-            "http://localhost:8000/api/register",
-            {
-              contacts: data.contacts,
-              role_id: 10,
-              account_type: "branch_manager",
-              facility_id: res.data.facility.facility_reg_no,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${authenticatedToken}`,
-              },
-            }
-          )
-          .then((res2) => {
-            setAlert({
-              message: "Facility created successfully",
-              visible: true,
-              type: "success",
-            });
-            router.push("/hospital_management");
-          })
-          .catch((err) => {
-            setAlert({
-              message: "Facility not created, please try again",
-              visible: true,
-              type: "error",
-            });
+
+            axios.post(
+          "facility",{"facility_reg_no":data.facility_reg_no,"facility_name":data.facility_name,"contacts":data.contacts,"ward_id":data.ward_id}
+        ).then((res)=>{
+          axios.post('register',{contacts:data.contacts,role_id:10,account_type:"branch_manager",facility_id:res.data.facility.facility_reg_no}, {
+            headers: {
+              Authorization: `Bearer ${authenticatedToken}`,
+            }}).then((res2)=>{
+              console.log(res2.data)
+              setAlert({message:"Facility created successfully",visible:true,type:"success"});
+              router.push('/hospital_management')
+              
+          }).catch((err)=>{
+            setAlert({message:"Facility not created, please try again",visible:true,type:"error"});
           })
           .catch((err) => {
             console.log("error occured when creating user", err);

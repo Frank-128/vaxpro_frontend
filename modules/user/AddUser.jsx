@@ -14,7 +14,7 @@ import { Close } from "@mui/icons-material";
 import React, { useState } from "react";
 import globalUser from "@/store/user";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axios";
 import globalAddress from "@/store/address";
 import globalRoles from "@/store/roles";
 import { useInitial } from "@/constants/functions";
@@ -85,7 +85,7 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
     // console.log(data2, "the data to be submitted");
    
       axios
-        .post(`/api/register`, data2, {
+        .post(`register`, data2, {
           headers: {
             Authorization: `Bearer ${authenticatedToken}`,
           },

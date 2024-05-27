@@ -8,27 +8,48 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import axios from "../app/axios";
+import axios from "../axios";
 
-const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine }) => {
+const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine, birthDate, cardNo, onVacSchedsChange }) => {
   const [vaccines, setVaccines] = useState([]);
+  const [selectedVaccines, setSelectedVaccines] = useState([]);
+  const [vacscheds, setVacScheds] = useState();
+  
 
   useEffect(() => {
-    axios.get(`/getVaccines`).then((res) => {
+
+    axios.get(`getVaccines`).then((res) => {
       if (res.data.status == 200) {
         console.log(res.data.vaccines)
         setVaccines(res.data.vaccines)
       }
     })
-  }, [])
+
+    if (onVacSchedsChange) {
+      onVacSchedsChange(vacscheds);
+    }
+
+   
+  },[onVacSchedsChange, vacscheds])
 
 
+  const handleCheckboxChange = (event) => {
+    if (event.target.checked) {
+      setSelectedVaccines([...selectedVaccines, event.target.value]);
+    } else {
+      setSelectedVaccines(selectedVaccines.filter(id => id !== event.target.value));
+    }
+  };
+  
   const submitAddedVaccine = (e) => {
     e.preventDefault();
-    axios.post(`/addChildVaccinnes`, formData).then((res) => {
-      if (res.data.status === 200) {
-        notifyAddVaccine(res.data.vaccine);
 
+    axios.post(`addNewChildVaccinnes`, {vaccines:selectedVaccines, date:birthDate, card_no:cardNo }).then((res) => {
+
+      if (res.data.status === 200) {
+        console.log(res.data.vaccineSchedule);
+        setVacScheds(res.data.vacItems);
+        // notifyAddVaccine(res.data.vaccine);
       }
     });
   };
@@ -49,8 +70,8 @@ const VaccinationModal = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVa
           <form onSubmit={submitAddedVaccine}>
             {vaccines.map((vaccine, index) => {
               return (
-                <div key={vaccine.id} className="flex flex-col">
-                <Checkbox label={vaccine.name} value={vaccine.id} />
+                <div key={index} className="flex flex-col">
+                <Checkbox label={vaccine.name} value={vaccine.id}  onChange={handleCheckboxChange} />
               </div>
               )
             })}

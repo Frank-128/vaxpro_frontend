@@ -29,7 +29,7 @@ const Login = () => {
 
   const login = async (data) => {
     setLoading({ loading: true });
-    await axios.post(`/api/login`, data).then(async (res) => {
+    await axios.post(`login`, data).then(async (res) => {
       if (res.data.status === 200) {
         const encryptionKey = "vaxpro_tanzania";
 
@@ -41,7 +41,7 @@ const Login = () => {
         Cookies.set("USER_TOKEN", encryptedData);
         setAuthenticatedToken(res.data.token);
         await axios
-          .get(`/api/user`, {
+          .get(`user`, {
             headers: {
               Authorization: `Bearer ${res.data.token}`,
             },

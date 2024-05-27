@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, Option, Select, Typography } from "@material-tailwind/react";
 import { TextField, Button } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
-import axios from "../app/axios";
+import axios from "../axios";
 
 
 
@@ -15,7 +15,7 @@ const ParentGuardianForm = ({ register, setValue }) => {
   const handleNidaChange = (nidaNo) => {
     setNidaInput(nidaNo);
     if (nidaNo) {
-      axios.get(`/parents?nidaNo=${nidaNo}`).then((res) => {
+      axios.get(`/api/parents?nidaNo=${nidaNo}`).then((res) => {
         if (res.status === 200 && res.data.length > 0) {
           console.log(res.data);
           const parentData = res.data[0]; 

@@ -33,7 +33,7 @@ import {
   VisibilityOutlined,
 } from "@mui/icons-material";
 import globalAllUsers from "@/store/all_users";
-import axios from "axios";
+import axios from "../../../../axios";
 import globalUser from "@/store/user";
 import { useInitial } from "@/constants/functions";
 import { useForm } from "react-hook-form";
@@ -120,7 +120,7 @@ function UserManagement() {
 
   const userHandler = (user_id) => {
     axios
-      .delete(`api/user/${user_id}`, {
+      .delete(`user/${user_id}`, {
         headers: {
           Authorization: `Bearer ${authenticatedToken}`,
         },
@@ -141,7 +141,7 @@ function UserManagement() {
   const submitUpdatedData = (data) => {
     axios
       .patch(
-        `api/update_user/${selectedRow.id}`,
+        `update_user/${selectedRow.id}`,
         {
           contacts: "+255" + data.contacts,
         },

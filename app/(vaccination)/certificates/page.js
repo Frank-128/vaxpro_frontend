@@ -197,7 +197,7 @@ function Certificates() {
   }
 
     axios
-      .post("api/certificates", formData, {
+      .post("certificates", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
       },

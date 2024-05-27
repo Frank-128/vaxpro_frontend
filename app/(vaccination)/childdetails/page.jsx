@@ -1,15 +1,15 @@
 "use client";
 import { Card, CardBody, Typography } from "@material-tailwind/react";
-import axios from "../../axios";
+import axios from "../../../axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import VaccinationModal from "@/components/VaccinationModal";
+import DateCalendarComp from "@/components/DateCalendar";
 
 
 
-
-function ChildCard({ firstname, middlename, surname, ward, date_of_birth, card_no }) {
+function ChildCard({ ward, date_of_birth, card_no }) {
   return (
     <Card className="rounded-lg shadow-lg bg-[#ffffff]" shadow={true}>
       <CardBody className="text-left flex flex-col gap-3">
@@ -126,10 +126,36 @@ export default function TeamSection12() {
   const [childData, setChildData] = useState([]);
   const searchParams = useSearchParams();
   const card_no = searchParams.get('cardNo');
+  const birth_date = searchParams.get('birth_date');
   const [openAddVaccine, setOpenAddVaccine] = useState(false);
+  const [open_date_viewer, setOpenDateViewer] = useState(false);
+  const [vacShdls, setVacScheds] = useState([]);
+  const [scheds, setScheds] = useState([]);
+  const [allVaccines, setAllVaccines] = useState([]);
+
+
 
   const handleClickCloseAddVacc = () => {
     setOpenAddVaccine(false);
+  };
+
+
+  const handleClickCloseDateViewer = () => {
+    setOpenDateViewer(false);
+  };
+
+  const handleClickOpenDateViewer = () => {
+    axios.get(`/fetchVaccineIds`).then((res)=>{
+      
+      setAllVaccines(res.data.vaccineIds);
+      console.log(res.data.vaccineIds);
+
+      axios.get(`/getAllChildSchedules`, {vaccines:allVaccines, date:birth_date }).then((res)=>{
+        setScheds(scheds);
+      })
+    })
+    
+    setOpenDateViewer(true);
   };
 
   const notifyAddVaccine = (newVaccine) => {
@@ -137,6 +163,7 @@ export default function TeamSection12() {
   };
 
   const handleClickOpenAddVacc = () => {
+    
     setOpenAddVaccine(true);
   };
 
@@ -147,7 +174,28 @@ export default function TeamSection12() {
         setChildData(res.data)
       }
     })
+
+    axios.get(`/getVacSchedules/${card_no}`).then((res) => {
+      if (res.data.status == 200) {
+        console.log(res.data.vacScheds);
+        setVacScheds(res.data.vacScheds);
+      }
+    })
   }, [card_no])
+
+  const handleVacSchedUpdate = ($vac_id, $date_of_birth) => {
+    axios.post(`updateChildVacSchedule`, { child_id: card_no, vac_id: $vac_id, curr_date: $date_of_birth }).then((res) => {
+      if (res.data.status == 200) {
+        console.log(res.data)
+      }
+    })
+  }
+
+  const handleVacScheds = (vacscheds) => {
+    setScheds(vacscheds);
+
+  };
+
 
   return (
     <section className="min-h-screen py-8 px-8 lg:py-12">
@@ -163,7 +211,7 @@ export default function TeamSection12() {
               <div> VaxPro</div>
               <div className="flex gap-2">
                 <button className="bg-[#212B36] text-white p-2 flex rounded-md  text-lg float-end font-bold">
-                  Update 
+                  Update
                 </button>
 
                 <button onClick={handleClickOpenAddVacc} className="bg-[#212B36] text-white p-2 flex rounded-md  text-lg float-end font-bold">Add Vaccine</button>
@@ -188,14 +236,37 @@ export default function TeamSection12() {
 
 
         <div className="!text-2xl font-bold mt-8 lg:!text-2xl self-center flex mb-1 ml-6">
-          Vaccination Schedules:
+          <div>Vaccination Schedules:</div>
+        </div>
+        <button onClick={handleClickOpenDateViewer} className="bg-[#212B36] text-white rounded-md p-2 ml-6">Click to View Schedule</button>
+        <div>
+          <DateCalendarComp handleClickCloseDateViewer={handleClickCloseDateViewer} openDateViewer={open_date_viewer} />
         </div>
 
 
+        <div className="flex gap-8 ">
+        {vacShdls && vacShdls.map((sched, index) => (
+           <div key={index}>
+            <div></div>
+           </div>
+          ))}
+        </div>
+
+
+
       </div>
-      <VaccinationModal openAddVaccine={openAddVaccine}
-        handleClickCloseAddVacc={handleClickCloseAddVacc}
-        notifyAddVaccine={notifyAddVaccine} />
+      {childData.map((child, index) => (
+        <div key={index}>
+          <VaccinationModal
+            onVacSchedsChange={handleVacScheds}
+            cardNo={child.card_no}
+            birthDate={child.date_of_birth}
+            openAddVaccine={openAddVaccine}
+            handleClickCloseAddVacc={handleClickCloseAddVacc}
+            notifyAddVaccine={notifyAddVaccine}
+          />
+        </div>
+      ))}
     </section>
   );
 }
