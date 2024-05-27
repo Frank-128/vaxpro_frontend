@@ -19,7 +19,6 @@ import globalAddress from "@/store/address";
 import globalAlert from "@/store/alert";
 import { useRouter } from "next/navigation";
 
-
 export default function DefaultStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [isLastStep, setIsLastStep] = React.useState(false);
@@ -27,33 +26,59 @@ export default function DefaultStepper() {
   const [showWard, setShowWard] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const wards = globalAddress((state) => state.wards);
-  const [wards, setWards] = useState([]);
+  // const [wards, setWards] = useState([]);
   const [wardName, setWardName] = useState("");
-  const authenticatedToken = globalUser((state)=>state.authenticatedToken)
-  const setAlert = globalAlert(state=>state.setAlert)
-  const router = useRouter()
-
-
+  const authenticatedToken = globalUser((state) => state.authenticatedToken);
+  const setAlert = globalAlert((state) => state.setAlert);
+  const router = useRouter();
+  const [isFocused, setIsFocused] = useState(false);
   const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
 
-  const { register, handleSubmit, getValues } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const submitForm = (data) => {
-            axios.post(
-          "http://localhost:8000/api/facility",{"facility_reg_no":data.facility_reg_no,"facility_name":data.facility_name,"contacts":data.contacts,"ward_id":data.ward_id}
-        ).then((res)=>{
-          axios.post('http://localhost:8000/api/register',{contacts:data.contacts,role_id:10,account_type:"branch_manager",facility_id:res.data.facility.facility_reg_no}, {
-            headers: {
-              Authorization: `Bearer ${authenticatedToken}`,
-            }}).then((res2)=>{
-
-              setAlert({message:"Facility created successfully",visible:true,type:"success"});
-              router.push('/hospital_management')
-              
-          }).catch((err)=>{
-            setAlert({message:"Facility not created, please try again",visible:true,type:"error"});
-
+    axios
+      .post("http://localhost:8000/api/facility", {
+        facility_reg_no: data.facility_reg_no,
+        facility_name: data.facility_name,
+        contacts: data.contacts,
+        ward_id: data.ward_id,
+      })
+      .then((res) => {
+        axios
+          .post(
+            "http://localhost:8000/api/register",
+            {
+              contacts: data.contacts,
+              role_id: 10,
+              account_type: "branch_manager",
+              facility_id: res.data.facility.facility_reg_no,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${authenticatedToken}`,
+              },
+            }
+          )
+          .then((res2) => {
+            setAlert({
+              message: "Facility created successfully",
+              visible: true,
+              type: "success",
+            });
+            router.push("/hospital_management");
+          })
+          .catch((err) => {
+            setAlert({
+              message: "Facility not created, please try again",
+              visible: true,
+              type: "error",
+            });
           })
           .catch((err) => {
             console.log("error occured when creating user", err);
@@ -107,7 +132,53 @@ export default function DefaultStepper() {
         <Card
           className={activeStep !== 1 ? "hidden" : "flex flex-col gap-8 p-5"}
         >
-          <Input label="Contacts" {...register("contacts")} />
+          <div className="">
+            <div className="flex font-monte-1 relative">
+              <span
+                className={clsx(
+                  " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300",
+                  {
+                    "border-r-2 border-black": isFocused,
+                    "border-r border-gray-500": !isFocused,
+                  }
+                )}
+              >
+                +255
+              </span>
+
+              <Input
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                autoComplete="off"
+                className="text-black font-monte-1 pl-16 border focus:border-2 rounded-l-none !border-t-blue-gray-200 focus:!border-t-gray-900"
+                size="lg"
+                placeholder="Contacts"
+                {...register("contacts", {
+                  required: "This field is required",
+                  maxLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  minLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  pattern: {
+                    value: /^[67][12345789][0-9]+$/,
+                    message: "Please enter valid number",
+                  },
+                })}
+              />
+            </div>
+            {errors.contacts && (
+              <p className="text-red-900 text-xs font-monte">
+                {errors.contacts.message}
+              </p>
+            )}
+          </div>
           <Input label="Role" defaultValue={"Role - Branch admin"} disabled />
         </Card>
 
