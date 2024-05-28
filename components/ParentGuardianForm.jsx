@@ -1,43 +1,100 @@
 "use client";
 import React, { useState } from "react";
-import { Card, Option, Select, Typography } from "@material-tailwind/react";
-import { TextField, Button } from "@mui/material";
-import Autocomplete from "@mui/material/Autocomplete";
-import axios from "../axios";
+import {
+  Card,
+  Option,
+  Select,
+  Button,
+  Typography,
+  Input,
+  CardBody,
+  CardHeader,
+} from "@material-tailwind/react";
+import clsx from "clsx";
+import { Controller } from "react-hook-form";
+import axios from '../axios'
 
 
+const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [availableParent, setAvailableParent] = useState({
+    status: false,
+    parent: null,
+  });
 
-const ParentGuardianForm = ({ register, setValue }) => {
+  const {trigger} = errTouched;
 
-  const [parents, setParents] = useState([]);
-  const [nidaNoInput, setNidaInput] = useState("");
+  const handleCardNoChange = async (e) => {
+    const currentNidaNo = e.target.value.trim();
 
-  const handleNidaChange = (nidaNo) => {
-    setNidaInput(nidaNo);
-    if (nidaNo) {
-      axios.get(`/api/parents?nidaNo=${nidaNo}`).then((res) => {
-        if (res.status === 200 && res.data.length > 0) {
-          console.log(res.data);
-          const parentData = res.data[0]; 
-          setParents([parentData]); 
-          
-          const { nida_id, firstname, middlename, lastname, child, user } = parentData;
-          setValue("nida_id", nida_id);
-          setValue("par_first_name", firstname);
-          setValue("par_middle_name", middlename);
-          setValue("par_last_name", lastname);
-          
-          if(user){
-            setValue("contact", user.contacts);
+    if (currentNidaNo.length == 20) {
+      const result = await trigger("card_no");
+      if (result) {
+        try {
+          const res = await axios.get(`/api/parents?nidaNo=${currentNidaNo}`);
+          if (res.status === 200) {
+            if (
+              res.data.length === 1 &&
+              res.data[0].card_no === currentCardNo
+            ) {
+            } else {
+              clearErrors("card_no");
+            }
           }
-          if (child.length > 0) {
-            setValue("relation", child[0].pivot.relationship_with_child);
-          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
-      });
+      }
     }
   };
-  
+
+  const handleNidaChange = async (e) => {
+    const nidaNo = e.target.value;
+    try{   if (nidaNo.length !== 20) {
+      const result = await trigger("nida_id");
+      if(result){
+        const parentRes = await axios.get(`parents?nidaNo=${e.target.value}`)
+        console.log(parentRes)
+      
+      if (parentRes.status === 200 && parentRes.data.length > 0) {
+      
+        const parentData = parentRes.data[0];
+        
+        setAvailableParent({status:true,parent:parentData})
+
+      
+      }
+      
+    }
+  }
+  // setAvailableParent({})
+}catch(err){
+    console.log(err)
+  }
+  };
+
+
+  const handleNidaRes = (res)=>{
+    if(res == 1){
+      const { nida_id, firstname, middlename, lastname, children, user } =
+      availableParent.parent;
+    setValue("nida_id", nida_id);
+    setValue("par_first_name", firstname);
+    setValue("par_middle_name", middlename);
+    setValue("par_last_name", lastname);
+
+    if (user) {
+      setValue("contact", user.contacts);
+    }
+    if (children.length > 0) {
+      setValue("relation", child[0].pivot.relationship_with_child);
+    }
+
+    setAvailableParent({status:false,parent:null})
+    } else{
+      setAvailableParent({status:false,parent:null})
+    }
+  }
 
 
   return (
@@ -52,67 +109,183 @@ const ParentGuardianForm = ({ register, setValue }) => {
 
       <div className="mt-8 mb-2 items-center sm:w-1/3  justify-center  max-w-screen-lg  ">
         <div className="mb-1 flex  2xs:w-72 xs:w-full  rounded-md 2xs:p-4 3xs:w-56 4xs:w-32 2xs:ml-0 xs:ml-0 flex-col gap-6">
-          <Autocomplete
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900 sm:w-56 lg:w-full "
-            options={parents}
-            freeSolo
-            getOptionLabel={(option) => option.nida_id.toString()}
-            onInputChange={(event, newValue) => handleNidaChange(newValue)}
-          
-            inputValue={nidaNoInput}
-            renderInput={(params) => (
-              <TextField  {...params} label="Search Nida Card No:" />
+          <div className="relative">
+            <Input
+              label="Nida ID:"
+              {...register("nida_id", {
+                required: "This field is required",
+                maxLength: {
+                  value: 20,
+                  message: "Nida number can not have more than 20 numbers",
+                },
+                minLength: {
+                  value: 0,
+                  message: "Nida number can not have less than 20 numbers",
+                },
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: "Please enter valid Nida number",
+                },
+                onChange:handleNidaChange
+              })}
+              className="  md:w-56 lg:w-full sm:w-64 "
+            />
+            {errors.nida_id && (
+              <p className="text-red-900 text-xs font-monte">
+                {errors.nida_id.message}
+              </p>
+            )}
+          {availableParent.status &&  <Card className="absolute p-4 cursor-pointer w-full bg-gray-50 shadow-xl border-gray-200 border-[0.4px] z-50">
+              <div >
+                <div className="font-bold text-xs ">{availableParent.parent?.firstname +" "+availableParent.parent?.lastname}</div>
+                <p className="text-gray-700 text-xs">NIDA No: {availableParent.parent?.nida_id}</p>
+                <p className="text-red-600 text-xs ">
+                User already exists, confirm and click to autofill                
+                </p>
+               <div className="flex justify-between">
+               <div
+                  onClick={() => handleNidaRes(1)}
+                  className="text-xs  hover:opacity-80 bg-[#212B36] text-white font-bold p-1 rounded"
+                >
+                 autofill
+                </div>
+                <div
+                  onClick={() => handleNidaRes(0)}
+                  className="text-xs  hover:opacity-80 bg-red-900 text-white font-bold p-1 rounded"
+                >
+                  cancel
+                </div>
+               </div>
+              </div>
+            </Card>}
+          </div>
+          <div>
+            <Input
+              label="First Name"
+              {...register("par_first_name", {
+                required: "This field is required",
+              })}
+              className="  md:w-56 lg:w-full  sm:w-64 "
+            />
+            {errors.par_first_name && (
+              <p className="text-red-900 text-xs font-monte">
+                {errors.par_first_name.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Input
+              label="Middle Name"
+              {...register("par_middle_name", {
+                required: "This field is required",
+              })}
+              className="  md:w-56 lg:w-full  sm:w-64 "
+            />
+            {errors.par_middle_name && (
+              <p className="text-red-900 text-xs font-monte">
+                {errors.par_middle_name.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              label="Last Name"
+              {...register("par_last_name", {
+                required: "This field is required",
+              })}
+              className="  md:w-56 lg:w-full  sm:w-64  "
+            />
+            {errors.par_last_name && (
+              <p className="text-red-900 text-xs font-monte">
+                {errors.par_last_name.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <div className="flex font-monte-1 relative">
+              <span
+                className={clsx(
+                  " absolute inset-y-0 left-0 px-2 text-black flex items-center rounded bg-gray-300",
+                  {
+                    "border-r-2 border-black": isFocused,
+                    "border-r border-gray-500": !isFocused,
+                  }
+                )}
+              >
+                +255
+              </span>
+
+              <Input
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                onFocus={() => setIsFocused(true)}
+                autoComplete="off"
+                className="text-black font-monte-1 pl-16 border  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
+                size="lg"
+                placeholder="Contacts"
+                {...register("contact", {
+                  onBlur: () => setIsFocused(false),
+                  required: "This field is required",
+                  maxLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  minLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  pattern: {
+                    value: /^[67][12345789][0-9]+$/,
+                    message: "Please enter valid number",
+                  },
+                })}
+              />
+            </div>
+            {errors.contact && (
+              <p className="text-red-900 text-xs font-monte">
+                {errors.contact.message}
+              </p>
+            )}
+          </div>
+
+          <Controller
+            control={control}
+            rules={{ required: "This field is required" }}
+            name="relation"
+            render={({ field:{onBlur, value,onChange}, fieldState: { error } }) => (
+              <div>
+                <Select
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  selected={value}
+                  value={value}
+                  label="Relation with Child"
+                  className=" sm:w-64 pl-3 lg:w-full rounded-md  md:w-56"
+                  animate={{
+                    mount: { y: 0 },
+                    unmount: { y: 25 },
+                  }}
+                >
+                  <Option value="Mother">Mother</Option>
+                  <Option value="Father">Father</Option>
+                  <Option value="Relative">Relative</Option>
+                </Select>
+                {error && (
+                  <p className="text-red-900 text-xs font-monte">
+                    {error.message}
+                  </p>
+                )}{" "}
+              </div>
             )}
           />
 
-
-          <TextField
-            label="Nida ID:"
-            type="number"
-            {...register("nida_id")}
-            className=" !border-t-blue-gray-200 md:w-56 lg:w-full focus:!border-t-gray-900 sm:w-64 "
-          />
-
-          <TextField
-            label="First Name"
-            {...register("par_first_name")}
-            className=" !border-t-blue-gray-200 md:w-56 lg:w-full focus:!border-t-gray-900 sm:w-64 "
-          />
-
-          <TextField
-            label="Middle Name"
-            {...register("par_middle_name")}
-            className=" !border-t-blue-gray-200 md:w-56 lg:w-full focus:!border-t-gray-900  sm:w-64 "
-          />
-
-          <TextField
-            label="Last Name"
-            {...register("par_last_name")}
-            className=" !border-t-blue-gray-200 md:w-56 lg:w-full focus:!border-t-gray-900 sm:w-64  "
-          />
-
-          <TextField
-            label="Contact"
-            type="number"
-            {...register("contact")}
-            className=" !border-t-blue-gray-200 md:w-56 lg:w-full focus:!border-t-gray-900 sm:w-64  "
-          />
-
-          <select
-            label="Relation with Child"
-            {...register("relation")}
-            className="h-14 sm:w-64 pl-3 lg:w-full rounded-md  md:w-56"
-          >
-            <option value="Mother">Mother</option>
-            <option value="Father">Father</option>
-            <option value="Relative">Relative</option>
-          </select>
-
           <Button
             type="submit"
-            className="bg-[#212B36] text-white sm:w-64 lg:w-full hover:bg-[#606061] md:w-56 h-14 mt-4"
+            className="bg-[#212B36] text-white sm:w-64 lg:w-full hover:bg-[#606061] md:w-56 mt-4"
           >
-            {" "}
             Submit
           </Button>
         </div>
