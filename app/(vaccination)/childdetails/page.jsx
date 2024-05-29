@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import VaccinationModal from "@/components/VaccinationModal";
 import DateCalendarComp from "@/components/DateCalendar";
+import { LongDialog } from "@/components/ScheduleUpdates";
 
 function ChildCard({ ward, date_of_birth, card_no }) {
   return (
@@ -140,6 +141,21 @@ export default function TeamSection12() {
   const [vacShdls, setVacScheds] = useState([]);
   const [scheds, setScheds] = useState();
   const [allVaccines, setAllVaccines] = useState([]);
+  const [savedScheds, setSavedScheds] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`/fetchVaccineIds`, { params: { child_id: card_no } })
+      .then((res) => {
+        setAllVaccines(res.data.vaccineIds);
+        console.log(res.data.vaccineIds);
+      });
+
+    axios.get(`/getSavedSchedules/${card_no}`).then((res) => {
+      console.log(res.data);
+      setSavedScheds(res.data);
+    });
+  }, [card_no]);
 
   const handleClickCloseAddVacc = () => {
     setOpenAddVaccine(false);
@@ -150,13 +166,10 @@ export default function TeamSection12() {
   };
 
   const handleClickOpenDateViewer = () => {
-    axios.get(`/fetchVaccineIds`).then((res) => {
-      setAllVaccines(res.data.vaccineIds);
-      console.log(res.data.vaccineIds);
-
+    {
       axios
         .post(`/getAllChildSchedules`, {
-          vaccines: res.data.vaccineIds,
+          vaccines: allVaccines,
           date: birth_date,
         })
         .then((res) => {
@@ -165,7 +178,7 @@ export default function TeamSection12() {
             console.log(res.data.vaccineSchedule);
           }
         });
-    });
+    }
 
     setOpenDateViewer(true);
   };
@@ -221,9 +234,7 @@ export default function TeamSection12() {
             >
               <div> VaxPro</div>
               <div className="flex gap-2">
-                <button className="bg-[#212B36] text-white p-2 flex rounded-md  text-lg float-end font-bold">
-                  Update
-                </button>
+                <LongDialog birthDate={birth_date} childId={card_no} setSavedScheds={setSavedScheds} savedScheds={savedScheds}  />
 
                 <button
                   onClick={handleClickOpenAddVacc}
@@ -263,10 +274,8 @@ export default function TeamSection12() {
             handleClickCloseDateViewer={handleClickCloseDateViewer}
             openDateViewer={open_date_viewer}
             scheduleData={scheds}
-
           />
         </div>
-
       </div>
       {childData.map((child, index) => (
         <div key={index}>

@@ -15,6 +15,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { AccordionCustomAnimation } from "./AccordionComp";
 
 const DateCalendarComp = ({
   openDateViewer,
@@ -39,7 +40,7 @@ const DateCalendarComp = ({
     const mods = {};
     if (scheduleData) {
       Object.entries(scheduleData).forEach(([name, doses], index) => {
-        const color = colors[index % colors.length]; // alternate colors for different persons
+        const color = colors[index % colors.length];
         doses.forEach((dose) =>
           Object.values(dose).forEach((date) => {
             const dateObj = new Date(date);
@@ -122,19 +123,19 @@ const DateCalendarComp = ({
                 <Typography>
                   {scheduleData &&
                     Object.entries(scheduleData).map(([name, doses], index) => {
-                      const color = colors[index % colors.length]; 
+                      const color = colors[index % colors.length];
                       return (
                         <div key={index}>
-                          <h2>
+                          <h2 className="flex gap-3">
                             <span
-                              className={`${color} mr-2`}
+                              className={`${color} mr-2 mt-4`}
                               style={{
                                 display: "inline-block",
                                 width: "20px",
                                 height: "20px",
                               }}
                             ></span>
-                            {name}
+                            <AccordionCustomAnimation name={name} doses={doses} />
                           </h2>
                         </div>
                       );
