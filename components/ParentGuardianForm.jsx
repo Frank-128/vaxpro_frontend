@@ -22,7 +22,7 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
     parent: null,
   });
 
-  const {trigger} = errTouched;
+  const {isValid,isSubmitted,trigger} = errTouched;
 
   const handleCardNoChange = async (e) => {
     const currentNidaNo = e.target.value.trim();
@@ -50,7 +50,7 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
 
   const handleNidaChange = async (e) => {
     const nidaNo = e.target.value;
-    try{   if (nidaNo.length !== 20) {
+    try{   if (nidaNo.length === 20) {
       const result = await trigger("nida_id");
       if(result){
         const parentRes = await axios.get(`parents?nidaNo=${e.target.value}`)
@@ -86,10 +86,7 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
     if (user) {
       setValue("contact", user.contacts);
     }
-    if (children.length > 0) {
-      setValue("relation", child[0].pivot.relationship_with_child);
-    }
-
+    
     setAvailableParent({status:false,parent:null})
     } else{
       setAvailableParent({status:false,parent:null})
@@ -238,7 +235,7 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
                     message: "Phone number should be exactly 9 digits",
                   },
                   pattern: {
-                    value: /^[67][12345789][0-9]+$/,
+                    value: /^[67][123456789][0-9]+$/,
                     message: "Please enter valid number",
                   },
                 })}
@@ -281,7 +278,11 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
               </div>
             )}
           />
-
+           {isSubmitted && !isValid &&  (
+              <p className="text-red-900 text-xs font-monte">
+                Please make sure there are no errors in child form and parent form
+              </p>
+            )}
           <Button
             type="submit"
             className="bg-[#212B36] text-white sm:w-64 lg:w-full hover:bg-[#606061] md:w-56 mt-4"

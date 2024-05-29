@@ -13,7 +13,7 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
   const [cardNoInput, setCardNoInput] = useState("");
   const router = useRouter();
   const [selectedCard, setSelectedCard] = useState();
-  const {watch,touchedFields,setError,trigger} = errTouched;
+  const {clearErrors,touchedFields,setError,trigger} = errTouched;
 
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
@@ -67,18 +67,10 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
 
       <div className="mt-8 mb-2 items-center sm:w-1/3  justify-center  max-w-screen-lg  ">
         <div className="mb-1 flex  2xs:w-72 xs:w-full rounded-md 2xs:p-4 3xs:w-56 4xs:w-32 2xs:ml-0 xs:ml-0 flex-col gap-6">
-          {/* {selectedCard && (
-           <Link
-           href={{
-             pathname: '/childdetails',
-             query: { cardNo: selectedCard.card_no, birth_date: selectedCard.birth_date },
-           }}
-         >
-           Go to Child
-         </Link>
-          )} */}
+        
 
-          <Input
+         <div>
+         <Input
             label="Card No"
             {...register("card_no", {
               required: "This field is required",
@@ -103,8 +95,10 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
               {errors.card_no.message}
             </span>
           )}
+         </div>
 
-          <Input
+         <div>
+         <Input
             label="First Name"
             {...register("first_name", {
               required: "This field is required",
@@ -116,10 +110,14 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
               {errors.first_name.message}
             </span>
           )}
+         </div>
 
-          <Input
+         <div>
+         <Input
             label="Middle Name"
-            {...register("middle_name")}
+            {...register("middle_name",{
+              required:"This field is required"
+            })}
             className="   sm:w-56 lg:w-full "
           />
           {errors.middle_name && (
@@ -127,10 +125,14 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
               {errors.middle_name.message}
             </span>
           )}
+         </div>
 
-          <Input
+        <div>
+        <Input
             label="Last Name"
-            {...register("last_name")}
+            {...register("last_name",{
+              required:"This field is required"
+            })}
             className="  sm:w-56 lg:w-full "
           />
           {errors.last_name && (
@@ -138,11 +140,15 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
               {errors.last_name.message}
             </span>
           )}
+        </div>
 
+          <div>
           <Input
             label="Birth Date"
             type="date"
-            {...register("birth_date")}
+            {...register("birth_date",{
+              required:"This field is required"
+            })}
             className="  sm:w-56 lg:w-full "
           />
           {errors.birth_date && (
@@ -151,10 +157,14 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
             </span>
           )}
 
-          <Input
+          </div>
+         <div>
+         <Input
             label="House No:"
             type="number"
-            {...register("house_no")}
+            {...register("house_no",{
+              required:"This field is required"
+            })}
             className="  sm:w-56 lg:w-full "
           />
           {errors.house_no && (
@@ -162,9 +172,11 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
               {errors.house_no.message}
             </span>
           )}
+         </div>
 
-          <Autocomplete
-            className="  sm:w-56 lg:w-full "
+       <div>
+       <Autocomplete
+            className="  sm:w-56  lg:w-full "
             options={wards}
             getOptionLabel={(option) =>
               `${option.ward_name}-${option.district.district_name}-${option.id}`
@@ -172,6 +184,7 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
             onInputChange={handleWardChange}
             renderInput={(params) => (
               <TextField
+            
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     height: "40px",
@@ -192,7 +205,9 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
                 size="small"
                 {...params}
                 label="Ward"
-                {...register("ward_id")}
+                {...register("ward_id",{
+                  required:"This field is required"
+                })}
               />
             )}
             getOptionKey={(option) => option.id}
@@ -202,6 +217,7 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
               {errors.ward_id.message}
             </span>
           )}
+       </div>
         </div>
       </div>
     </Card>
