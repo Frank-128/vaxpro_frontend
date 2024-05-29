@@ -92,14 +92,11 @@ const Vaccinaions = () => {
               <TableCell>S/No</TableCell>
               <TableCell>Vaccine Name</TableCell>
               <TableCell>Frequency</TableCell>
-              <TableCell>Vaccine Against</TableCell>
-              <TableCell>Administered Via</TableCell>
               <TableCell>First Dose After (days)</TableCell>
               <TableCell>Second Dose After (days)</TableCell>
               <TableCell>Third Dose After (days)</TableCell>
               <TableCell>Fourth Dose After (days)</TableCell>
               <TableCell>Fifth Dose After (days)</TableCell>
-              <TableCell>Side Effects</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -111,14 +108,11 @@ const Vaccinaions = () => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{vaccine.name}</TableCell>
                     <TableCell>{vaccine.frequency}</TableCell>
-                    <TableCell>{vaccine.vaccine_against}</TableCell>
-                    <TableCell>{vaccine.administered_via}</TableCell>
                     <TableCell>{vaccine.first_dose_after}</TableCell>
                     <TableCell>{vaccine.second_dose_after}</TableCell>
                     <TableCell>{vaccine.third_dose_after}</TableCell>
                     <TableCell>{vaccine.fourth_dose_after}</TableCell>
                     <TableCell>{vaccine.fifth_dose_after}</TableCell>
-                    <TableCell>{vaccine.side_effects}</TableCell>
                     <TableCell className="flex gap-4">
                       <Button
                         onClick={() => handleClickOpenEdit(vaccine.id)}

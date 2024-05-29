@@ -13,12 +13,9 @@ import { useForm } from "react-hook-form";
 import globalUser from "@/store/user";
 import { useRouter } from "next/navigation";
 
- 
-
-
 
 const Children = () => {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue,watch,trigger,setError,formState:{errors,touchedFields},control } = useForm();
   const loggedInUser = globalUser(state=>state.loggedInUser)
    const router = useRouter();
 
@@ -26,12 +23,12 @@ const Children = () => {
     {
       label: "Child",
       value: "child",
-      form: <ChildRegistrationForm setValue={setValue} register={register} />,
+      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,touchedFields,watch,trigger}} />,
     },
     {
       label: "Parent/Guardian",
       value: "parent",
-      form: <ParentGuardianForm setValue={setValue} register={register} />,
+      form: <ParentGuardianForm setValue={setValue} register={register} errors={errors} control={control} errTouched={{touchedFields,watch,trigger}}  />,
     },
   ];  
 
@@ -52,7 +49,7 @@ const Children = () => {
     
   };
 
-  console.log(loggedInUser)
+  
 
   return (
     <Tabs className="mt-5" value="child">

@@ -103,7 +103,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           </div>
         </div>
         <Button
-          className="bg-white py-2 px-3 text-black border border-black font-monte-3"
+          className="bg-white py-2 px-3 text-black border border-black font-monte-3 shadow-none"
           onClick={() => {
             setLogoutDialog(true);
           }}
@@ -133,7 +133,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           <Button
             loading={loading}
             disabled={loading}
-            className="bg-red-900"
+            className="bg-red-900 "
             onClick={() => {
               logout();
             }}
