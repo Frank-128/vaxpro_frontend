@@ -43,7 +43,7 @@ const Children = () => {
       console.log(res.status)
       if(res.status == 200){
         console.log(res.data)
-        router.push(`/childdetails?cardNo=${res.data.cardNo}&birthDate=${res.data.birthDate}`)
+        router.push(`/childdetails?cardNo=${res.data.cardNo}`)
 
       }else{
         console.log(res.data.message)

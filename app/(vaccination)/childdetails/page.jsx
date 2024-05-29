@@ -135,13 +135,13 @@ export default function TeamSection12() {
   const [childData, setChildData] = useState([]);
   const searchParams = useSearchParams();
   const card_no = searchParams.get("cardNo");
-  const birth_date = searchParams.get("birthDate");
   const [openAddVaccine, setOpenAddVaccine] = useState(false);
   const [open_date_viewer, setOpenDateViewer] = useState(false);
   const [vacShdls, setVacScheds] = useState([]);
   const [scheds, setScheds] = useState();
   const [allVaccines, setAllVaccines] = useState([]);
   const [savedScheds, setSavedScheds] = useState([]);
+  const [birth_date, setBirthDate] = useState();
 
   useEffect(() => {
     axios
@@ -152,8 +152,10 @@ export default function TeamSection12() {
       });
 
     axios.get(`/getSavedSchedules/${card_no}`).then((res) => {
-      console.log(res.data);
-      setSavedScheds(res.data);
+      console.log(res.data.child_schedules);
+      setSavedScheds(res.data.child_schedules);
+      setBirthDate(res.data.birth_date);
+
     });
   }, [card_no]);
 
@@ -207,19 +209,19 @@ export default function TeamSection12() {
     });
   }, [card_no]);
 
-  const handleVacSchedUpdate = ($vac_id, $date_of_birth) => {
-    axios
-      .post(`updateChildVacSchedule`, {
-        child_id: card_no,
-        vac_id: $vac_id,
-        curr_date: $date_of_birth,
-      })
-      .then((res) => {
-        if (res.data.status == 200) {
-          console.log(res.data);
-        }
-      });
-  };
+  // const handleVacSchedUpdate = ($vac_id, $date_of_birth) => {
+  //   axios
+  //     .post(`updateChildVacSchedule`, {
+  //       child_id: card_no,
+  //       vac_id: $vac_id,
+  //       curr_date: $date_of_birth,
+  //     })
+  //     .then((res) => {
+  //       if (res.data.status == 200) {
+  //         console.log(res.data);
+  //       }
+  //     });
+  // };
 
   return (
     <section className="min-h-screen py-8 px-8 lg:py-12">
