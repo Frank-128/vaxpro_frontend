@@ -1,17 +1,19 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Menu } from "@mui/icons-material";
 import { Button, Input } from "@material-tailwind/react";
 import globalUser from "@/store/user";
+import axios from '../axios'
+
 import {
   Dialog,
   DialogHeader,
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-import axios from "../axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(vaccination)/loading";
+import AsyncSelect from 'react-select/async';
 
 function Navbar({ openSidebar, setOpenSidebar }) {
   const loggedInUser = globalUser((state) => state.loggedInUser);
@@ -19,6 +21,57 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   const router = useRouter();
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const [loading, setLoading] = useState(false);
+  const selectRef = useRef(null)
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      width: 350,
+      outline: 'none',
+      boxShadow: state.isFocused ? '0 0 0 1px black' : 'none',
+      '&:hover': {
+        boxShadow: '0 0 0 1px black'
+      }
+    }),
+    menu: (provided) => ({
+      ...provided,
+      width: 350,
+      zIndex: 50,
+      backgroundColor:'white'
+    })
+  };
+
+  const handleSelectedChild = (selectedChild)=>{
+
+    router.push(`/childdetails?cardNo=${selectedChild.value}`)
+    // if (selectRef.current) {
+    //   selectRef.current.clearValue();
+    // }
+  }
+
+  const loadOptions = async (inputValue, callback) => {
+    try {
+      const response = await axios.get('children', {
+        params: {
+          cardNo: inputValue,
+        },
+      });
+      const data = response.data;
+
+      if(data){
+
+        const formattedOptions = data.map(item => ({
+          value: item.card_no,
+          label: item.firstname+" "+item.surname+"--"+item.card_no,
+        }));
+        
+        callback(formattedOptions);
+      }
+    } catch (error) {
+      console.error('Error fetching data', error);
+      callback([]);
+    }
+  };
 
   const logout = () => {
     setLoading(true);
@@ -49,7 +102,13 @@ function Navbar({ openSidebar, setOpenSidebar }) {
     >
       <div className="flex gap-2 items-center ">
         <Menu onClick={() => setOpenSidebar(!openSidebar)} />
-        <Input label="search" />
+        <AsyncSelect
+      ref={selectRef}
+      styles={customStyles}
+      loadOptions={loadOptions}
+      onChange={handleSelectedChild}
+      placeholder="Select an option"
+    />
       </div>
       <div className="flex gap-6 justify-center items-center capitalize">
         <div className="flex gap-2">

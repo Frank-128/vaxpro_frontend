@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 
 const Children = () => {
-  const { register, handleSubmit, setValue,watch,trigger,setError,formState:{errors,touchedFields},control } = useForm();
+  const { register, handleSubmit,clearErrors, setValue,watch,trigger,setError,formState:{errors,touchedFields,isValid,isSubmitted},control } = useForm();
   const loggedInUser = globalUser(state=>state.loggedInUser)
    const router = useRouter();
 
@@ -23,12 +23,12 @@ const Children = () => {
     {
       label: "Child",
       value: "child",
-      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,touchedFields,watch,trigger}} />,
+      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,touchedFields,clearErrors,trigger}} />,
     },
     {
       label: "Parent/Guardian",
       value: "parent",
-      form: <ParentGuardianForm setValue={setValue} register={register} errors={errors} control={control} errTouched={{touchedFields,watch,trigger}}  />,
+      form: <ParentGuardianForm setValue={setValue} register={register} errors={errors} control={control} errTouched={{isValid,touchedFields,watch,trigger,isSubmitted}}  />,
     },
   ];  
 
@@ -52,8 +52,8 @@ const Children = () => {
   
 
   return (
-    <Tabs className="mt-5" value="child">
-      <TabsHeader>
+    <Tabs className="mt-5 " value="child">
+      <TabsHeader className="z-0">
         {data.map(({ label, value }) => (
           <Tab key={value} value={value}>
             {label}
