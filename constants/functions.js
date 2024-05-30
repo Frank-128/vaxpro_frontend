@@ -125,8 +125,13 @@ export const useInitial = () => {
       });
   }, [loggedInUser, setAllUsers]);
 
+
+  
+
   return { initialRequest, getInitialUsers };
 };
+
+
 
 export const verifyToken = async (token) => {
   try {
@@ -143,3 +148,5 @@ export const verifyToken = async (token) => {
     return err;
   }
 };
+
+

@@ -19,9 +19,7 @@ import {
   DialogFooter,
   Chip,
   Input,
-  Tabs,
-  Tab,
-  TabsHeader,
+  
 } from "@material-tailwind/react";
 import {
   Close,
