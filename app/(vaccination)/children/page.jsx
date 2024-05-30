@@ -13,46 +13,45 @@ import { useForm } from "react-hook-form";
 import globalUser from "@/store/user";
 import { useRouter } from "next/navigation";
 
+
+
 const Children = () => {
-  const { register, handleSubmit, setValue } = useForm();
-  const loggedInUser = globalUser((state) => state.loggedInUser);
-  const router = useRouter();
+  const { register, handleSubmit,clearErrors, setValue,watch,trigger,setError,formState:{errors,touchedFields,isValid,isSubmitted},control } = useForm();
+  const loggedInUser = globalUser(state=>state.loggedInUser)
+   const router = useRouter();
+
 
   const data = [
     {
       label: "Child",
       value: "child",
-      form: <ChildRegistrationForm setValue={setValue} register={register} />,
+      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,touchedFields,clearErrors,trigger}} />,
     },
     {
       label: "Parent/Guardian",
       value: "parent",
-      form: <ParentGuardianForm setValue={setValue} register={register} />,
+      form: <ParentGuardianForm setValue={setValue} register={register} errors={errors} control={control} errTouched={{isValid,touchedFields,watch,trigger,isSubmitted}}  />,
     },
   ];
 
   const submitFunction = (data) => {
-    axios
-      .post(`/parentChildData`, {
-        ...data,
-        facility_id: loggedInUser?.facility_id,
-        modified_by: loggedInUser?.id,
-      })
-      .then((res) => {
-        if (res.data.status == 200) {p
-          console.log(res.data);
-          router.push(`/childdetails?cardNo=${res.data.cardNo}`);
-        } else {
-          console.log(res.data.message);
-        }
-      });
+ 
+    axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
+      console.log(res.status)
+      if(res.status == 200){
+        console.log(res.data)
+        router.push(`/childdetails?cardNo=${res.data.cardNo}`)
+
+      }else{
+        console.log(res.data.message)
+      }
+    })
+    
   };
 
-  // console.log(loggedInUser)
-
   return (
-    <Tabs className="mt-5" value="child">
-      <TabsHeader>
+    <Tabs className="mt-5 " value="child">
+      <TabsHeader className="z-0">
         {data.map(({ label, value }) => (
           <Tab key={value} value={value}>
             {label}
