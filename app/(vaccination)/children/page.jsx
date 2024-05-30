@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 
 
 const Children = () => {
-  const { register, handleSubmit,clearErrors, setValue,watch,trigger,setError,formState:{errors,touchedFields,isValid,isSubmitted},control } = useForm();
+  const { register, handleSubmit,clearErrors, validate,setValue,watch,trigger,setError,formState:{errors,touchedFields,isValid,isSubmitted},control } = useForm();
   const loggedInUser = globalUser(state=>state.loggedInUser)
    const router = useRouter();
 
@@ -25,7 +25,7 @@ const Children = () => {
     {
       label: "Child",
       value: "child",
-      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,touchedFields,clearErrors,trigger}} />,
+      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,validate,touchedFields,clearErrors,trigger}} />,
     },
     {
       label: "Parent/Guardian",
@@ -35,12 +35,36 @@ const Children = () => {
   ];
 
   const submitFunction = (data) => {
- 
+
+
+    function getDaysDifference(startDate, endDate) {
+      const oneDay = 24 * 60 * 60 * 1000; // Milliseconds in one day
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diffDays = Math.round((end - start) / oneDay);
+      return diffDays;
+    }
+    
+   
+  
+    const today = new Date().toISOString().split('T')[0];
+    
+    
+    
+
     axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
       console.log(res.status)
       if(res.status == 200){
-        console.log(res.data)
-        router.push(`/childdetails?cardNo=${res.data.cardNo}`)
+        
+        
+        const child_date = new Date(res.data.birthDate)
+        const daysDifference = getDaysDifference(today, child_date);
+        
+        if(daysDifference > 0){
+          console.log(daysDifference)
+         return router.push(`/children/`+res.data.cardNo)
+        }
+       return  router.push(`/childdetails?cardNo=${res.data.cardNo}`)
 
       }else{
         console.log(res.data.message)
