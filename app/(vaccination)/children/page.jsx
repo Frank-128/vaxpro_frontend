@@ -14,10 +14,12 @@ import globalUser from "@/store/user";
 import { useRouter } from "next/navigation";
 
 
+
 const Children = () => {
   const { register, handleSubmit,clearErrors, setValue,watch,trigger,setError,formState:{errors,touchedFields,isValid,isSubmitted},control } = useForm();
   const loggedInUser = globalUser(state=>state.loggedInUser)
    const router = useRouter();
+
 
   const data = [
     {
@@ -30,12 +32,10 @@ const Children = () => {
       value: "parent",
       form: <ParentGuardianForm setValue={setValue} register={register} errors={errors} control={control} errTouched={{isValid,touchedFields,watch,trigger,isSubmitted}}  />,
     },
-  ];  
+  ];
 
   const submitFunction = (data) => {
-
-    
-    
+ 
     axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
       console.log(res.status)
       if(res.status == 200){
@@ -48,8 +48,6 @@ const Children = () => {
     })
     
   };
-
-  
 
   return (
     <Tabs className="mt-5 " value="child">
