@@ -43,9 +43,9 @@ function Navbar({ openSidebar, setOpenSidebar }) {
 
   const handleSelectedChild = (selectedChild)=>{
 
-    router.push(`/childdetails?cardNo=${selectedChild.value}`)
+     router.push(`/childdetails?cardNo=${selectedChild?.value}`)
     // if (selectRef.current) {
-    //   selectRef.current.clearValue();
+    //   selectRef?.current.clearValue();
     // }
   }
 

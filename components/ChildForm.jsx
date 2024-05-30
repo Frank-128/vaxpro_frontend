@@ -3,17 +3,11 @@ import { TextField } from "@mui/material";
 import axios from "../axios";
 import { useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
 
-const ChildRegistrationForm = ({ register, errors,errTouched }) => {
+
+const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
   const [wards, setWards] = useState([]);
-  const [children, setChildren] = useState([]);
-  const [cardNoInput, setCardNoInput] = useState("");
-  const router = useRouter();
-  const [selectedCard, setSelectedCard] = useState();
-  const {clearErrors,touchedFields,setError,trigger} = errTouched;
+  const {clearErrors,setError,trigger} = errTouched;
 
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
@@ -24,6 +18,13 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
         }
       });
     }
+  };
+
+  const validateDate = (value) => {
+    const selectedDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to midnight to compare only the date part
+    return selectedDate <= today || "Date should not exceed today's date";
   };
 
   
@@ -147,7 +148,8 @@ const ChildRegistrationForm = ({ register, errors,errTouched }) => {
             label="Birth Date"
             type="date"
             {...register("birth_date",{
-              required:"This field is required"
+              required:"This field is required",
+              validate:validateDate
             })}
             className="  sm:w-56 lg:w-full "
           />

@@ -46,7 +46,7 @@ export function ScheduleAccordionAnimation({
       .then((res) => {
         axios.get(`/getSavedSchedules/${childId}`).then((res) => {
           console.log(res.data);
-          setSavedScheds(res.data);
+          setSavedScheds(res.data.child_schedules);
         });
       });
   };
