@@ -51,6 +51,7 @@ function Certificates() {
     const pageWidth = certificate.internal.pageSize.getWidth();
     const pageHeight = certificate.internal.pageSize.getHeight();
     var pageSize = { width: 210, height: 297 };
+    
     const color = "#1e3a8a";
     const fontSizeColoredText = 14;
     const fontSizeNormalText = 12;

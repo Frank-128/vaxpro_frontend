@@ -48,7 +48,7 @@ const Login = () => {
           })
           .then((res) => {
             setLoggedInUser(res.data[0]);
-            route.push("/");
+            router.push("/");
 
           });
       } else {
