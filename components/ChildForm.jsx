@@ -1,13 +1,14 @@
-import { Card, Input, Typography } from "@material-tailwind/react";
+import { Card, Input, Option, Select, Typography } from "@material-tailwind/react";
 import { TextField } from "@mui/material";
 import axios from "../axios";
 import { useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
+import AutoCompleteSearch from "./AutoCompleteSearch";
 
 
 const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
   const [wards, setWards] = useState([]);
-  const {clearErrors,setError,trigger} = errTouched;
+  const {clearErrors,setError,trigger,control} = errTouched;
 
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
@@ -177,7 +178,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
          </div>
 
        <div>
-       <Autocomplete
+       {/* <Autocomplete
             className="  sm:w-56  lg:w-full "
             options={wards}
             getOptionLabel={(option) =>
@@ -211,9 +212,14 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                   required:"This field is required"
                 })}
               />
+              
+              
+           
             )}
             getOptionKey={(option) => option.id}
-          />
+          /> */}
+
+          <AutoCompleteSearch name={"ward"} control={control} />
           {errors.ward_id && (
             <span className="text-red-900 text-sm font-mono ">
               {errors.ward_id.message}

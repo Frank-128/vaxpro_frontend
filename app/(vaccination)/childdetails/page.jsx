@@ -56,7 +56,7 @@ function ChildCard({ ward, date_of_birth, card_no }) {
 
 function ParentCard({ parents_guardians }) {
   return (
-    <Card className="rounded-lg shadow-lg bg-[#ffffff]" shadow={true}>
+    <Card className="rounded-lg shadow-lg border-gray-200 bg-[#ffffff]" shadow={true}>
       <CardBody className="text-left flex flex-col gap-3">
         {parents_guardians &&
           parents_guardians.map((parent, index) => (

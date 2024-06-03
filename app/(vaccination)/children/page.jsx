@@ -25,7 +25,7 @@ const Children = () => {
     {
       label: "Child",
       value: "child",
-      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,validate,touchedFields,clearErrors,trigger}} />,
+      form: <ChildRegistrationForm setValue={setValue} register={register} errors={errors} errTouched={{setError,control,validate,touchedFields,clearErrors,trigger}} />,
     },
     {
       label: "Parent/Guardian",

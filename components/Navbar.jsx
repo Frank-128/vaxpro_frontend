@@ -20,6 +20,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   const [logoutDiolog, setLogoutDialog] = useState(false);
   const router = useRouter();
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
+  const [searchChild,setSearchChild] = useState(null)
   const [loading, setLoading] = useState(false);
   const selectRef = useRef(null)
 
@@ -42,11 +43,9 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   };
 
   const handleSelectedChild = (selectedChild)=>{
-
-     router.push(`/childdetails?cardNo=${selectedChild?.value}`)
-    // if (selectRef.current) {
-    //   selectRef?.current.clearValue();
-    // }
+    router.push(`/childdetails?cardNo=${selectedChild?.value}`)
+    setSearchChild(null)
+   
   }
 
   const loadOptions = async (inputValue, callback) => {
@@ -103,11 +102,11 @@ function Navbar({ openSidebar, setOpenSidebar }) {
       <div className="flex gap-2 items-center ">
         <Menu onClick={() => setOpenSidebar(!openSidebar)} />
         <AsyncSelect
-      ref={selectRef}
+      value={searchChild}
       styles={customStyles}
       loadOptions={loadOptions}
       onChange={handleSelectedChild}
-      placeholder="Select an option"
+      placeholder="Search the child here"
     />
       </div>
       <div className="flex gap-6 justify-center items-center capitalize">
