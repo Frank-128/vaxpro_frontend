@@ -1,17 +1,16 @@
 "use client"
 import React, { useState } from 'react';
-import {  Controller } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import axios from 'axios';
 import { Input, List, ListItem } from '@material-tailwind/react';
-
 
 const AutoCompleteSearch = ({ name, control }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [options, setOptions] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-     // Function to handle the search input changes
-     const handleSearch = async (event, onChange) => {
+    // Function to handle the search input changes
+    const handleSearch = async (event, onChange) => {
         const searchQuery = event.target.value;
         setSearchTerm(searchQuery);
 
@@ -58,8 +57,8 @@ const AutoCompleteSearch = ({ name, control }) => {
                             autoComplete="off"
                         />
                         {isDropdownVisible && options.length > 0 && (
-                            <List className="max-h-72 bg-gray-100 w-full overflow-y-scroll absolkute top-10 left-0 ">
-                               {options.map((option, index) => (
+                            <List className="max-h-72 bg-gray-100 w-full overflow-y-scroll absolute top-10 left-0">
+                                {options.map((option, index) => (
                                     <ListItem
                                         key={index}
                                         onClick={() => handleOptionClick(option, onChange)}
@@ -68,9 +67,7 @@ const AutoCompleteSearch = ({ name, control }) => {
                                     </ListItem>
                                 ))}
                             </List>
-                        )
-                       
-                        }
+                        )}
                     </div>
                 )}
             />
@@ -78,6 +75,4 @@ const AutoCompleteSearch = ({ name, control }) => {
     );
 };
 
-
-
-export default AutoCompleteSearch
+export default AutoCompleteSearch;
