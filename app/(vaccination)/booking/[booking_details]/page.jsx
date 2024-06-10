@@ -6,10 +6,7 @@ import axios from "../../../../axios";
 import { Button, Select, Option, Input } from "@material-tailwind/react";
 import { useForm, Controller } from "react-hook-form";
 import clsx from "clsx";
-import {
-  BlockRounded,
-  CheckCircleOutlineRounded,
-} from "@mui/icons-material";
+import { BlockRounded, CheckCircleOutlineRounded } from "@mui/icons-material";
 
 const BookingDetails = () => {
   const searchParams = useSearchParams();
@@ -51,14 +48,20 @@ const BookingDetails = () => {
             status: "cancelled",
             rejection_reason: reason_for_booking_cancellation,
           })
-          .then((res) => fetchBooking());
+          .then((res) => {
+            fetchBooking();
+            setReason(false);
+          });
       } else {
         axios
           .put(`update_booking/${bookingDetails?.id}`, {
             status: "cancelled",
             rejection_reason: other_reason,
           })
-          .then((res) => fetchBooking());
+          .then((res) => {
+            fetchBooking();
+            setReason(false);
+          });
       }
     }
   };
