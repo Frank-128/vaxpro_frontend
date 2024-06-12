@@ -82,13 +82,14 @@ export function ScheduleAccordionAnimation({
             let buttonText = "Update";
             if (isDoseSaved) {
               divColorClass = "bg-green-500";
-            } else if (
+            }  else if (
               (!isDoseSaved && isVaccineIdNotInSavedScheds && index === 0) ||
               isNextVaccinationDate
             ) {
               divColorClass = "bg-orange-500";
               buttonText = "Next";
-            } else {
+            }
+             else {
               divColorClass = "bg-gray-500";
               buttonText = "Pending";
             }

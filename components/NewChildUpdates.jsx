@@ -14,6 +14,7 @@ const NewChildUpdates = ({
   openVacUpdate,
   handleCloseVaccUpdate,
   vaccines,
+  
 }) => {
   return (
     <Dialog
@@ -28,7 +29,7 @@ const NewChildUpdates = ({
       </DialogTitle>
       <DialogContent className="scrollbar-hidden">
         <DialogContentText id="alert-dialog-description">
-          <UpdateSchedAccordion vaccines={vaccines} />
+          <UpdateSchedAccordion  vaccines={vaccines} />
         </DialogContentText>
       </DialogContent>
     </Dialog>

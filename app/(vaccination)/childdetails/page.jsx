@@ -154,7 +154,9 @@ export default function TeamSection12() {
     axios.get(`/getSavedSchedules/${card_no}`).then((res) => {
       console.log(res.data.child_schedules);
       setSavedScheds(res.data.child_schedules);
+
       setBirthDate(res.data.birth_date);
+      
 
     });
   }, [card_no]);

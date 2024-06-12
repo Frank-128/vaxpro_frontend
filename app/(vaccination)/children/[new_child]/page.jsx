@@ -110,7 +110,7 @@ function NewChild({ params }) {
           Submit
         </Button>
       </form>
-      <NewChildUpdates handleCloseVaccUpdate={handleCloseVaccUpdate} openVacUpdate={openVacUpdate} vaccines={vaccines}  />
+      <NewChildUpdates  handleCloseVaccUpdate={handleCloseVaccUpdate} openVacUpdate={openVacUpdate} vaccines={vaccines}  />
     </div>
   );
 }
