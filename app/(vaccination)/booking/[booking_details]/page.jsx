@@ -7,16 +7,21 @@ import { Button, Select, Option, Input } from "@material-tailwind/react";
 import { useForm, Controller } from "react-hook-form";
 import clsx from "clsx";
 import { BlockRounded, CheckCircleOutlineRounded } from "@mui/icons-material";
+import { useInitial } from "@/constants/functions";
+import Loading from "../../loading";
 
 const BookingDetails = () => {
   const searchParams = useSearchParams();
+  const {getBookings} = useInitial();
   const [bookingDetails, setBookingDetails] = useState();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     control,
     watch,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm();
 
@@ -26,20 +31,25 @@ const BookingDetails = () => {
   const reasonForCancellation = [
     "We are full booked",
     "It is not working day",
+    "We don't provide this kind of vaccine",
     "Other reason",
   ];
 
   const bookingHandler = (setter) => {
     if (setter === 1) {
+      setLoading(true)
       axios
         .put(`update_booking/${bookingDetails?.id}`, {
           status: "confirmed",
         })
         .then((res) => {
+          setLoading(false);
           fetchBooking();
+          getBookings();
         });
     }
     if (typeof setter === "object") {
+      setLoading(true)
       const { other_reason, reason_for_booking_cancellation } = setter;
 
       if (reason_for_booking_cancellation !== "Other reason") {
@@ -49,7 +59,9 @@ const BookingDetails = () => {
             rejection_reason: reason_for_booking_cancellation,
           })
           .then((res) => {
+            setLoading(false)
             fetchBooking();
+            getBookings();
             setReason(false);
           });
       } else {
@@ -59,11 +71,15 @@ const BookingDetails = () => {
             rejection_reason: other_reason,
           })
           .then((res) => {
+            setLoading(false)
             fetchBooking();
+            getBookings();
             setReason(false);
           });
       }
+      
     }
+    // setLoading(false)
   };
 
   const fetchBooking = () => {
@@ -85,8 +101,9 @@ const BookingDetails = () => {
   // console.log(bookingDetails);
 
   return (
-    <main className="flex flex-col gap-12">
-      <div
+  bookingDetails ?  
+  <main className="flex flex-col gap-12">
+   { bookingDetails ?  <div
         className={clsx({
           "bg-green-50": bookingDetails?.status === "confirmed",
           "bg-red-50": bookingDetails?.status === "cancelled",
@@ -118,10 +135,11 @@ const BookingDetails = () => {
               {bookingDetails?.vaccination_date}
             </span>
           </div>
-        </div>
+        </div> 
         {!reason && bookingDetails?.status === "pending" && (
           <div className="flex gap-3 justify-center items-center">
             <Button
+              loading={loading}
               onClick={() => bookingHandler(1)}
               ripple={false}
               className="bg-green-700 shadow-none rounded h-[25%] py-1 px-12"
@@ -153,7 +171,7 @@ const BookingDetails = () => {
           )}
         </div>
       </div>
-
+: <Loading/>}
       {reason && (
         <form
           onSubmit={handleSubmit(bookingHandler)}
@@ -169,9 +187,10 @@ const BookingDetails = () => {
                 rules={{ required: "Select reason to submit" }}
                 name="reason_for_booking_cancellation"
                 render={({
-                  field: { onChange, onBlur, value },
+                  field: { onChange, onBlur, value, ref },
                   fieldState: { error },
                 }) => (
+                  <div>
                   <Select
                     animate={{
                       mount: { y: 0 },
@@ -194,20 +213,28 @@ const BookingDetails = () => {
                         {reason}
                       </Option>
                     ))}
+                  
                   </Select>
+                   {error && (
+                    <p className="text-red-900 text-xs font-monte">
+                      {error.message}
+                    </p>
+                  )}
+                  </div>
                 )}
               />
+             
             </div>
             {watch("reason_for_booking_cancellation") === "Other reason" && (
               <div className="flex flex-col gap-1 w-[60%]">
                 <span>Write the specific reason here</span>
                 <Input
                   {...register("other_reason", {
-                    required: "Write reason before to cancel",
+                    required:true,
                   })}
                 />
                 {errors.other_reason && (
-                  <p className="text-red-700">{errors.message}</p>
+                  <p className="text-red-500">Write reason for cancelling</p>
                 )}
               </div>
             )}
@@ -216,13 +243,15 @@ const BookingDetails = () => {
           <div className="flex gap-4 justify-end">
             <Button
               type="submit"
+              loading={loading}
               ripple={false}
               className="bg-[#212b36] shadow-none rounded py-3 px-12"
             >
               submit
             </Button>
             <Button
-              onClick={() => setReason(false)}
+              onClick={() => {setReason(false); clearErrors()}}
+            
               ripple={false}
               className="bg-red-800 shadow-none rounded py-3 px-12"
             >
@@ -232,6 +261,7 @@ const BookingDetails = () => {
         </form>
       )}
     </main>
+     : <Loading/>
   );
 };
 

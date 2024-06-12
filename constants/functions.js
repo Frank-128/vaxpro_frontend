@@ -77,13 +77,6 @@ export const useInitial = () => {
           });
       }
 
-      if(loggedInUser.role?.account_type === "health_worker"){
-        axios.get(`hospital_bookings/${loggedInUser?.facility_id}`).then((res)=>{
-            setBookings(res.data);
-        })
-
-      }
-
       axios
         .get(`roles`, {
           headers: {
@@ -125,13 +118,18 @@ export const useInitial = () => {
       });
   }, [loggedInUser, setAllUsers]);
 
+  const getBookings = useCallback(() => {
+    if (loggedInUser.role?.account_type === "health_worker") {
+      axios
+        .get(`hospital_bookings/${loggedInUser?.facility_id}`)
+        .then((res) => {
+          setBookings(res.data);
+        });
+    }
+  }, [loggedInUser?.facility_id, loggedInUser.role?.account_type, setBookings]);
 
-  
-
-  return { initialRequest, getInitialUsers };
+  return { initialRequest, getInitialUsers, getBookings };
 };
-
-
 
 export const verifyToken = async (token) => {
   try {
@@ -148,5 +146,3 @@ export const verifyToken = async (token) => {
     return err;
   }
 };
-
-
