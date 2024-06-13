@@ -4,9 +4,9 @@ import axios from "../../../axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import VaccinationModal from "@/components/VaccinationModal";
 import DateCalendarComp from "@/components/DateCalendar";
 import { LongDialog } from "@/components/ScheduleUpdates";
+import InfoUpdateModal from "@/components/InfoUpdateModal";
 
 function ChildCard({ ward, date_of_birth, card_no }) {
   return (
@@ -135,7 +135,7 @@ export default function TeamSection12() {
   const [childData, setChildData] = useState([]);
   const searchParams = useSearchParams();
   const card_no = searchParams.get("cardNo");
-  const [openAddVaccine, setOpenAddVaccine] = useState(false);
+  const [openUpdateInfo, setOpenUpdateInfo] = useState(false);
   const [open_date_viewer, setOpenDateViewer] = useState(false);
   const [vacShdls, setVacScheds] = useState([]);
   const [scheds, setScheds] = useState();
@@ -154,13 +154,15 @@ export default function TeamSection12() {
     axios.get(`/getSavedSchedules/${card_no}`).then((res) => {
       console.log(res.data.child_schedules);
       setSavedScheds(res.data.child_schedules);
+
       setBirthDate(res.data.birth_date);
+      
 
     });
   }, [card_no]);
 
-  const handleClickCloseAddVacc = () => {
-    setOpenAddVaccine(false);
+  const handleClickCloseUpdateInfo = () => {
+    setOpenUpdateInfo(false);
   };
 
   const handleClickCloseDateViewer = () => {
@@ -189,8 +191,8 @@ export default function TeamSection12() {
     setVaccineFetch([...childVaccines, newVaccine]);
   };
 
-  const handleClickOpenAddVacc = () => {
-    setOpenAddVaccine(true);
+  const handleClickOpenUpdateInfo = () => {
+    setOpenUpdateInfo(true);
   };
 
   useEffect(() => {
@@ -209,19 +211,6 @@ export default function TeamSection12() {
     });
   }, [card_no]);
 
-  // const handleVacSchedUpdate = ($vac_id, $date_of_birth) => {
-  //   axios
-  //     .post(`updateChildVacSchedule`, {
-  //       child_id: card_no,
-  //       vac_id: $vac_id,
-  //       curr_date: $date_of_birth,
-  //     })
-  //     .then((res) => {
-  //       if (res.data.status == 200) {
-  //         console.log(res.data);
-  //       }
-  //     });
-  // };
 
   return (
     <section className="min-h-screen py-8 px-8 lg:py-12">
@@ -239,10 +228,10 @@ export default function TeamSection12() {
                 <LongDialog birthDate={birth_date} childId={card_no} setSavedScheds={setSavedScheds} savedScheds={savedScheds}  />
 
                 <button
-                  onClick={handleClickOpenAddVacc}
-                  className="bg-[#212B36] text-white p-2 flex rounded-md  text-lg float-end font-bold"
+                  onClick={handleClickOpenUpdateInfo}
+                  className="bg-[#212B36] text-white p-2 flex rounded-md uppercase  text-xs  float-end font-bold"
                 >
-                  Add Vaccine
+                  <p className=" mt-1">Update info</p>
                 </button>
               </div>
             </Typography>
@@ -281,11 +270,12 @@ export default function TeamSection12() {
       </div>
       {childData.map((child, index) => (
         <div key={index}>
-          <VaccinationModal
+          <InfoUpdateModal
+            childDetails={childData}
             cardNo={child.card_no}
             birthDate={child.date_of_birth}
-            openAddVaccine={openAddVaccine}
-            handleClickCloseAddVacc={handleClickCloseAddVacc}
+            openUpdateInfo={openUpdateInfo}
+            handleClickCloseUpdateInfo={handleClickCloseUpdateInfo}
             notifyAddVaccine={notifyAddVaccine}
           />
         </div>

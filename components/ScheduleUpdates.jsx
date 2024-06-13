@@ -16,6 +16,7 @@ export function LongDialog({ birthDate, childId, savedScheds, setSavedScheds }) 
   const [schedItems, setVacItems] = useState([]);
 
   const handleOpen = () => {
+    console.log(birthDate)
     axios.get(`/fetchVaccineIds`).then((res) => {
       axios
         .post(`/getAllChildSchedules`, {
