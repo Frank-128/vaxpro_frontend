@@ -20,14 +20,24 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   const [logoutDiolog, setLogoutDialog] = useState(false);
   const router = useRouter();
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
-  const [searchChild,setSearchChild] = useState(null)
+  const [searchChild, setSearchChild] = useState(null);
   const [loading, setLoading] = useState(false);
-  const selectRef = useRef(null)
+  const selectRef = useRef(null);
+  const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDeviceWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      width: 350,
+      width: deviceWidth > 700 ? 350 : 300,
       outline: 'none',
       boxShadow: state.isFocused ? '0 0 0 1px black' : 'none',
       '&:hover': {
@@ -36,17 +46,16 @@ function Navbar({ openSidebar, setOpenSidebar }) {
     }),
     menu: (provided) => ({
       ...provided,
-      width: 350,
+      width: deviceWidth > 700 ? 350 : 300,
       zIndex: 50,
-      backgroundColor:'white'
+      backgroundColor: 'white'
     })
   };
 
-  const handleSelectedChild = (selectedChild)=>{
-    router.push(`/childdetails?cardNo=${selectedChild?.value}`)
-    setSearchChild(null)
-   
-  }
+  const handleSelectedChild = (selectedChild) => {
+    router.push(`/childdetails?cardNo=${selectedChild?.value}`);
+    setSearchChild(null);
+  };
 
   const loadOptions = async (inputValue, callback) => {
     try {
@@ -57,13 +66,11 @@ function Navbar({ openSidebar, setOpenSidebar }) {
       });
       const data = response.data;
 
-      if(data){
-
+      if (data) {
         const formattedOptions = data.map(item => ({
           value: item.card_no,
-          label: item.firstname+" "+item.surname+"--"+item.card_no,
+          label: item.firstname + " " + item.surname + "--" + item.card_no,
         }));
-        
         callback(formattedOptions);
       }
     } catch (error) {
@@ -85,94 +92,90 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           router.push("/signin");
           setLoading(false);
         }, 2000);
-
-
         console.log(res.data, "LOGOUT ERROR");
       });
   };
 
   return (
     <nav
-      className={`bg-white sticky left-0 top-0 p-2  h-20 z-10  flex items-center w-screen justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
+      className={`bg-white sticky left-0 top-0 p-2 h-20 z-10 flex-col md:flex-row flex items-center w-screen justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
         openSidebar
           ? "md:left-[280px] md:w-[calc(100vw-280px)] "
           : "md:left-0  "
       }`}
     >
-      <div className="flex gap-2 items-center ">
+      <div className="flex gap-2 md:px-0 px-4 items-center">
         <Menu onClick={() => setOpenSidebar(!openSidebar)} />
         <AsyncSelect
-      value={searchChild}
-      styles={customStyles}
-      loadOptions={loadOptions}
-      onChange={handleSelectedChild}
-      placeholder="Search the child here"
-    />
+          value={searchChild}
+          styles={customStyles}
+          loadOptions={loadOptions}
+          onChange={handleSelectedChild}
+          placeholder="Search the child here"
+        />
       </div>
-      <div className="flex gap-6 justify-center items-center capitalize">
-        <div className="flex gap-2">
-          <p>Level:</p>
-          <h1 className=" md:block hidden font-monte-1">
-            {loggedInUser.role?.account_type}
-          </h1>
-        </div>
-        {loggedInUser.region_id &&
-          loggedInUser.role.account_type === "regional" && (
-            <div className="flex gap-2">
-              <p>Region:</p>
-              <h1 className=" md:block hidden font-monte-1">
-                {loggedInUser.region.region_name}
-              </h1>
+      <div>
+        <div className="flex gap-6 justify-center items-center capitalize">
+          <div className="flex gap-2">
+            <p>Level:</p>
+            <h1 className="md:block hidden font-monte-1">
+              {loggedInUser.role?.account_type}
+            </h1>
+          </div>
+          {loggedInUser.region_id &&
+            loggedInUser.role.account_type === "regional" && (
+              <div className="flex gap-2">
+                <p>Region:</p>
+                <h1 className="md:block hidden font-monte-1">
+                  {loggedInUser.region.region_name}
+                </h1>
+              </div>
+            )}
+          {loggedInUser.district_id && (
+            <div className="text-sm">
+              <div className="flex gap-2">
+                <p>District:</p>
+                <h1 className="md:block hidden font-monte-1">
+                  {loggedInUser.district?.district_name}
+                </h1>
+              </div>
+              <div className="flex gap-2">
+                <p>Region:</p>
+                <h1 className="md:block hidden font-monte-1">
+                  {loggedInUser.district?.region.region_name}
+                </h1>
+              </div>
             </div>
           )}
-        {loggedInUser.district_id && (
-          <div className="text-sm">
-            <div className="flex gap-2">
-              <p>District:</p>
-              <h1 className=" md:block hidden font-monte-1">
-                {loggedInUser.district?.district_name}
-              </h1>
-            </div>
-            <div className="flex gap-2">
-              <p> Region:</p>
-              <h1 className=" md:block hidden font-monte-1">
-                {loggedInUser.district?.region.region_name}
-              </h1>
-            </div>
-          </div>
-        )}
-        <div className="flex flex-col gap-2">
-          {loggedInUser.facility && (
+          <div className="flex flex-col gap-2">
+            {loggedInUser.facility && (
+              <div className="flex gap-3">
+                <p>Facility:</p>
+                <h1 className="md:block hidden font-monte-1">
+                  {loggedInUser.facility?.facility_name}
+                </h1>
+              </div>
+            )}
             <div className="flex gap-3">
-              {" "}
-              <p>Facility:</p>
-              <h1 className=" md:block hidden font-monte-1">
-              {loggedInUser.facility?.facility_name}
-
+              <p>Role:</p>
+              <h1 className="md:block hidden font-monte-1">
+                {loggedInUser.role?.role}
               </h1>
             </div>
-          )}
-          <div className="flex gap-3">
-
-          <p>Role:</p>
-          <h1 className=" md:block hidden font-monte-1">
-            {loggedInUser.role?.role}
-          </h1>
           </div>
+          <Button
+            className="bg-white py-2 px-3 text-black border border-black font-monte-3 shadow-none"
+            onClick={() => {
+              setLogoutDialog(true);
+            }}
+          >
+            sign out
+          </Button>
         </div>
-        <Button
-          className="bg-white py-2 px-3 text-black border border-black font-monte-3 shadow-none"
-          onClick={() => {
-            setLogoutDialog(true);
-          }}
-        >
-          sign out
-        </Button>
       </div>
-
       <Dialog
         open={logoutDiolog}
-        handler={() =>{ setLogoutDialog(false)}}
+        handler={() => setLogoutDialog(false)}
         size="xs"
       >
         <DialogHeader></DialogHeader>
@@ -191,10 +194,8 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           <Button
             loading={loading}
             disabled={loading}
-            className="bg-red-900 "
-            onClick={() => {
-              logout();
-            }}
+            className="bg-red-900"
+            onClick={logout}
           >
             {loading ? <span>logging out</span> : <span>logout</span>}
           </Button>

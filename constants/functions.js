@@ -97,9 +97,9 @@ export const useInitial = () => {
       console.log("wrong credentials");
     }
   }, [
-    loggedInUser.district?.id,
-    loggedInUser.region?.id,
-    loggedInUser.role?.account_type,
+    loggedInUser?.district?.id,
+    loggedInUser?.region?.id,
+    loggedInUser?.role?.account_type,
     setAuthenticatedToken,
     setDistricts,
     setLoggedInUser,
