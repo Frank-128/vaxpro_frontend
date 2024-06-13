@@ -11,8 +11,8 @@ import { useRouter } from "next/navigation";
 import globalAlert from "@/store/alert";
 import { Alert } from "@material-tailwind/react";
 import { Error, Verified } from "@mui/icons-material";
-import globalAddress from "@/store/address";
 import globalUser from "@/store/user";
+import { useEcho } from '@/constants/echo';
 
 
 function Main({ children }) {
@@ -26,7 +26,7 @@ function Main({ children }) {
   
   
   useEffect(() => {
-      
+   
     initialRequest();
   }, [initialRequest]);
   
@@ -35,7 +35,14 @@ function Main({ children }) {
     getBookings()
   },[getBookings, getInitialUsers])
 
-  
+  const echo = useEcho()
+  useEffect(() => {
+      if(echo){
+          echo.channel(`testChannel`).listen('testingEvent',event=>{
+            console.log('Real time event received',event)
+          })
+        }
+  }, [echo]);
 
   useEffect(()=>{
     if(isIdle){

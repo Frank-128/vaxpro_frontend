@@ -29,22 +29,38 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   const [loading, setLoading] = useState(false);
   const selectRef = useRef(null);
 
+  const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDeviceWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      width: 350,
-      outline: "none",
-      boxShadow: state.isFocused ? "0 0 0 1px black" : "none",
-      "&:hover": {
-        boxShadow: "0 0 0 1px black",
-      },
+
+      width: deviceWidth > 700 ? 350 : 300,
+      outline: 'none',
+      boxShadow: state.isFocused ? '0 0 0 1px black' : 'none',
+      '&:hover': {
+        boxShadow: '0 0 0 1px black'
+      }
+
     }),
     menu: (provided) => ({
       ...provided,
-      width: 350,
+      width: deviceWidth > 700 ? 350 : 300,
       zIndex: 50,
-      backgroundColor: "white",
-    }),
+
+      backgroundColor: 'white'
+    })
+
   };
 
   const handleSelectedChild = (selectedChild) => {
@@ -62,7 +78,8 @@ function Navbar({ openSidebar, setOpenSidebar }) {
       const data = response.data;
 
       if (data) {
-        const formattedOptions = data.map((item) => ({
+
+        const formattedOptions = data.map(item => ({
           value: item.card_no,
           label: item.firstname + " " + item.surname + "--" + item.card_no,
         }));
@@ -99,13 +116,13 @@ function Navbar({ openSidebar, setOpenSidebar }) {
 
   return (
     <nav
-      className={`bg-white sticky left-0 top-0 p-2  h-20 z-10  flex items-center w-screen justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
+      className={`bg-white sticky left-0 top-0 p-2 h-20 z-10 flex-col md:flex-row flex items-center w-screen justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
         openSidebar
           ? "md:left-[280px] md:w-[calc(100vw-280px)] "
           : "md:left-0  "
       }`}
     >
-      <div className="flex gap-2 items-center ">
+      <div className="flex gap-2 md:px-0 px-4 items-center">
         <Menu onClick={() => setOpenSidebar(!openSidebar)} />
         <AsyncSelect
           value={searchChild}
@@ -115,6 +132,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           placeholder="Search the child here"
         />
       </div>
+
       {loggedInUser ? (
         <div className="hidden lg:flex gap-6 justify-center items-center capitalize">
           <div className="flex gap-2">
@@ -123,13 +141,16 @@ function Navbar({ openSidebar, setOpenSidebar }) {
               {loggedInUser.role?.account_type === "health_worker"
                 ? "health worker"
                 : loggedInUser.role?.account_type}
+
             </h1>
           </div>
           {loggedInUser.region_id &&
             loggedInUser.role.account_type === "regional" && (
               <div className="flex gap-2">
                 <p>Region:</p>
-                <h1 className=" md:block hidden font-monte-1">
+
+                <h1 className="md:block hidden font-monte-1">
+
                   {loggedInUser.region.region_name}
                 </h1>
               </div>
@@ -138,13 +159,17 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             <div className="text-sm">
               <div className="flex gap-2">
                 <p>District:</p>
+
                 <h1 className=" md:block hidden font-monte-1">
+
                   {loggedInUser.district?.district_name}
                 </h1>
               </div>
               <div className="flex gap-2">
+
                 <p> Region:</p>
                 <h1 className=" md:block hidden font-monte-1">
+
                   {loggedInUser.district?.region.region_name}
                 </h1>
               </div>
@@ -153,20 +178,25 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           <div className="flex flex-col gap-2">
             {loggedInUser.facility && (
               <div className="flex gap-3">
+
                 {" "}
                 <p>Facility:</p>
                 <h1 className=" md:block hidden font-monte-1">
+
                   {loggedInUser.facility?.facility_name}
                 </h1>
               </div>
             )}
             <div className="flex gap-3">
               <p>Role:</p>
+
               <h1 className=" md:block hidden font-monte-1">
+
                 {loggedInUser.role?.role}
               </h1>
             </div>
           </div>
+
           <Button
             className=" py-2 px-6 bg-blue-900 rounded-[0.25rem]  
            text-white border border-blue-900  shadow-none"
@@ -174,6 +204,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
               setLogoutDialog(true);
             }}
             ripple={false}
+
           >
             sign out
           </Button>

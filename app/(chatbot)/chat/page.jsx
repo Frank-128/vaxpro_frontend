@@ -1,10 +1,12 @@
 "use client"
-import React from 'react'
+
+import React, { useEffect } from 'react'
 import SarufiChatbox from "react-sarufi-chatbox"
   
 // usage
 
 function ChatPage() {
+ 
   return (
     <div className='w-screen h-screen  flex items-center justify-center'>
         <div className=''>

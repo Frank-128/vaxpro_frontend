@@ -27,9 +27,9 @@ const Login = () => {
     (state) => state.setAuthenticatedToken
   );
   
-  const login = async (data) => {
+  const login =  (data) => {
     setLoading({ loading: true });
-    await axios.post(`login`, data).then(async (res) => {
+     axios.post(`login`, data).then( (res) => {
       if (res.data.status === 200) {
         const encryptionKey = "vaxpro_tanzania";
 
@@ -40,7 +40,7 @@ const Login = () => {
 
         Cookies.set("USER_TOKEN", encryptedData);
         setAuthenticatedToken(res.data.token);
-        await axios
+         axios
           .get(`user`, {
             headers: {
               Authorization: `Bearer ${res.data.token}`,
@@ -54,6 +54,8 @@ const Login = () => {
       } else {
         setLoading({ loading: false, error: "Wrong Credentials" });
       }
+    }).catch((err)=>{
+      setLoading({ loading: false, error: "Network error please try again later" });
     });
   };
 
