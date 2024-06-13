@@ -12,9 +12,9 @@ import { Fragment, useEffect } from "react";
 import globalAllUsers from "@/store/all_users";
 import axios from "../../axios";
 
-function TeamCard({ name, title }) {
+function TeamCard({ name, title,bg }) {
   return (
-    <Card className="rounded-lg bg-[#212B36] h-28" shadow={false}>
+    <Card className={`rounded-lg ${bg}  h-28}`} shadow={false}>
       <CardBody className="text-center">
         <Typography
           variant="h5"
@@ -42,18 +42,22 @@ export function Dashboard() {
     {
       name: "Vaccinated Children",
       title: children?.vaccinated_children,
+      bg:"bg-[#abc321]"
     },
     {
-      name: "Unvaccinated Children",
+      name: "Ongoing Vaccinations",
       title: children?.unvaccinated_children,
+      bg:"bg-[#acb987]"
     },
     {
       name: "Registered Children",
       title: children?.registered_children,
+      bg:"bg-[#bbcd7e]"
     },
     {
       name: "Success Rate",
       title: children?.success + "%",
+      bg:"bg-[#ee4caf]"
     },
   ];
 
@@ -74,14 +78,14 @@ export function Dashboard() {
             children == null ? (
               <Card
                 key={key}
-                className="rounded-lg bg-[#212B36] h-28 animate-pulse"
+                className={`rounded-lg bg-green-200  h-28 animate-pulse`}
                 shadow={false}
               >
                 <CardBody className="text-center">
                   <Typography
                     variant="h5"
                     color="blue-gray"
-                    className="!font-medium  bg-slate-300 rounded  text-lg text-white"
+                    className="!font-medium  bg-slate-800 rounded  text-lg text-white"
                   ></Typography>
                   <Typography
                     color="blue-gray"
