@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionHeader,
@@ -25,6 +25,8 @@ export function ScheduleAccordionAnimation({
   const [open, setOpen] = useState(0);
   const [currentDose, setCurrentDose] = useState(0);
   const loggedInUser = globalUser((state) => state.loggedInUser);
+  const [vaccines,setVaccines] = useState([])
+  
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
 
@@ -51,6 +53,17 @@ export function ScheduleAccordionAnimation({
       });
   };
 
+  useEffect(()=>{
+    axios.get('/getVaccines').then((res)=>{
+        setVaccines(res.data.vaccines)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  },[])
+
+  console.log(vaccines)
+  console.log(savedScheds)
+
   return (
     <>
       <Accordion open={open === 1} animate={CUSTOM_ANIMATION}>
@@ -65,11 +78,15 @@ export function ScheduleAccordionAnimation({
             const isVaccineIdNotInSavedScheds = !savedScheds.some(
               (sched) => sched.vaccine_id === currentItem.id
             );
-
+            let savedDoseDate = null;
             const isDoseSaved = savedScheds.some(
               (sched) =>
-                sched.vaccination_date === date &&
-                sched.vaccine_id === currentItem.id
+{                // sched.vaccination_date === date 
+                // (Number(sched.frequency) < sched.total_freq || Number(sched.frequency) === sched.total_freq )
+                
+                // &&
+                savedDoseDate = sched.vaccination_date
+                return (sched.frequency == (index+1) && sched.vaccine_id === currentItem.id) }//4
             );
 
             const nextVaccinationDates = savedScheds
@@ -113,7 +130,7 @@ export function ScheduleAccordionAnimation({
                 )}
                 <p className="mt-1">{`${
                   doseType.charAt(0).toUpperCase() + doseType.slice(1)
-                }: ${date}`}</p>
+                }: ${isDoseSaved?savedDoseDate:date}`}</p>
               </div>
             );
           })}

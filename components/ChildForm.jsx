@@ -23,12 +23,11 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
   const validateDate = (value) => {
     const selectedDate = new Date(value);
     const today = new Date();
+    selectedDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0); // Set to midnight to compare only the date part
     return selectedDate <= today || "Date should not exceed today's date";
   };
-
   
-
 
   const handleCardNoChange = async (e) => {
     const currentCardNo = e.target.value.trim();
