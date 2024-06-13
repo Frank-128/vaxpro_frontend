@@ -43,6 +43,68 @@ const InfoUpdateModal = ({
 
   const [wards, setWards] = useState([]);
 
+  useEffect(()=>{
+    const extractedChildData = childDetails.map((child) => ({
+      card_no: child.card_no,
+      firstname: child.firstname,
+      middlename: child.middlename,
+      surname: child.surname,
+      facility_id: child.facility_id,
+      ward_id: child.ward_id,
+      house_no: child.house_no,
+      date_of_birth: child.date_of_birth,
+      modified_by: child.modified_by,
+      created_at: child.created_at,
+      updated_at: child.updated_at,
+    }));
+    
+  
+    const extractedParentData = childDetails.flatMap((child) =>
+      child.parents_guardians.map((parent) => ({
+        nida_id: parent.nida_id,
+        firstname: parent.firstname,
+        middlename: parent.middlename,
+        lastname: parent.lastname,
+        user_id: parent.user_id,
+        created_at: parent.created_at,
+        updated_at: parent.updated_at,
+        relationship_with_child: parent.pivot.relationship_with_child,
+        contacts: parent.user.contacts,
+      }))
+    );
+   
+  
+    const extractedAddressData = childDetails.map((child) => ({
+      ward_name: child.ward.ward_name,
+      district_name: child.ward.district.district_name,
+      region_name: child.ward.district.region.region_name,
+    }));
+
+    setChildData(extractedChildData);
+    setParentData(extractedParentData);
+    setAddressData(extractedAddressData);
+
+    if (childData.length > 0 && addressData.length > 0 && parentData.length > 0) {
+      setValue("card_no", childData[0].card_no);
+      setValue("first_name", childData[0].firstname);
+      setValue("middle_name", childData[0].middlename);
+      setValue("last_name", childData[0].surname);
+      setValue("birth_date", childData[0].date_of_birth);
+      setValue("house_no", childData[0].house_no);
+
+      setValue("ward_id", addressData[0].ward_name);
+
+      setValue("par_first_name", parentData[0].firstname)
+      setValue("par_middle_name", parentData[0].middlename)
+      setValue("par_last_name", parentData[0].lastname)
+      setValue("nida_id", parentData[0].nida_id)
+      setValue("contact", parentData[0].contacts)
+      setValue("relation", parentData[0].relationship_with_child)
+      
+    }
+  
+  }, [childDetails]);
+
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
     if (searchQuery) {
@@ -62,39 +124,9 @@ const InfoUpdateModal = ({
     return selectedDate <= today || "Date should not exceed today's date";
   };
 
-  const extractedChildData = childDetails.map((child) => ({
-    card_no: child.card_no,
-    firstname: child.firstname,
-    middlename: child.middlename,
-    surname: child.surname,
-    facility_id: child.facility_id,
-    ward_id: child.ward_id,
-    house_no: child.house_no,
-    date_of_birth: child.date_of_birth,
-    modified_by: child.modified_by,
-    created_at: child.created_at,
-    updated_at: child.updated_at,
-  }));
+  
 
-  const extractedParentData = childDetails.flatMap((child) =>
-    child.parents_guardians.map((parent) => ({
-      nida_id: parent.nida_id,
-      firstname: parent.firstname,
-      middlename: parent.middlename,
-      lastname: parent.lastname,
-      user_id: parent.user_id,
-      created_at: parent.created_at,
-      updated_at: parent.updated_at,
-      relationship_with_child: parent.pivot.relationship_with_child,
-      contacts: parent.user.contacts,
-    }))
-  );
-
-  const extractedAddressData = childDetails.map((child) => ({
-    ward_name: child.ward.ward_name,
-    district_name: child.ward.district.district_name,
-    region_name: child.ward.district.region.region_name,
-  }));
+  // setValue("card_no", childData.card_no);
 
   const handleNidaChange = async (e) => {
     const nidaNo = e.target.value;
@@ -118,7 +150,6 @@ const InfoUpdateModal = ({
     }
   };
 
-  console.log(extractedChildData);
 
   return (
     <Dialog
@@ -129,7 +160,7 @@ const InfoUpdateModal = ({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title" className="">
-        {"Update Child Information:"}
+        {"Child Information:"}
       </DialogTitle>
       <DialogContent className="scrollbar-hidden">
         <DialogContentText id="alert-dialog-description">
@@ -202,7 +233,7 @@ const InfoUpdateModal = ({
 
             <div className="flex flex-col gap-3">
               <Input
-                label="Birth Date"
+                label="Birth Date "
                 type="date"
                 {...register("birth_date", {
                   required: "This field is required",
@@ -276,7 +307,7 @@ const InfoUpdateModal = ({
         </DialogContentText>
       </DialogContent>
       <DialogTitle id="alert-dialog-title" className="">
-        {"Update Parent Information:"}
+        {"Parent / Guardian Information:"}
       </DialogTitle>
       <DialogContent className="scrollbar-hidden">
         <DialogContentText id="alert-dialog-description">
@@ -348,53 +379,51 @@ const InfoUpdateModal = ({
                 </p>
               )}
 
-              <div>
-                <div className="flex font-monte-1 relative">
-                  <span
-                    className={clsx(
-                      " absolute inset-y-0 left-0 px-2 text-black flex items-center rounded bg-gray-300",
-                      {
-                        "border-r-2 border-black": isFocused,
-                        "border-r border-gray-500": !isFocused,
-                      }
-                    )}
-                  >
-                    +255
-                  </span>
+              <div className="flex font-monte-1 relative">
+                <span
+                  className={clsx(
+                    " absolute inset-y-0 left-0 px-2 text-black flex items-center rounded bg-gray-300",
+                    {
+                      "border-r-2 border-black": isFocused,
+                      "border-r border-gray-500": !isFocused,
+                    }
+                  )}
+                >
+                  +255
+                </span>
 
-                  <Input
-                    labelProps={{
-                      className: "before:content-none after:content-none",
-                    }}
-                    onFocus={() => setIsFocused(true)}
-                    autoComplete="off"
-                    className="text-black font-monte-1 pl-16 border  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    size="lg"
-                    placeholder="Contacts"
-                    {...register("contact", {
-                      onBlur: () => setIsFocused(false),
-                      required: "This field is required",
-                      maxLength: {
-                        value: 9,
-                        message: "Phone number should be exactly 9 digits",
-                      },
-                      minLength: {
-                        value: 9,
-                        message: "Phone number should be exactly 9 digits",
-                      },
-                      pattern: {
-                        value: /^[67][123456789][0-9]+$/,
-                        message: "Please enter valid number",
-                      },
-                    })}
-                  />
-                </div>
-                {errors.contact && (
-                  <p className="text-red-900 text-xs font-monte">
-                    {errors.contact.message}
-                  </p>
-                )}
+                <Input
+                  labelProps={{
+                    className: "before:content-none after:content-none",
+                  }}
+                  onFocus={() => setIsFocused(true)}
+                  autoComplete="off"
+                  className="text-black font-monte-1 pl-16 border  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
+                  size="lg"
+                  placeholder="Contacts"
+                  {...register("contact", {
+                    onBlur: () => setIsFocused(false),
+                    required: "This field is required",
+                    maxLength: {
+                      value: 9,
+                      message: "Phone number should be exactly 9 digits",
+                    },
+                    minLength: {
+                      value: 9,
+                      message: "Phone number should be exactly 9 digits",
+                    },
+                    pattern: {
+                      value: /^[67][123456789][0-9]+$/,
+                      message: "Please enter valid number",
+                    },
+                  })}
+                />
               </div>
+              {errors.contact && (
+                <p className="text-red-900 text-xs font-monte">
+                  {errors.contact.message}
+                </p>
+              )}
 
               <Controller
                 control={control}
