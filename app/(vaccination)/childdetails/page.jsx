@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import DateCalendarComp from "@/components/DateCalendar";
 import { LongDialog } from "@/components/ScheduleUpdates";
 import InfoUpdateModal from "@/components/InfoUpdateModal";
+import { useRouter } from "next/navigation";
 
 function ChildCard({ ward, date_of_birth, card_no }) {
   return (
@@ -143,6 +144,8 @@ export default function TeamSection12() {
   const [savedScheds, setSavedScheds] = useState([]);
   const [birth_date, setBirthDate] = useState();
 
+  const router = useRouter();
+
   useEffect(() => {
     axios
       .get(`/fetchVaccineIds`, { params: { child_id: card_no } })
@@ -192,7 +195,7 @@ export default function TeamSection12() {
   };
 
   const handleClickOpenUpdateInfo = () => {
-    setOpenUpdateInfo(true);
+    router.push(`/info_update?cardNo=${card_no}`)
   };
 
   useEffect(() => {
