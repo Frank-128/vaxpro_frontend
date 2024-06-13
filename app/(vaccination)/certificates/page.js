@@ -15,7 +15,7 @@ function Certificates() {
       <Button
         ripple={false}
         loading={loading}
-        className="bg-[#212b36] shadow-none rounded-sm w-[40%] flex justify-center items-center"
+        className="bg-[#212b36] rounded-[0.25rem] shadow-none  w-[40%] flex justify-center items-center"
         onClick={() => {
           generateCertificate();
           setLoading(true);
@@ -24,7 +24,7 @@ function Certificates() {
         {loading ? "Generating certificate" : "Generate certificate"}
       </Button>
 
-     ``
+    
       {/* <Dialog
         size="xl"
         open={pdfContent}

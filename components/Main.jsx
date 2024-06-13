@@ -16,7 +16,7 @@ import { useEcho } from '@/constants/echo';
 
 
 function Main({ children }) {
-  const {initialRequest,getInitialUsers} = useInitial();
+  const {initialRequest,getInitialUsers, getBookings} = useInitial();
   const [openSidebar, setOpenSidebar] = useState(true);
   const isIdle = useIdle(1000*60*60*2)
   const router = useRouter()
@@ -32,7 +32,8 @@ function Main({ children }) {
   
   useEffect(()=>{
     getInitialUsers()
-  },[getInitialUsers])
+    getBookings()
+  },[getBookings, getInitialUsers])
 
   const echo = useEcho()
   useEffect(() => {
@@ -56,11 +57,10 @@ function Main({ children }) {
         
         return router.push("/signin");
         
-
      
     })}
    
-  },[isIdle,router])
+  },[authenticatedToken, isIdle, router])
 
  
   return (

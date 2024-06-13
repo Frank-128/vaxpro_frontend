@@ -55,7 +55,7 @@ const Children = () => {
         
         
         const child_date = new Date(res.data.birthDate)
-        const daysDifference = getDaysDifference(today, child_date);
+        const daysDifference = getDaysDifference(child_date, today);
         
         if(daysDifference > 0){
           console.log(daysDifference)

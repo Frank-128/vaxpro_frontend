@@ -64,7 +64,9 @@ export function Dashboard() {
       });
     };
     fetchChildren();
-  }, []);
+
+  }, [setAllChildren]);
+
 
   return (
     <section className="min-h-screen py-8 px-8 lg:py-12">

@@ -3,17 +3,22 @@ import React, { useEffect, useRef, useState } from "react";
 import { Menu } from "@mui/icons-material";
 import { Button, Input } from "@material-tailwind/react";
 import globalUser from "@/store/user";
-import axios from '../axios'
+import axios from "../axios";
 
 import {
   Dialog,
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Card,
+  Typography,
+  CardFooter,
+  CardBody,
+  Checkbox,
 } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(vaccination)/loading";
-import AsyncSelect from 'react-select/async';
+import AsyncSelect from "react-select/async";
 
 function Navbar({ openSidebar, setOpenSidebar }) {
   const loggedInUser = globalUser((state) => state.loggedInUser);
@@ -23,6 +28,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   const [searchChild, setSearchChild] = useState(null);
   const [loading, setLoading] = useState(false);
   const selectRef = useRef(null);
+
   const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -34,22 +40,27 @@ function Navbar({ openSidebar, setOpenSidebar }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
+
       width: deviceWidth > 700 ? 350 : 300,
       outline: 'none',
       boxShadow: state.isFocused ? '0 0 0 1px black' : 'none',
       '&:hover': {
         boxShadow: '0 0 0 1px black'
       }
+
     }),
     menu: (provided) => ({
       ...provided,
       width: deviceWidth > 700 ? 350 : 300,
       zIndex: 50,
+
       backgroundColor: 'white'
     })
+
   };
 
   const handleSelectedChild = (selectedChild) => {
@@ -59,7 +70,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
 
   const loadOptions = async (inputValue, callback) => {
     try {
-      const response = await axios.get('children', {
+      const response = await axios.get("children", {
         params: {
           cardNo: inputValue,
         },
@@ -67,14 +78,16 @@ function Navbar({ openSidebar, setOpenSidebar }) {
       const data = response.data;
 
       if (data) {
+
         const formattedOptions = data.map(item => ({
           value: item.card_no,
           label: item.firstname + " " + item.surname + "--" + item.card_no,
         }));
+
         callback(formattedOptions);
       }
     } catch (error) {
-      console.error('Error fetching data', error);
+      console.error("Error fetching data", error);
       callback([]);
     }
   };
@@ -92,8 +105,13 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           router.push("/signin");
           setLoading(false);
         }, 2000);
+
         console.log(res.data, "LOGOUT ERROR");
       });
+  };
+
+  const handleOpen = () => {
+    setLogoutDialog(false);
   };
 
   return (
@@ -114,19 +132,25 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           placeholder="Search the child here"
         />
       </div>
-      <div>
-        <div className="flex gap-6 justify-center items-center capitalize">
+
+      {loggedInUser ? (
+        <div className="hidden lg:flex gap-6 justify-center items-center capitalize">
           <div className="flex gap-2">
             <p>Level:</p>
-            <h1 className="md:block hidden font-monte-1">
-              {loggedInUser.role?.account_type}
+            <h1 className=" md:block hidden font-monte-1">
+              {loggedInUser.role?.account_type === "health_worker"
+                ? "health worker"
+                : loggedInUser.role?.account_type}
+
             </h1>
           </div>
           {loggedInUser.region_id &&
             loggedInUser.role.account_type === "regional" && (
               <div className="flex gap-2">
                 <p>Region:</p>
+
                 <h1 className="md:block hidden font-monte-1">
+
                   {loggedInUser.region.region_name}
                 </h1>
               </div>
@@ -135,13 +159,17 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             <div className="text-sm">
               <div className="flex gap-2">
                 <p>District:</p>
-                <h1 className="md:block hidden font-monte-1">
+
+                <h1 className=" md:block hidden font-monte-1">
+
                   {loggedInUser.district?.district_name}
                 </h1>
               </div>
               <div className="flex gap-2">
-                <p>Region:</p>
-                <h1 className="md:block hidden font-monte-1">
+
+                <p> Region:</p>
+                <h1 className=" md:block hidden font-monte-1">
+
                   {loggedInUser.district?.region.region_name}
                 </h1>
               </div>
@@ -150,56 +178,74 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           <div className="flex flex-col gap-2">
             {loggedInUser.facility && (
               <div className="flex gap-3">
+
+                {" "}
                 <p>Facility:</p>
-                <h1 className="md:block hidden font-monte-1">
+                <h1 className=" md:block hidden font-monte-1">
+
                   {loggedInUser.facility?.facility_name}
                 </h1>
               </div>
             )}
             <div className="flex gap-3">
               <p>Role:</p>
-              <h1 className="md:block hidden font-monte-1">
+
+              <h1 className=" md:block hidden font-monte-1">
+
                 {loggedInUser.role?.role}
               </h1>
             </div>
           </div>
+
           <Button
-            className="bg-white py-2 px-3 text-black border border-black font-monte-3 shadow-none"
+            className=" py-2 px-6 bg-blue-900 rounded-[0.25rem]  
+           text-white border border-blue-900  shadow-none"
             onClick={() => {
               setLogoutDialog(true);
             }}
+            ripple={false}
+
           >
             sign out
           </Button>
         </div>
-      </div>
+      ) : (
+        <div className=" hidden lg:flex w-4/12 h-full justify-center items-center">
+          <Loading />
+        </div>
+      )}
+
       <Dialog
-        open={logoutDiolog}
-        handler={() => setLogoutDialog(false)}
         size="xs"
+        open={logoutDiolog}
+        handler={handleOpen}
+        className="bg-transparent shadow-none "
       >
-        <DialogHeader></DialogHeader>
-        <DialogBody className="text-black font-monte-1">
-          Are you sure you want to logout?
-        </DialogBody>
-        <DialogFooter className="flex gap-8">
-          <Button
-            className="bg-[#212b36]"
-            onClick={() => {
-              setLogoutDialog(false);
-            }}
-          >
-            cancel
-          </Button>
-          <Button
-            loading={loading}
-            disabled={loading}
-            className="bg-red-900"
-            onClick={logout}
-          >
-            {loading ? <span>logging out</span> : <span>logout</span>}
-          </Button>
-        </DialogFooter>
+        <Card className="mx-auto w-full max-w-[24rem] rounded-[0.35rem]">
+          <CardBody className="flex flex-col font-monte-1 text-black gap-4">
+            Are you sure you want to logout?
+          </CardBody>
+          <CardFooter className="pt-0 flex justify-end items-center gap-4">
+            <Button
+              loading={loading}
+              disabled={loading}
+              className="bg-red-900 rounded-[0.25rem] "
+              onClick={() => {
+                logout();
+              }}
+            >
+              {loading ? <span>logging out</span> : <span>logout</span>}
+            </Button>
+            <Button
+              className="text-white bg-[#212b36] rounded-[0.25rem] "
+              onClick={() => {
+                setLogoutDialog(false);
+              }}
+            >
+              cancel
+            </Button>
+          </CardFooter>
+        </Card>
       </Dialog>
     </nav>
   );
