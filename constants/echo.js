@@ -23,10 +23,10 @@ export const useEcho = ()=>{
                         axios.post('/broadcasting/auth', {
                             socket_id: socketId,
                             channel_name: channel.name,
-                            headers: {
-                                Authorization: `Bearer ${authenticatedToken}`,
-                              },
-                        })
+                           
+                        },{ headers: {
+                            Authorization: `Bearer ${authenticatedToken}`,
+                          }})
                         .then(response => {
                             callback(false, response.data);
                         })
@@ -43,7 +43,7 @@ export const useEcho = ()=>{
             enabledTransports: ['ws', 'wss'],
         });
         setEchoInstance(echo)        
-    },[])
+    },[authenticatedToken])
 
     return echoInstance;
 }
