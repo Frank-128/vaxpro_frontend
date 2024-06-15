@@ -41,7 +41,7 @@ export const useInitial = () => {
           },
         })
         .then((res) => {
-          setLoggedInUser(res.data[0]);
+          setLoggedInUser(res.data);
         });
 
       axios

@@ -19,7 +19,7 @@ import {
   DialogFooter,
   Chip,
   Input,
-  
+
 } from "@material-tailwind/react";
 import {
   Close,
@@ -164,8 +164,8 @@ function UserManagement() {
       .catch((err) => {
         // setLoading(false);
         if (
-          err?.response?.status == 400 &&
-          err?.response?.data.error == "contacts"
+          err?.response?.status === 400 &&
+          err?.response?.data.error === "contacts"
         ) {
           setError("contacts", {
             type: err.status,
@@ -376,7 +376,7 @@ function UserManagement() {
                                       className={clsx(
                                         " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300",
                                         {
-                                          "border-r-2 border-black": isFocused,
+                                          'border-r border-2 border-black': isFocused,
                                           "border-r border-gray-500":
                                             !isFocused,
                                         }
@@ -415,9 +415,8 @@ function UserManagement() {
                                       })}
                                       defaultValue={getValues("contacts")}
                                       onChange={(e) => {
-                                        // console.log(errors)
                                         setValue("contacts", e.target.value, {shouldValidate:true})
-                                        
+
                                       }}
                                     />
                                   </div>
@@ -453,7 +452,7 @@ function UserManagement() {
                                     action: "",
                                     contacts: "",
                                   });
-                                 
+
                                 }}
                                 className="text-black hover:border hover:bg-gray-300 hover:rounded-xl hover:p-1 hover:cursor-pointer"
                               >

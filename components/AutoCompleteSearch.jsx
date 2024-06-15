@@ -35,7 +35,10 @@ const AutoCompleteSearch = ({ name, control }) => {
     const handleOptionClick = (option, onChange) => {
         setSearchTerm(option.ward_name);  // Update display value
         onChange(option.id);  // Update form value
-        setIsDropdownVisible(false);
+        setInterval(()=>{
+            setIsDropdownVisible(false);
+        },7000)
+
     };
 
     return (
@@ -47,7 +50,7 @@ const AutoCompleteSearch = ({ name, control }) => {
                     <div className='relative'>
                         <Input
                             label='Ward'
-                            value={searchTerm}  
+                            value={searchTerm}
                             onChange={(e) => handleSearch(e, onChange)}
                             onFocus={() => setIsDropdownVisible(true)}
                             onBlur={(e) => {

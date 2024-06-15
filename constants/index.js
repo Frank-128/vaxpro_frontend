@@ -1,6 +1,6 @@
 
 import {
-  
+
   Book,
   ChildCare,
   HealthAndSafety,
@@ -10,7 +10,7 @@ import {
   Note,
   Person,
   Report,
-
+    Group
 } from "@mui/icons-material";
 
 
@@ -29,7 +29,7 @@ export const navlinks = [
     icon: <Person />,
     suffixIcon: <KeyboardArrowDown />,
     role: ["IT admin"],
-    account_type: ["default"],
+    account_type: ["ministry", "regional","district","branch_manager"],
 
 
     sublinks: [
@@ -81,44 +81,46 @@ export const navlinks = [
     name: "Vaccination",
     link: "/vaccination",
     icon: <Medication />,
-    role: ["IT admin"],
-    account_type: ["ministry"],
+    role: ["IT admin","Nurse"],
+    account_type: ["ministry", "branch_manager", "health_worker"],
   }
 ,
+  {
+    name: "Roles",
+    link: "/roles",
+    icon: <Group/>,
+    role: ["IT admin"],
+    account_type: ["ministry"],
+  },
     {
         name:'Children',
         link:'/children',
         icon:<ChildCare/>,
         role: ["Nurse"],
     account_type: ["health_worker"],
-        
+
     },
-    {
-        name:'ChildDetails',
-        link:'/childdetails',
-        icon:<ChildCare/>,
-        role: ["Nurse"],
-    account_type: ["health_worker"],
-        
-    },
+
   {
     name: "Bookings",
     link: "/booking",
     icon: <Book />,
     role: ["Nurse"],
-    account_type: ["health_worker"],
+    account_type: ["branch_manager","health_worker"],
   },
-  {
-    name: "Certificates",
-    link: "/certificates",
-    icon: <Note />,
-    role: ["5000-1-1"],
-    account_type: ["default"],
-  },
+
   {
     name: "Reports",
     link: "/reports",
     icon: <Report />,
+    role: ["IT admin", "regional", "district", "branch_manager"],
+    account_type: ["ministry", "regional", "district","branch_manager"],
+  },
+
+  {
+    name: "Profile",
+    link: "/reports",
+    icon: <Person />,
     role: ["default"],
     account_type: ["default"],
   },
