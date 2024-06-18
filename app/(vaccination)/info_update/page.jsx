@@ -8,6 +8,13 @@ import { Controller } from "react-hook-form";
 import clsx from "clsx";
 import axios from "../../../axios";
 import { useSearchParams } from "next/navigation";
+import globalAlert from "@/store/alert";
+import { useRouter } from "next/navigation";
+import AutoCompleteSearch from "@/components/AutoCompleteSearch";
+import globalUser from "@/store/user";
+
+
+
 const InfoUpdate = () => {
   const {
     register,
@@ -15,93 +22,89 @@ const InfoUpdate = () => {
     clearErrors,
     validate,
     setValue,
+    getValues,
+    defaultValue,
     watch,
     trigger,
     setError,
     formState: { errors, touchedFields, isValid, isSubmitted },
     control,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      card_no: "",
+      firstname: "",
+      middlename: "",
+      surname: "",
+      date_of_birth: "",
+      ward_id: "",
+      house_no: "",
+      nida_id: "",
+      parent_first_name: "",
+      parent_middle_name: "",
+      parent_last_name: "",
+      relationship_with_child: "",
+      contacts: "",
+    },
+  });
 
-  const [childDetails, setChildDetails] = useState([]);
+  const loggedInUser = globalUser((state) => state.loggedInUser);
+  const setAlert = globalAlert((state) => state.setAlert);
 
-  const [childData, setChildData] = useState([]);
-  const [parentData, setParentData] = useState([]);
-  const [addressData, setAddressData] = useState([]);
+  const router = useRouter();
 
   const searchParams = useSearchParams();
   const card_number = searchParams.get("cardNo");
-
+  const [ward, setWard] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [originalNidaId, setOriginalNidaId] = useState(null);
 
   const [wards, setWards] = useState([]);
 
   useEffect(() => {
     axios.get(`/getChildData/${card_number}`).then((res) => {
       if (res.status === 200) {
-        setChildDetails(res.data);
+        setWard(res.data[0].ward);
+        const defaultValues = res.data.map((child) => ({
+          card_no: child.card_no,
+          firstname: child.firstname,
+          middlename: child.middlename,
+          surname: child.surname,
+          date_of_birth: child.date_of_birth,
+          ward: child.ward_id,
+          house_no: child.house_no,
+          nida_id: child.parents_guardians[0].nida_id,
+          par_first_name: child.parents_guardians[0].firstname,
+          par_middle_name: child.parents_guardians[0].middlename,
+          par_last_name: child.parents_guardians[0].lastname,
+          contacts: child.parents_guardians[0].user.contacts,
+          relation: child.parents_guardians[0].pivot.relationship_with_child,
+
+          // ... other fields
+        }));
+
+        if (defaultValues.length > 0) {
+          setValue("card_no", defaultValues[0].card_no);
+          setValue("first_name", defaultValues[0].firstname);
+          setValue("middle_name", defaultValues[0].middlename);
+          setValue("last_name", defaultValues[0].surname);
+          setValue("house_no", defaultValues[0].house_no);
+          setValue("ward_id", defaultValues[0].ward);
+          setValue("birth_date", defaultValues[0].date_of_birth);
+
+          setValue("nida_id", defaultValues[0].nida_id);
+          setValue("par_first_name", defaultValues[0].par_first_name);
+          setValue("par_middle_name", defaultValues[0].par_middle_name);
+          setValue("par_last_name", defaultValues[0].par_last_name);
+          setValue("contact", defaultValues[0].contacts);
+          setValue("relation", defaultValues[0].relation);
+
+          setOriginalNidaId(defaultValues[0].nida_id)
+
+          // ... set other fields
+        }
       }
     });
-
-    const extractedChildData = childDetails.map((child) => ({
-      card_no: child.card_no,
-      firstname: child.firstname,
-      middlename: child.middlename,
-      surname: child.surname,
-      facility_id: child.facility_id,
-      ward_id: child.ward_id,
-      house_no: child.house_no,
-      date_of_birth: child.date_of_birth,
-      modified_by: child.modified_by,
-      created_at: child.created_at,
-      updated_at: child.updated_at,
-    }));
-
-    const extractedParentData = childDetails.flatMap((child) =>
-      child.parents_guardians.map((parent) => ({
-        nida_id: parent.nida_id,
-        firstname: parent.firstname,
-        middlename: parent.middlename,
-        lastname: parent.lastname,
-        user_id: parent.user_id,
-        created_at: parent.created_at,
-        updated_at: parent.updated_at,
-        relationship_with_child: parent.pivot.relationship_with_child,
-        contacts: parent.user.contacts,
-      }))
-    );
-
-    const extractedAddressData = childDetails.map((child) => ({
-      ward_name: child.ward.ward_name,
-      district_name: child.ward.district.district_name,
-      region_name: child.ward.district.region.region_name,
-    }));
-
-    setChildData(extractedChildData);
-    setParentData(extractedParentData);
-    setAddressData(extractedAddressData);
-
-    if (
-      childData.length > 0 &&
-      addressData.length > 0 &&
-      parentData.length > 0
-    ) {
-      setValue("card_no", childData[0].card_no);
-      setValue("first_name", childData[0].firstname);
-      setValue("middle_name", childData[0].middlename);
-      setValue("last_name", childData[0].surname);
-      setValue("birth_date", childData[0].date_of_birth);
-      setValue("house_no", childData[0].house_no);
-
-      setValue("ward_id", addressData[0].ward_name);
-
-      setValue("par_first_name", parentData[0].firstname);
-      setValue("par_middle_name", parentData[0].middlename);
-      setValue("par_last_name", parentData[0].lastname);
-      setValue("nida_id", parentData[0].nida_id);
-      setValue("contact", parentData[0].contacts);
-      setValue("relation", parentData[0].relationship_with_child);
-    }
-  }, [childDetails]);
+  }, [card_number, setValue]);
 
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
@@ -118,7 +121,7 @@ const InfoUpdate = () => {
     const selectedDate = new Date(value);
     const today = new Date();
     selectedDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
     return selectedDate <= today || "Date should not exceed today's date";
   };
 
@@ -143,8 +146,36 @@ const InfoUpdate = () => {
     }
   };
 
+  const handleSubmitUpdates = (data) => {
+    axios
+      .post(`/updateChildParentInfo`, {
+        child_parent_data: data,
+        facility_id: loggedInUser?.facility_id,
+        modified_by: loggedInUser?.id,
+        original_card_no: card_number,
+        original_nida_no: originalNidaId
+      })
+      .then((res) => {
+        if (res.data.message) {
+          setAlert({message: res.data.message, visible:true,type:"success"});
+          
+          router.push(`/childdetails?cardNo=${res.data.child_card_number}`)
+
+        } else {
+          setAlert({message: res.data.error, visible:true, type:"error"});
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <div>
+    <form
+      onSubmit={handleSubmit(handleSubmitUpdates)}
+      className="flex flex-col gap-4 items-center justify-center"
+    >
+      <div className="font-bold">Child Information</div>
       <div className="flex gap-6">
         <div className="flex flex-col gap-3">
           <Input
@@ -164,7 +195,7 @@ const InfoUpdate = () => {
                 message: "Please enter valid number",
               },
             })}
-            className=" sm:w-56  lg:w-full "
+            className=" sm:w-56 lg:w-64  "
           />
           {errors.card_no && (
             <span className="text-red-900 text-sm font-mono ">
@@ -177,7 +208,7 @@ const InfoUpdate = () => {
             {...register("first_name", {
               required: "This field is required",
             })}
-            className="  sm:w-56  lg:w-full "
+            className="  sm:w-56  lg:w-64 "
           />
           {errors.first_name && (
             <span className="text-red-900 text-sm font-mono ">
@@ -190,7 +221,7 @@ const InfoUpdate = () => {
             {...register("middle_name", {
               required: "This field is required",
             })}
-            className="   sm:w-56 lg:w-full "
+            className="   sm:w-56 lg:w-64 "
           />
           {errors.middle_name && (
             <span className="text-red-900 text-sm font-mono ">
@@ -203,7 +234,7 @@ const InfoUpdate = () => {
             {...register("last_name", {
               required: "This field is required",
             })}
-            className="  sm:w-56 lg:w-full "
+            className="  sm:w-56 lg:w-64 "
           />
           {errors.last_name && (
             <span className="text-red-900 text-sm font-mono ">
@@ -220,7 +251,7 @@ const InfoUpdate = () => {
               required: "This field is required",
               validate: validateDate,
             })}
-            className="  sm:w-56 lg:w-full "
+            className="  sm:w-56 lg:w-64 "
           />
           {errors.birth_date && (
             <span className="text-red-900 text-sm font-mono ">
@@ -234,49 +265,14 @@ const InfoUpdate = () => {
             {...register("house_no", {
               required: "This field is required",
             })}
-            className="  sm:w-56 lg:w-full "
+            className="sm:w-56 lg:w-64"
           />
-          {errors.house_no && (
-            <span className="text-red-900 text-sm font-mono ">
-              {errors.house_no.message}
-            </span>
-          )}
 
-          <Autocomplete
-            className="  sm:w-56  lg:w-full "
-            options={wards}
-            getOptionLabel={(option) =>
-              `${option.ward_name}-${option.district.district_name}-${option.id}`
-            }
-            onInputChange={handleWardChange}
-            renderInput={(params) => (
-              <TextField
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    height: "40px",
-                    borderRadius: "6px",
-                    "& .MuiOutlinedInput-input": {
-                      padding: "10px 14px",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "black",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    "&.Mui-focused": {
-                      color: "black",
-                    },
-                  },
-                }}
-                size="small"
-                {...params}
-                label="Ward"
-                {...register("ward_id", {
-                  required: "This field is required",
-                })}
-              />
-            )}
-            getOptionKey={(option) => option.id}
+          <AutoCompleteSearch
+            name={"ward_id"}
+            control={control}
+            ward={ward}
+            register={register}
           />
           {errors.ward_id && (
             <span className="text-red-900 text-sm font-mono ">
@@ -286,6 +282,8 @@ const InfoUpdate = () => {
         </div>
       </div>
 
+      <div className="font-bold">Parent / Guardian Information</div>
+
       <div className="flex gap-6 ">
         <div className="flex flex-col gap-3">
           <Input
@@ -293,7 +291,7 @@ const InfoUpdate = () => {
             {...register("par_first_name", {
               required: "This field is required",
             })}
-            className="  md:w-56 lg:w-full  sm:w-64 "
+            className="  md:w-56 lg:w-64  sm:w-64 "
           />
           {errors.par_first_name && (
             <p className="text-red-900 text-xs font-monte">
@@ -306,7 +304,7 @@ const InfoUpdate = () => {
             {...register("par_middle_name", {
               required: "This field is required",
             })}
-            className="  md:w-56 lg:w-full  sm:w-64 "
+            className="  md:w-56 lg:w-64 sm:w-64 "
           />
           {errors.par_middle_name && (
             <p className="text-red-900 text-xs font-monte">
@@ -319,7 +317,7 @@ const InfoUpdate = () => {
             {...register("par_last_name", {
               required: "This field is required",
             })}
-            className="  md:w-56 lg:w-full  sm:w-64  "
+            className="  md:w-56 lg:w-64  sm:w-64  "
           />
           {errors.par_last_name && (
             <p className="text-red-900 text-xs font-monte">
@@ -329,6 +327,8 @@ const InfoUpdate = () => {
         </div>
         <div className="flex flex-col gap-3">
           <Input
+            defaultValue={getValues("nida_id")}
+            onChange={(e) => setValue("nida_id", e.target.value)}
             label="Nida ID:"
             {...register("nida_id", {
               required: "This field is required",
@@ -344,9 +344,9 @@ const InfoUpdate = () => {
                 value: /^[0-9]+$/,
                 message: "Please enter valid Nida number",
               },
-              onChange: handleNidaChange,
+              //   onChange: handleNidaChange,
             })}
-            className="  md:w-56 lg:w-full sm:w-64 "
+            className="  md:w-56 lg:w-64 sm:w-64 "
           />
           {errors.nida_id && (
             <p className="text-red-900 text-xs font-monte">
@@ -373,7 +373,7 @@ const InfoUpdate = () => {
               }}
               onFocus={() => setIsFocused(true)}
               autoComplete="off"
-              className="text-black font-monte-1 pl-16 border  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
+              className="text-black font-monte-1 pl-16 border lg:w-64  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
               size="lg"
               placeholder="Contacts"
               {...register("contact", {
@@ -415,7 +415,7 @@ const InfoUpdate = () => {
                   selected={value}
                   value={value}
                   label="Relation with Child"
-                  className=" sm:w-64 pl-3 lg:w-full rounded-md  md:w-56"
+                  className=" sm:w-64 pl-3 lg:w-64 rounded-md  md:w-56"
                   animate={{
                     mount: { y: 0 },
                     unmount: { y: 25 },
@@ -433,14 +433,12 @@ const InfoUpdate = () => {
               </div>
             )}
           />
-          {isSubmitted && !isValid && (
-            <p className="text-red-900 text-xs font-monte">
-              Please make sure there are no errors in child form and parent form
-            </p>
-          )}
         </div>
       </div>
-    </div>
+      <button type="submit" className="p-2 rounded-md bg-[#212B36] text-white">
+        Update
+      </button>
+    </form>
   );
 };
 
