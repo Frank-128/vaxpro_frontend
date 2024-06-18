@@ -4,6 +4,8 @@ import axios from "../axios";
 import { useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import AutoCompleteSearch from "./AutoCompleteSearch";
+import { Controller } from "react-hook-form";
+
 
 
 const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
@@ -159,6 +161,38 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
             </span>
           )}
 
+          </div>
+          <div>
+          <Controller
+            control={control}
+            rules={{ required: "This field is required" }}
+            name="gender"
+            render={({ field:{onBlur, value,onChange}, fieldState: { error } }) => (
+              <div>
+                <Select
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  selected={value}
+                  value={value}
+                  label="Gender"
+                  className=" sm:w-64 pl-3 lg:w-full rounded-md  md:w-56"
+                  animate={{
+                    mount: { y: 0 },
+                    unmount: { y: 25 },
+                  }}
+                >
+                  <Option value="male">Male</Option>
+                  <Option value="female">Female</Option>
+                 
+                </Select>
+                {error && (
+                  <p className="text-red-900 text-xs font-monte">
+                    {error.message}
+                  </p>
+                )}{" "}
+              </div>
+            )}
+          />
           </div>
          <div>
          <Input
