@@ -13,27 +13,29 @@ import { Alert } from "@material-tailwind/react";
 import { Error, Verified } from "@mui/icons-material";
 import globalUser from "@/store/user";
 import { useEcho } from '@/constants/echo';
+import PasswordEditAlert from "@/components/passwordReset/PasswordEditAlert";
 
 
 function Main({ children }) {
-  const {initialRequest,getInitialUsers, getBookings} = useInitial();
+  const {initialRequest,getInitialUsers, getBookings, getRoles} = useInitial();
   const [openSidebar, setOpenSidebar] = useState(true);
   const isIdle = useIdle(1000*60*60*2)
   const router = useRouter()
   const alertObj = globalAlert((state)=>state.alert)
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
-  
-  
-  
+
+
+
   useEffect(() => {
-   
+
     initialRequest();
   }, [initialRequest]);
-  
+
   useEffect(()=>{
     getInitialUsers()
     getBookings()
-  },[getBookings, getInitialUsers])
+      getRoles()
+  },[getBookings, getInitialUsers, getRoles])
 
   const echo = useEcho()
   useEffect(() => {
@@ -54,15 +56,15 @@ function Main({ children }) {
         },
       })
       .then((res) => {
-        
+
         return router.push("/signin");
-        
-     
+
+
     })}
-   
+
   },[authenticatedToken, isIdle, router])
 
- 
+
   return (
     <main>
       <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
@@ -74,22 +76,23 @@ function Main({ children }) {
         })}
       >
         {children}
-        
+
       </section>
       <Alert
-      open={alertObj.visible}
-      icon={alertObj.type == "success" ?<Verified /> : <Error />} 
+      open={alertObj?.visible}
+      icon={alertObj?.type === "success" ?<Verified /> : <Error />}
       animate={{
         mount: { y: 0 },
         unmount: { y: 100 },
       }}
-      color={alertObj.type =="success"?'green':"red"}
+      color={alertObj?.type ==="success"?'green':"red"}
       className={"rounded-sm  absolute top-1 right-1 z-[90]   w-1/3 font-medium text-white"}
     >
-      {alertObj.message}
-     
+      {alertObj?.message}
+
     </Alert>
     </main>
+
   );
 }
 

@@ -18,10 +18,24 @@ import {
     XAxis,
     YAxis
 } from "recharts";
+import globalBookings from "@/store/bookings";
+import {useEffect, useState} from "react";
 
 const HealthWorker = () => {
     const loggedUser = globalUser((state) => state.loggedInUser)
     const router = useRouter()
+    const bookings = globalBookings((state) => state.bookings);
+    const [pendingBookings, setPendingBookings] = useState([])
+
+    useEffect(() => {
+        const filteredBookings = bookings.filter(({status})=>{
+          return   status === "confirmed"
+        })
+        setPendingBookings(filteredBookings)
+    }, [bookings]);
+
+    console.log(pendingBookings,"this is the bookings list")
+
     const members = [
         {
             name: "Weekly Visitors",
@@ -43,10 +57,10 @@ const HealthWorker = () => {
 
         {
             name: "Bookings",
-            bg:"bg-[#c4c4c4]/70",
+            bg:"bg-[#c4c4c4]/40",
             textColor:"text-[#0c0c0c]/50",
             valueColor:"text-[#0c0c0c]",
-            value:43,
+            value:pendingBookings.length,
 
 
         },
@@ -119,14 +133,14 @@ const HealthWorker = () => {
                     </Button>
                 </div>
 
-                <div className={'flex w-full h-[30rem] gap-2'}>
+                <div className={'flex w-full h-[35rem] gap-2'}>
                     <div className={'flex w-4/6 flex-col'}>
                         <div className={'flex w-full h-[20%] gap-2'}>
                             {members.map(({bg, name, textColor, valueColor, value},index) => (
                                 <div key={index}
                                      className={`${bg} 
                                       flex-col text-sm items-start
-                                      p-2 rounded-xl flex w-2/6 h-[90%] shadow-md justify-center gap-3`}>
+                                      p-2 rounded-xl flex w-2/6 h-[90%] shadow-sm justify-center gap-3`}>
                                     <span className={`${textColor} font-extrabold`}>
                                       {name}
                                     </span>
@@ -137,8 +151,8 @@ const HealthWorker = () => {
                             ))
                             }
                         </div>
-                        <div className={'bg-black/70 h-[80%] rounded-md flex justify-center items-center '}>
-                            <ResponsiveContainer width="70%" height="80%">
+                        <div className={'bg-[#BF40BF]/10 h-[80%] rounded-md flex justify-center items-center '}>
+                            <ResponsiveContainer width="90%" height="80%">
                                 <AreaChart
                                     width={300}
                                     height={200}
@@ -156,7 +170,7 @@ const HealthWorker = () => {
                                     <Tooltip />
                                     {/*<Area type="monotone" dataKey="uv" stackId="1" stroke="#8884d8" fill="#8884d8" />*/}
                                     {/*<Area type="monotone" dataKey="pv" stackId="1" stroke="#82ca9d" fill="#82ca9d" />*/}
-                                    <Area type="monotone" dataKey="amt" stackId="1" stroke="#ffc658" fill="#ffc658" />
+                                    <Area type="monotone" dataKey="amt" stackId="1" stroke="#800080/50" fill="#BF40BF" />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>

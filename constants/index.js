@@ -119,7 +119,7 @@ export const navlinks = [
 
   {
     name: "Profile",
-    link: "/reports",
+    link: "/profile",
     icon: <Person />,
     role: ["default"],
     account_type: ["default"],

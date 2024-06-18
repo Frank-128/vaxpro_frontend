@@ -26,7 +26,7 @@ const Login = () => {
   const setAuthenticatedToken = globalUser(
     (state) => state.setAuthenticatedToken
   );
-  
+
   const login =  (data) => {
     setLoading({ loading: true });
      axios.post(`login`, data).then( (res) => {
@@ -110,6 +110,7 @@ const Login = () => {
         {errors.password && (
           <p className="text-red-900 text-xs font-monte">This field is required</p>
         )}
+          <span className={'text-xs p-1 text-black w-fit cursor-pointer'} onClick={()=>router.push('password-recovery')}>forgot password?</span>
         <Button
           loading={loading.loading}
           className="4xs:w-full w-48 flex justify-center"
