@@ -5,8 +5,9 @@ import globalAddress from "@/store/address";
 import globalRoles from "@/store/roles";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
-import { useCallback } from "react";
+import {useCallback} from "react";
 import globalBookings from "@/store/bookings";
+import globalVaccines from "@/store/vaccines";
 
 export const useInitial = () => {
   const setLoggedInUser = globalUser((state) => state.setLoggedInUser);
@@ -21,12 +22,12 @@ export const useInitial = () => {
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const setWards = globalAddress((state) => state.setWards);
   const setBookings = globalBookings((state) => state.setBookings);
+  const setVaccines = globalVaccines(state=>state.setVaccines);
 
   const initialToken = () => {
     const user_token = Cookies.get("USER_TOKEN");
     const decrypted_token = CryptoJS.AES.decrypt(user_token, "vaxpro_tanzania");
-    const decrypted_token2 = decrypted_token.toString(CryptoJS.enc.Utf8);
-    return decrypted_token2;
+    return decrypted_token.toString(CryptoJS.enc.Utf8);
   };
 
   const initialRequest = useCallback(() => {
@@ -41,8 +42,15 @@ export const useInitial = () => {
           },
         })
         .then((res) => {
-          setLoggedInUser(res.data[0]);
+          setLoggedInUser(res.data);
         });
+      axios.get(`getVaccines`).then((res) => {
+
+        if (res.data.status === 200) {
+          setVaccines(res.data.vaccines)
+
+        }
+      });
 
       axios
         .get(`regions`, {
@@ -77,15 +85,7 @@ export const useInitial = () => {
           });
       }
 
-      axios
-        .get(`roles`, {
-          headers: {
-            Authorization: `Bearer ${decrypted_token2}`,
-          },
-        })
-        .then((res) => {
-          setRoles(res.data);
-        });
+
     } else {
       console.log("wrong credentials");
     }
@@ -128,8 +128,26 @@ export const useInitial = () => {
     }
   }, [loggedInUser?.facility_id, loggedInUser.role?.account_type, setBookings]);
 
-  return { initialRequest, getInitialUsers, getBookings };
+  const  getRoles =() => {
+    const decrypted_token2 = initialToken();
+
+    axios
+        .get(`roles`, {
+          headers: {
+            Authorization: `Bearer ${decrypted_token2}`,
+          },
+        })
+        .then((res) => {
+          setRoles(res.data);
+        });
+  }
+
+
+
+  return { initialRequest, getInitialUsers, getBookings, getRoles };
 };
+
+
 
 export const verifyToken = async (token) => {
   try {

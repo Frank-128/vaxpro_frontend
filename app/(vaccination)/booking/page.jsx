@@ -70,14 +70,14 @@ export default function BookingTile() {
             className="px-2 md:px-8 py-5 md:py-8 flex flex-row justify-between border-t text-black"
           >
             <div className="flex flex-col text-xs md:text-sm">
-              <div className="flex gap-6 text-black">
+              <div className="flex gap-2 text-black">
                 <span>Name:</span>{" "}
-                <span className="font-monte-1 flex gap-3 capitalize">
+                <span className="font-monte-1 flex gap-1 capitalize">
                   <span>{children?.firstname}</span>
                   <span>{children?.surname}</span>
                 </span>{" "}
               </div>
-              <div className="flex gap-6 text-black">
+              <div className="flex gap-2 text-black">
                 <span>Child ID:</span>{" "}
                 <span className="font-monte-1">{child_id}</span>{" "}
               </div>

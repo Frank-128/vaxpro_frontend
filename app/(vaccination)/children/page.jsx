@@ -44,19 +44,19 @@ const Children = () => {
       const diffDays = Math.round((end - start) / oneDay);
       return diffDays;
     }
-    
-   
-  
+
+
+
     const today = new Date().toISOString().split('T')[0];
-   
+
     axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
       console.log(res.status)
-      if(res.status == 200){
-        
-        
+      if(res.status === 200){
+
+
         const child_date = new Date(res.data.birthDate)
         const daysDifference = getDaysDifference(child_date, today);
-        
+
         if(daysDifference > 0){
           console.log(daysDifference)
          return router.push(`/children/`+res.data.cardNo)
@@ -67,7 +67,7 @@ const Children = () => {
         console.log(res.data.message)
       }
     })
-    
+
   };
 
   return (

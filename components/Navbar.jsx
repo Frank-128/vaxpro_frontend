@@ -176,14 +176,14 @@ function Navbar({ openSidebar, setOpenSidebar }) {
             </div>
           )}
           <div className="flex flex-col gap-2">
-            {loggedInUser.facility && (
+            {loggedInUser.facilities && (
               <div className="flex gap-3">
 
                 {" "}
                 <p>Facility:</p>
                 <h1 className=" md:block hidden font-monte-1">
 
-                  {loggedInUser.facility?.facility_name}
+                  {loggedInUser.facilities?.facility_name}
                 </h1>
               </div>
             )}
@@ -198,7 +198,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           </div>
 
           <Button
-            className=" py-2 px-6 bg-blue-900 rounded-[0.25rem]  
+            className=" py-2 px-6 bg-blue-900 rounded-[0.25rem]
            text-white border border-blue-900  shadow-none"
             onClick={() => {
               setLogoutDialog(true);
