@@ -9,6 +9,8 @@ import { LongDialog } from "@/components/ScheduleUpdates";
 import InfoUpdateModal from "@/components/InfoUpdateModal";
 import Certificates from "@/components/certificates/Certificate";
 import {CertificateGenerator} from "@/constants/certificate_generator";
+import { useRouter } from "next/navigation";
+
 
 function ChildCard({ ward, date_of_birth, card_no,certificate_status,handleGenerate }) {
   return (
@@ -155,6 +157,8 @@ export default function TeamSection12() {
   const router = useRouter()
 
 
+  const router = useRouter();
+
   useEffect(() => {
 
     axios
@@ -206,7 +210,7 @@ export default function TeamSection12() {
   };
 
   const handleClickOpenUpdateInfo = () => {
-    setOpenUpdateInfo(true);
+    router.push(`/info_update?cardNo=${card_no}`)
   };
 
   useEffect(() => {
