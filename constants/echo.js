@@ -5,7 +5,7 @@ import { useState,useEffect } from "react";
 import axios from '../axios';
 
 
-window.Pusher = Pusher;
+
 
 export const useEcho = ()=>{
     const [echoInstance,setEchoInstance] = useState(null);
@@ -13,6 +13,7 @@ export const useEcho = ()=>{
    
     useEffect(()=>{
         if (!authenticatedToken) return;
+        window.Pusher = Pusher;
 
         const echo = new Echo({
             broadcaster: 'reverb',

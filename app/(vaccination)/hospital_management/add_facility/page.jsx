@@ -33,15 +33,16 @@ export default function DefaultStepper() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
   const submitForm = (data) => {
-
+      
             axios.post(
-          "facility",{"facility_reg_no":data.facility_reg_no,"facility_name":data.facility_name,"contacts":data.contacts,"ward_id":data.ward_id}
+          "facility",{"facility_reg_no":data.facility_reg_no,"facility_name":data.facility_name,"contacts":"+255"+data.contacts,"ward_id":data.ward_id}
         ).then((res)=>{
-          axios.post('register',{contacts:data.contacts,role_id:10,account_type:"branch_manager",facility_id:res.data.facility.facility_reg_no}, {
+          axios.post('register',{contacts:"+255"+data.contacts,role_id:10,account_type:"branch_manager",facility_id:res.data.facility.facility_reg_no}, {
             headers: {
               Authorization: `Bearer ${authenticatedToken}`,
             }}).then((res2)=>{
@@ -50,10 +51,16 @@ export default function DefaultStepper() {
               router.push('/hospital_management')
               
           }).catch((err)=>{
+            if(err.status == 400){
+              return setError('facility_reg_no', {
+                type: err.status,
+                message: err.response.data.message,
+              })
+            }
             setAlert({message:"Facility not created, please try again",visible:true,type:"error"});
           })
-          .catch((err) => {
-            console.log("error occured when creating user", err);
+          .catch((err2) => {
+            console.log("error occured when creating user", err2);
           });
       })
       .catch((er) => {
@@ -99,6 +106,9 @@ export default function DefaultStepper() {
             label="Facility Registration No"
             {...register("facility_reg_no")}
           />
+          {errors.facility_reg_no && 
+          <span className="text-xs text-red-500">{errors.facility_reg_no.message}</span>
+          }
         </Card>
 
         <Card

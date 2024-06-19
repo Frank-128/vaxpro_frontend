@@ -92,7 +92,7 @@ export function Dashboard() {
 
   useEffect(() => {
     const fetchChildren = () => {
-      axios.get("all_children").then((res) => {
+      axios.post("all_children").then((res) => {
         setAllChildren(res.data);
       });
     };
