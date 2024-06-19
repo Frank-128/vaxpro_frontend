@@ -27,7 +27,7 @@ const ChatContainer = () => {
 
   useEffect(() => {
       if(echo){
-          echo.private('chat.102').listen('MessageSent',event=>{
+          echo.private(`chat.${loggedInUser.id}`).listen('MessageSent',event=>{
             console.log('Real time event received',event)
             handleNewMessage(event);
           })
@@ -97,16 +97,6 @@ const ChatHeader = ({messages}) => {
   };
 
 
-  // const messages = [
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Hello!' ,sender:2,receiver:1},
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Hello!' ,sender:2,receiver:1},
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Wow wow wow!' ,sender:102,receiver:1},
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Hello!' ,sender:2,receiver:1},
-  // ];
   
   const MessageList = ({messages}) => {
     return (
