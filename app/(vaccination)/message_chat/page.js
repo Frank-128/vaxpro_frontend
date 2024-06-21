@@ -15,6 +15,7 @@ import IconButton from '@mui/material/IconButton';
 const ChatContainer = () => {
   const loggedInUser = globalUser(state=>state.loggedInUser)
   const [messages,setMessages] = useState([]);
+  const [recipient,setRecipient] = useState(1)
   const echo = useEcho()
   const sound = new Howl({
     src:['/sound/new_message.wav']
@@ -27,7 +28,7 @@ const ChatContainer = () => {
 
   useEffect(() => {
       if(echo){
-          echo.private('chat.102').listen('MessageSent',event=>{
+          echo.private(`chat.${loggedInUser.id}`).listen('MessageSent',event=>{
             console.log('Real time event received',event)
             handleNewMessage(event);
           })
@@ -35,9 +36,9 @@ const ChatContainer = () => {
   }, [echo,loggedInUser?.id]);
   return (
     <div className="flex flex-col h-[calc(100vh-80px)] bg-gray-100">
-      <ChatHeader messages={messages}  />
+      <ChatHeader messages={messages} setRecipient={setRecipient} />
       <MessageList messages={messages} />
-      <ChatInput handleNewMessage={handleNewMessage} />
+      <ChatInput recipient={recipient}  />
     </div>
   );
 };
@@ -63,7 +64,7 @@ const MessageItem = ({ user, text,is_sender }) => {
     );
   };
 
-const ChatHeader = ({messages}) => {
+const ChatHeader = ({messages,setRecipient}) => {
     const loggedInUser = globalUser(state=>state.loggedInUser)
      const iconRef = useRef(null)
 
@@ -88,7 +89,10 @@ const ChatHeader = ({messages}) => {
       <div className="p-4 bg-blue-600 text-white text-center">
         <h1 className="text-xl font-bold">Chat Room</h1>
         <span>Hi, {loggedInUser?.id}</span> 
-        
+        <select onChange={(e)=>setRecipient(e.target.value)} name="" id="">
+          <option value="1">Ministry</option>
+          <option value="103">Nurse</option>
+        </select>
         <IconButton ref={iconRef} className="message-icon">
         <Notifications/>
       </IconButton>
@@ -97,16 +101,6 @@ const ChatHeader = ({messages}) => {
   };
 
 
-  // const messages = [
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Hello!' ,sender:2,receiver:1},
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Hello!' ,sender:2,receiver:1},
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Wow wow wow!' ,sender:102,receiver:1},
-  //   { id: 1, user: 'Alice', text: 'Hi there!',sender:102,receiver:2 },
-  //   { id: 2, user: 'Bob', text: 'Hello!' ,sender:2,receiver:1},
-  // ];
   
   const MessageList = ({messages}) => {
     return (
@@ -118,7 +112,7 @@ const ChatHeader = ({messages}) => {
     );
   };
 
-  const ChatInput = ({handleNewMessage}) => {
+  const ChatInput = ({recipient}) => {
     const [message, setMessage] = useState('');
     const loggedInUser = globalUser(state=>state.loggedInUser)
     const authenticatedToken = globalUser(state=>state.authenticatedToken)
@@ -126,7 +120,7 @@ const ChatHeader = ({messages}) => {
 
     const sendMessage = async() => {
       if (message.trim()) {
-       const res = await axios.post('send_message',{sender:loggedInUser.id,receiver:102,message}, {
+       const res = await axios.post('send_message',{sender:loggedInUser.id,receiver:recipient,message}, {
             headers: {
               Authorization: `Bearer ${authenticatedToken}`,
             }})

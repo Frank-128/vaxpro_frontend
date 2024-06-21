@@ -29,7 +29,7 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
   return (
     <div className="w-screen top-0 left-0 ">
       <div
-        className={`w-[90%] md:w-[280px] z-50 transition-all duration-300  fixed h-screen bg-[#212b36] ${
+        className={`w-[90%] md:w-[280px] z-50 transition-all duration-300  fixed h-screen bg-blue-900 ${
           openSidebar ? "left-0" : "-left-[90%] "
         } md:block   `}
       >

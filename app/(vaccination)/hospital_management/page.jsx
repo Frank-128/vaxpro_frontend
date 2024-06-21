@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 
 import { Edit, Error, HouseSharp, LocalHospital, PersonAdd, Search, Verified } from '@mui/icons-material';
 
-import { FACILITY_ROWS } from '@/constants';
 import {
   Card,
   CardHeader,
@@ -17,7 +16,6 @@ import {
   Alert,
   Spinner,
 } from "@material-tailwind/react";
-import FacilityDialog from '@/components/facility/FacilityDialog';
 import { useEffect } from 'react';
 import axios from "../../../axios";
 import Link from 'next/link';
@@ -47,7 +45,9 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
         })
       }
       fetchDistrictFacilites()
-    },[])
+    },[loggedInUser])
+
+    console.log(loggedInUser)
   return (
        <section className='h-full w-full flex justify-center items-center p-4'>
     <Card className="w-11/12  h-5/6 overflow-x-scroll">
@@ -104,9 +104,9 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
             </tr>
           </thead>
           <tbody>
-            {facilities == null ? <tr><Spinner /> </tr>: filteredArray?.length == 0 ? <i className='p-2'>There are no records available</i> : filteredArray?.splice(interval,5).map(
-              ({  facility_reg_no,facility_name,contacts,region,district }, index) => {
-                const isLast = index === FACILITY_ROWS?.length - 1;
+            {facilities == null ? <tr><Spinner /> </tr>: filteredArray?.length == 0 ? <tr><i className='p-2'>There are no records available</i></tr> : filteredArray?.splice(interval,5).map(
+              ({  facility_reg_no,facility_name,contacts,ward}, index) => {
+                const isLast = index === facilities?.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
@@ -143,7 +143,7 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {region + ", "+ district}
+                          {ward.ward_name}
                         </Typography>
                        
                       
@@ -180,7 +180,7 @@ const TABLE_HEAD = ["Facility Reg No", "Facility Name", "Location", "Contacts", 
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
           Page 1 of {
-            FACILITY_ROWS?.length % 5 == 0 ? FACILITY_ROWS?.length/ 5 : Math.ceil(FACILITY_ROWS?.length / 5)
+            filteredArray?.length % 5 == 0 ? filteredArray?.length/ 5 : Math.ceil(filteredArray?.length / 5)
           } 
          
         </Typography>
