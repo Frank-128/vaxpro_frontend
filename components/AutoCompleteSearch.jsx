@@ -64,6 +64,7 @@ const AutoCompleteSearch = ({ name, control, ward = null }) => {
                             value={searchTerm} // Control the input value with searchTerm state
                             onChange={(e) => handleSearch(e, onChange)}
                             onFocus={() => setIsDropdownVisible(true)}
+                          //  containerProps={{ className: "4xs:min-w-72 " }}
                             onBlur={() => {
                                 if (!isSelecting) {
                                     setIsDropdownVisible(false);

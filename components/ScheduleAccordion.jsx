@@ -25,7 +25,7 @@ export function ScheduleAccordionAnimation({
   const [open, setOpen] = useState(0);
   const [currentDose, setCurrentDose] = useState(0);
   const loggedInUser = globalUser((state) => state.loggedInUser);
-  const [vaccines,setVaccines] = useState([])
+  // const [vaccines,setVaccines] = useState([])
   
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
@@ -53,15 +53,6 @@ export function ScheduleAccordionAnimation({
       });
   };
 
-  useEffect(()=>{
-    axios.get('/getVaccines').then((res)=>{
-        setVaccines(res.data.vaccines)
-    }).catch((err)=>{
-      console.log(err)
-    })
-  },[])
-
-  console.log(vaccines)
   console.log(savedScheds)
 
   return (

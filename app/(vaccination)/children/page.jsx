@@ -66,8 +66,11 @@ const Children = () => {
       }else{
         console.log(res.data.message)
       }
-    })
 
+    }).catch((er) => {
+      console.log(er)
+    });
+    
   };
 
   return (

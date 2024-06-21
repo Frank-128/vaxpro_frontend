@@ -5,6 +5,8 @@ import Vaccinaions from "../../vaccination/page";
 import { Button, Checkbox } from "@material-tailwind/react";
 import { LongDialog } from "@/components/ScheduleUpdates";
 import NewChildUpdates from "@/components/NewChildUpdates";
+import { useRouter } from "next/navigation";
+
 
 function NewChild({ params }) {
   const [vaccinations, setVaccinations] = useState([]);
@@ -13,6 +15,8 @@ function NewChild({ params }) {
   const [selectedVaccines, setSelectedVaccines] = useState([]);
   const [vaccines, setVaccines] = useState([]);
   const [openVacUpdate, setOpenVacUpdate] = useState(false);
+
+  const router = useRouter();
 
   function getDaysDifference(startDate, endDate) {
     const oneDay = 24 * 60 * 60 * 1000; // Milliseconds in one day
@@ -30,7 +34,7 @@ function NewChild({ params }) {
 
   useEffect(() => {
     axios
-      .get("getVaccines")
+      .get(`getChildVaccines/${params.new_child}`)
       .then((res) => {
         setVaccinations(res.data.vaccines);
       })
@@ -47,6 +51,11 @@ function NewChild({ params }) {
         console.log(err);
       });
   }, []);
+
+  const goToDashboard = () =>{
+    router.push(`/childdetails?cardNo=${params.new_child}`);
+  }
+
 
   const handleCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -109,8 +118,14 @@ function NewChild({ params }) {
         >
           Submit
         </Button>
+        <Button
+          onClick={goToDashboard}
+          className="w-56 self-center bg-[#212B36] mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
+        >
+          Go to Dashboard
+        </Button>
       </form>
-      <NewChildUpdates  handleCloseVaccUpdate={handleCloseVaccUpdate} openVacUpdate={openVacUpdate} vaccines={vaccines}  />
+      <NewChildUpdates  handleCloseVaccUpdate={handleCloseVaccUpdate} openVacUpdate={openVacUpdate} vaccines={vaccines} date_of_birth={childData?.date_of_birth}   />
     </div>
   );
 }

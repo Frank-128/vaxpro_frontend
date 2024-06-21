@@ -1,19 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { Input, Typography } from "@material-tailwind/react";
-import { TextFields } from "@mui/icons-material";
 import { UpdateSchedAccordion } from "./UpdateSchedAccordion";
 
 const NewChildUpdates = ({
   openVacUpdate,
   handleCloseVaccUpdate,
   vaccines,
+  date_of_birth
   
 }) => {
   return (
@@ -29,7 +27,7 @@ const NewChildUpdates = ({
       </DialogTitle>
       <DialogContent className="scrollbar-hidden">
         <DialogContentText id="alert-dialog-description">
-          <UpdateSchedAccordion  vaccines={vaccines} />
+          <UpdateSchedAccordion date_of_birth={date_of_birth}  vaccines={vaccines}  />
         </DialogContentText>
       </DialogContent>
     </Dialog>

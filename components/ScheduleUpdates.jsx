@@ -38,7 +38,7 @@ export function LongDialog({ birthDate, childId, savedScheds, setSavedScheds }) 
 
   return (
     <>
-      <Button onClick={()=>handleOpen()}>Update Schedule</Button>
+      <Button className="w-44 items-center" onClick={()=>handleOpen()}>Update Schedule</Button>
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Schedule Update:</DialogHeader>
         <DialogBody className="h-[42rem] overflow-scroll">
