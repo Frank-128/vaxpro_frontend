@@ -105,14 +105,6 @@ export function Dashboard() {
     <section className="min-h-screen py-2 px-4">
       {loggedInUser && loggedInUser.role?.account_type !== "health_worker" ?
       <div className="container mx-auto">
-        {/*<div  className={'flex justify-end gap-2 py-2'}>*/}
-
-        {/*  { filter_array.map(({options, option_type},index)=> (<Filter setRegion={setRegion} key={index} options={options} option_type={option_type}/>))}*/}
-        {/*  <Button className={'bg-transparent w-28 h-8 p-2 border border-black text-black rounded-[0.25rem] flex justify-center items-center gap-2'}>*/}
-        {/*    <FilterAltOutlined/>*/}
-        {/*  <span> Apply</span>*/}
-        {/*  </Button>*/}
-        {/*</div>*/}
         <Filter/>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {members.map((props, key) =>

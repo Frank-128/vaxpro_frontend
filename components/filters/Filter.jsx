@@ -86,7 +86,7 @@ const Filter = () => {
 console.log(regions)
     return (
 
-        <div className={'flex justify-around md:justify-end gap-2 overflow-x-scroll py-2'}>
+        <div className={'flex justify-around md:justify-end gap-2 overflow-x-scroll pb-6'}>
 
             {filter_array.map(({options, option_type}, index) => (
                 <select key={index} onChange={(e)=>handleSelect(option_type,e)} className="w-28 text-xs h-8 p-2 border border-black rounded bg-white text-gray-700">
