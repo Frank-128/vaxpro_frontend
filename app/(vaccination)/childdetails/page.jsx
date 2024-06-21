@@ -9,7 +9,7 @@ import { LongDialog } from "@/components/ScheduleUpdates";
 import InfoUpdateModal from "@/components/InfoUpdateModal";
 import Certificates from "@/components/certificates/Certificate";
 import {CertificateGenerator} from "@/constants/certificate_generator";
-import { useRouter } from "next/navigation";
+
 
 
 function ChildCard({ ward, date_of_birth, card_no,certificate_status,handleGenerate }) {
@@ -154,9 +154,6 @@ export default function TeamSection12() {
   const [savedScheds, setSavedScheds] = useState([]);
   const [birth_date, setBirthDate] = useState();
   const {loading} = CertificateGenerator();
-  const router = useRouter()
-
-
   const router = useRouter();
 
   useEffect(() => {

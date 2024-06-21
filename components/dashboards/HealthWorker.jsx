@@ -118,10 +118,15 @@ const HealthWorker = () => {
                 <div className={'flex justify-between gap-3'}>
                     <div className={'bg-blue-500/15 p-2 rounded flex gap-2 items-center w-3/4'}>
                         <span> Welcome Back</span>
+                       {loggedUser.role.account_type == "health_worker" ?<>
                         <span
                             className={'text-xl font-monte-1 text-blue-800'}>{loggedUser?.health_workers[0]?.first_name}</span>
                         <span
                             className={'text-xl font-monte-1 text-blue-800'}>{loggedUser?.health_workers[0]?.last_name} </span>
+                       </>:
+                            <span
+                            className={'text-xl font-monte-1 text-blue-800'}>{loggedUser?.facilities?.facility_name} Branch Manager</span>
+                            }
                         <span>!!</span>
                     </div>
                     <Button className={'w-1/4 rounded-[0.25rem] bg-blue-900 flex justify-center items-center gap-3'}
