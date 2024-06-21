@@ -8,7 +8,6 @@ import {useRouter, useSearchParams} from "next/navigation";
 import { useEffect, useState } from "react";
 import DateCalendarComp from "@/components/DateCalendar";
 import { LongDialog } from "@/components/ScheduleUpdates";
-
 import Certificates from "@/components/certificates/Certificate";
 import {CertificateGenerator} from "@/constants/certificate_generator";
 
@@ -186,6 +185,7 @@ export default function TeamSection12() {
   const [savedScheds, setSavedScheds] = useState([]);
   const [birth_date, setBirthDate] = useState();
   const {loading} = CertificateGenerator();
+
   const router = useRouter();
 
   useEffect(() => {

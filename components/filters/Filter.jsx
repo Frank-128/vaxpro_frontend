@@ -39,6 +39,7 @@ const Filter = ({ setAllChildren }) => {
   const [districts, setDistricts] = useState([]);
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
 
+
   const filter_array = [
     {
       option_type: "region",
