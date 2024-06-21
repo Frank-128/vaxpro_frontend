@@ -14,6 +14,7 @@ import VaccinationReg from "@/components/VaccinationReg";
 import VaccinationEdit from "@/components/VaccinationEdit";
 import VaccinationDel from "@/components/VaccinationDel";
 import axios from "../../../axios";
+import globalVaccines from "@/store/vaccines";
 
 const Vaccinaions = () => {
   const [openEdit, setOpenEdit] = useState(false);
@@ -22,12 +23,14 @@ const Vaccinaions = () => {
   const [vaccineId, setVaccineId] = useState(0);
 
   const [childVaccines, setVaccineFetch] = useState([]);
+  const setVaccines = globalVaccines(state=>state.setVaccines)
 
   useEffect(() => {
 
     axios.get(`getVaccines`).then((res) => {
 
       if (res.data.status === 200) {
+        setVaccines(res.data.vaccines)
         setVaccineFetch(res.data.vaccines);
       }
     });
@@ -69,7 +72,7 @@ const Vaccinaions = () => {
   const notifyEditVaccine = (editedVaccine) => {
     setVaccineFetch(childVaccines.map(vaccine => vaccine.id === editedVaccine.id ? editedVaccine : vaccine ));
   }
-  
+
 
 
   return (
@@ -165,4 +168,4 @@ const Vaccinaions = () => {
   );
 };
 
-export default Vaccinaions; 
+export default Vaccinaions;

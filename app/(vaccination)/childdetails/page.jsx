@@ -1,14 +1,20 @@
 "use client";
+
 import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
+
 import axios from "../../../axios";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import { useEffect, useState } from "react";
 import DateCalendarComp from "@/components/DateCalendar";
 import { LongDialog } from "@/components/ScheduleUpdates";
+
+import Certificates from "@/components/certificates/Certificate";
+import {CertificateGenerator} from "@/constants/certificate_generator";
 import { useRouter } from "next/navigation";
 
-function ChildCard({ ward, date_of_birth, card_no, house_no }) {
+
+function ChildCard({ ward, date_of_birth, card_no, house_no,certificate_status,handleGenerate }) {
   return (
     <Card className="rounded-lg shadow-lg bg-[#dce1e2] lg:w-1/2 4xs:w-full " shadow={true}>
       <CardBody className="text-left flex flex-col gap-3">
@@ -72,6 +78,9 @@ function ChildCard({ ward, date_of_birth, card_no, house_no }) {
           </div>
         )}
       </CardBody>
+      <CardFooter className="flex justify-end">
+        <Certificates card_no={card_no} certificate_status={certificate_status} handleGenerate={handleGenerate} />
+      </CardFooter>
     </Card>
   );
 }
@@ -137,7 +146,12 @@ function TeamCard({
   date_of_birth,
   parents_guardians,
   ward,
+
   house_no,
+
+  certificates,
+  handleGenerate,
+
 }) {
   return (
     <div className="flex gap-4 lg:flex-row  flex-col">
@@ -149,6 +163,8 @@ function TeamCard({
         house_no={house_no}
         card_no={card_no}
         date_of_birth={date_of_birth}
+        certificate_status={certificates != null}
+        handleGenerate={handleGenerate}
       />
       {/* <div className="!text-2xl font-bold lg:!text-2xl self-center flex mb-1 ml-6">
         Parent / Guardian Details:
@@ -169,10 +185,14 @@ export default function TeamSection12() {
   const [allVaccines, setAllVaccines] = useState([]);
   const [savedScheds, setSavedScheds] = useState([]);
   const [birth_date, setBirthDate] = useState();
+  const {loading} = CertificateGenerator();
+  const router = useRouter()
+
 
   const router = useRouter();
 
   useEffect(() => {
+
     axios
       .get(`/fetchVaccineIds`, { params: { child_id: card_no } })
       .then((res) => {
@@ -185,7 +205,9 @@ export default function TeamSection12() {
       setSavedScheds(res.data.child_schedules);
 
       setBirthDate(res.data.birth_date);
+
     });
+
   }, [card_no]);
 
   const handleClickCloseUpdateInfo = () => {
@@ -223,6 +245,7 @@ export default function TeamSection12() {
   };
 
   useEffect(() => {
+
     axios.get(`/getChildData/${card_no}`).then((res) => {
       if (res.status === 200) {
         console.log(res.data);
@@ -231,12 +254,27 @@ export default function TeamSection12() {
     });
 
     axios.get(`/getVacSchedules/${card_no}`).then((res) => {
-      if (res.data.status == 200) {
+      if (res.data.status === 200) {
         console.log(res.data.vacScheds);
         setVacScheds(res.data.vacScheds);
       }
     });
-  }, [card_no]);
+  }, [card_no,]);
+
+  const handleGenerate = () => {
+    axios.get(`/getChildData/${card_no}`).then((res) => {
+      if (res.status === 200) {
+        console.log(res.data);
+        setChildData(res.data);
+      }
+    }).finally(() => {
+          // window.location.reload()
+        }
+    );
+  }
+
+
+
 
   return (
     <section className="min-h-screen py-8 px-8 lg:py-2">
@@ -278,7 +316,7 @@ export default function TeamSection12() {
 
         <div className="grid w-full grid-cols-1 gap-1  mb-10">
           {childData.map((props, key) => (
-            <TeamCard key={key} {...props} />
+            <TeamCard key={key} {...props} handleGenerate={handleGenerate} />
           ))}
         </div>
 

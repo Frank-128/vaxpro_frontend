@@ -55,7 +55,7 @@ function Sidebar({ openSidebar, setOpenSidebar }) {
                     <div
                       className="flex gap-x-2 items-center justify-between bg-yellow-30 w-full"
                       onClick={() => {
-                        openSublinks == ""
+                        openSublinks === ""
                           ? setOpenSublinks(name)
                           : setOpenSublinks("");
                       }}

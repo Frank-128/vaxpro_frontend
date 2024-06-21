@@ -2,30 +2,32 @@
 import {
   Card,
   CardBody,
-  IconButton,
   Typography,
 } from "@material-tailwind/react";
 import ChartGraph from "@/components/chart";
-import Link from "next/link";
 import globalUser from "@/store/user";
-import { Fragment, useEffect } from "react";
+import {useEffect, useState} from "react";
 import globalAllUsers from "@/store/all_users";
 import axios from "../../axios";
+import HealthWorker from "@/components/dashboards/HealthWorker";
+import {Button} from "@material-tailwind/react";
+import {FilterAltOutlined} from "@mui/icons-material";
+import globalAddress from "@/store/address";
+import globalVaccines from "@/store/vaccines";
+import Filter from "@/components/filters/Filter";
+import {useInitial} from "@/constants/functions";
 
-function TeamCard({ name, title,bg }) {
+function TeamCard({ name, title,bg, textColor, valueColor }) {
   return (
-    <Card className={`rounded-lg ${bg}  h-28}`} shadow={false}>
-      <CardBody className="text-center">
+    <Card className={`rounded-lg ${bg} h-28}`} shadow={false}>
+      <CardBody className=" w-full h-full flex flex-col items-start ">
         <Typography
-          variant="h5"
-          color="blue-gray"
-          className="!font-medium text-lg text-white"
+          className={`w-full h-2/3 text-sm ${textColor} font-extrabold`}
         >
           {name}
         </Typography>
         <Typography
-          color="blue-gray"
-          className="mb-2 !text-base !font-semibold text-white"
+          className={` text-2xl w-full h-1/3 font-extrabold font-monte-1  ${valueColor}`}
         >
           {title}
         </Typography>
@@ -34,36 +36,63 @@ function TeamCard({ name, title,bg }) {
   );
 }
 
+
+
+
 export function Dashboard() {
+
+  // const
+
   const children = globalAllUsers((state) => state.allChildren);
   const setAllChildren = globalAllUsers((state) => state.setAllChildren);
+  const loggedInUser = globalUser((state) => state.loggedInUser);
+
+
 
   const members = [
     {
       name: "Vaccinated Children",
       title: children?.vaccinated_children,
-      bg:"bg-[#abc321]"
+      bg:"bg-[#f5edfc]/40",
+      textColor:"text-[#9D86DE]",
+      valueColor:"text-[#8d25df]"
+
     },
     {
       name: "Ongoing Vaccinations",
       title: children?.unvaccinated_children,
-      bg:"bg-[#acb987]"
+      bg:"bg-[#daebfe]/40",
+      textColor:"text-[#0074fc]/60",
+      valueColor:"text-[#0074fc]"
+
     },
     {
       name: "Registered Children",
       title: children?.registered_children,
-      bg:"bg-[#bbcd7e]"
+      bg:"bg-[#fde28b]/20",
+      textColor:"text-[#f28c07]/60",
+      valueColor:"text-[#d07806]"
+
+
     },
     {
       name: "Success Rate",
       title: children?.success + "%",
-      bg:"bg-[#ee4caf]"
+      bg:"bg-[#c4c4c4]/70",
+      textColor:"text-[#0c0c0c]/50",
+      valueColor:"text-[#0c0c0c]"
+
+
     },
   ];
 
+
+
+
+
   useEffect(() => {
     const fetchChildren = () => {
-      axios.get("all_children").then((res) => {
+      axios.post("all_children").then((res) => {
         setAllChildren(res.data);
       });
     };
@@ -73,8 +102,18 @@ export function Dashboard() {
 
 
   return (
-    <section className="min-h-screen py-8 px-8 lg:py-12">
+    <section className="min-h-screen py-2 px-4">
+      {loggedInUser && loggedInUser.role?.account_type !== "health_worker" ?
       <div className="container mx-auto">
+        {/*<div  className={'flex justify-end gap-2 py-2'}>*/}
+
+        {/*  { filter_array.map(({options, option_type},index)=> (<Filter setRegion={setRegion} key={index} options={options} option_type={option_type}/>))}*/}
+        {/*  <Button className={'bg-transparent w-28 h-8 p-2 border border-black text-black rounded-[0.25rem] flex justify-center items-center gap-2'}>*/}
+        {/*    <FilterAltOutlined/>*/}
+        {/*  <span> Apply</span>*/}
+        {/*  </Button>*/}
+        {/*</div>*/}
+        <Filter/>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {members.map((props, key) =>
             children == null ? (
@@ -100,14 +139,20 @@ export function Dashboard() {
             )
           )}
         </div>
+
         <div className="grid grid-cols-1 mt-20 gap-6 md:grid-cols-2 lg:grid-cols-2">
           <ChartGraph vaccineName="Vaccine: Polio" />
           <ChartGraph vaccineName="Vaccine: BCG" />
           <ChartGraph vaccineName="Vaccine: MR" />
         </div>
-      </div>
+      </div>:
+
+      <HealthWorker/>
+      }
     </section>
   );
 }
 
 export default Dashboard;
+
+

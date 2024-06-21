@@ -19,7 +19,7 @@ import {
   DialogFooter,
   Chip,
   Input,
-  
+
 } from "@material-tailwind/react";
 import {
   Close,
@@ -79,23 +79,11 @@ function UserManagement() {
     setSubPathname(pathname.split("/")[2]);
   }, [pathname]);
 
-  const TABS = [
-    {
-      label: "All",
-      value: "all",
-    },
-    {
-      label: "Monitored",
-      value: "monitored",
-    },
-    {
-      label: "Unmonitored",
-      value: "unmonitored",
-    },
-  ];
+
 
   const TABLE_HEAD = React.useMemo(
     () => [
+      {name:'N/C',accounts: ['default']},
       { name: "Role", accounts: ["default"] },
       { name: "Region", accounts: ["ministry"] },
       { name: "District", accounts: ["regional"] },
@@ -164,8 +152,8 @@ function UserManagement() {
       .catch((err) => {
         // setLoading(false);
         if (
-          err?.response?.status == 400 &&
-          err?.response?.data.error == "contacts"
+          err?.response?.status === 400 &&
+          err?.response?.data.error === "contacts"
         ) {
           setError("contacts", {
             type: err.status,
@@ -280,33 +268,42 @@ function UserManagement() {
                     return true;
                   }
                 }).map(
-                  ({ id, role, contacts, ward, region, district }) => {
+                  ({ id, role, contacts, ward, region, district },index) => {
                     return (
                       <Fragment key={id}>
                         <tr className="border-b capitalize px-8 border-black">
                           <td className={""}>
                             <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-monte"
+                                variant="small"
+                                color="blue-gray"
+                                className="font-monte"
+                            >
+                              {index+1}
+                            </Typography>
+                          </td>
+                          <td className={""}>
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-monte"
                             >
                               {role.role}
                             </Typography>
                           </td>
                           {loggedInUser.role.account_type === "ministry" &&
-                            subPathname === "regional" && (
-                              <td>{region?.region_name}</td>
-                            )}
+                              subPathname === "regional" && (
+                                  <td>{region?.region_name}</td>
+                              )}
 
                           {loggedInUser.role.account_type === "regional" &&
-                            subPathname === "district" && (
-                              <td>{district?.district_name}</td>
-                            )}
+                              subPathname === "district" && (
+                                  <td>{district?.district_name}</td>
+                              )}
 
                           {subPathname === "community_health_worker" && (
-                            <td className={""}>
-                              <div className="w-max">{ward?.ward_name}</div>
-                            </td>
+                              <td className={""}>
+                                <div className="w-max">{ward?.ward_name}</div>
+                              </td>
                           )}
                           <td>
                             <div>{contacts}</div>
@@ -315,54 +312,54 @@ function UserManagement() {
                           <td className="flex justify-between">
                             <Tooltip content="Edit Account">
                               <IconButton
-                                variant="text"
-                                onClick={() => {
-                                  clearErrors("contacts");
-                                  setSelectedRow({
-                                    id: id,
-                                    action: "update",
-                                    contacts: contacts,
-                                  });
-                                  setValue(
-                                    "contacts",
-                                    contacts.split("+255")[1]
-                                  );
-                                }}
+                                  variant="text"
+                                  onClick={() => {
+                                    clearErrors("contacts");
+                                    setSelectedRow({
+                                      id: id,
+                                      action: "update",
+                                      contacts: contacts,
+                                    });
+                                    setValue(
+                                        "contacts",
+                                        contacts.split("+255")[1]
+                                    );
+                                  }}
                               >
-                                <Edit />
+                                <Edit/>
                               </IconButton>
                             </Tooltip>
                             <Tooltip content="View Account">
                               <IconButton
-                                variant="text"
-                                onClick={() =>
-                                  setSelectedRow({ id: id, action: "view" })
-                                }
+                                  variant="text"
+                                  onClick={() =>
+                                      setSelectedRow({id: id, action: "view"})
+                                  }
                               >
-                                <VisibilityOutlined />
+                                <VisibilityOutlined/>
                               </IconButton>
                             </Tooltip>
                             {loggedInUser.id !== id ? (
-                              <Tooltip content="Delete Account">
-                                <IconButton
-                                  variant="text"
-                                  onClick={() =>
-                                    setSelectedRow({ id: id, action: "delete" })
-                                  }
-                                >
-                                  <Delete />
-                                </IconButton>
-                              </Tooltip>
+                                <Tooltip content="Delete Account">
+                                  <IconButton
+                                      variant="text"
+                                      onClick={() =>
+                                          setSelectedRow({id: id, action: "delete"})
+                                      }
+                                  >
+                                    <Delete/>
+                                  </IconButton>
+                                </Tooltip>
                             ) : (
-                              <div className="w-10"></div>
+                                <div className="w-10"></div>
                             )}
                           </td>
                         </tr>
                         {selectedRow.id === id &&
-                          selectedRow.action === "update" && (
-                            <tr
-                              key={id}
-                              className="capitalize w-full shadow-xl border border-1 bg-white py-3
+                            selectedRow.action === "update" && (
+                                <tr
+                                    key={id}
+                                    className="capitalize w-full shadow-xl border border-1 bg-white py-3
                               rounded-xl flex justify-evenly items-center absolute left-0 z-50"
                             >
                               <td className="border-transparent">
@@ -376,7 +373,7 @@ function UserManagement() {
                                       className={clsx(
                                         " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300",
                                         {
-                                          "border-r-2 border-black": isFocused,
+                                          'border-r border-2 border-black': isFocused,
                                           "border-r border-gray-500":
                                             !isFocused,
                                         }
@@ -415,9 +412,8 @@ function UserManagement() {
                                       })}
                                       defaultValue={getValues("contacts")}
                                       onChange={(e) => {
-                                        // console.log(errors)
                                         setValue("contacts", e.target.value, {shouldValidate:true})
-                                        
+
                                       }}
                                     />
                                   </div>
@@ -453,7 +449,7 @@ function UserManagement() {
                                     action: "",
                                     contacts: "",
                                   });
-                                 
+
                                 }}
                                 className="text-black hover:border hover:bg-gray-300 hover:rounded-xl hover:p-1 hover:cursor-pointer"
                               >

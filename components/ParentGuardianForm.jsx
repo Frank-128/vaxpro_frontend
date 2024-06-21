@@ -24,69 +24,61 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
 
   const {isValid,isSubmitted,trigger} = errTouched;
 
-  const handleCardNoChange = async (e) => {
-    const currentNidaNo = e.target.value.trim();
-
-    if (currentNidaNo.length == 20) {
-      const result = await trigger("card_no");
-      if (result) {
-        try {
-          const res = await axios.get(`/api/parents?nidaNo=${currentNidaNo}`);
-          if (res.status === 200) {
-            if (
-              res.data.length === 1 &&
-              res.data[0].card_no === currentCardNo
-            ) {
-            } else {
-              clearErrors("card_no");
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }
-    }
-  };
+  // const handleCardNoChange = async (e) => {
+  //   const currentNidaNo = e.target.value.trim();
+  //
+  //   if (currentNidaNo.length > 1) {
+  //     const result = await trigger("card_no");
+  //     if (result) {
+  //       try {
+  //         const res = await axios.get(`/api/parents?nidaNo=${currentNidaNo}`);
+  //         if (res.status === 200) {
+  //           if (
+  //             res.data.length === 1 &&
+  //             res.data[0].card_no === currentCardNo
+  //           ) {
+  //           } else {
+  //             clearErrors("card_no");
+  //           }
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     }
+  //   }
+  // };
 
   const handleNidaChange = async (e) => {
     const nidaNo = e.target.value;
-    try{   if (nidaNo.length === 20) {
+    try{
+      if (nidaNo.length === 20) {
       const result = await trigger("nida_id");
       if(result){
         const parentRes = await axios.get(`parents?nidaNo=${e.target.value}`)
-        console.log(parentRes)
-      
-      if (parentRes.status === 200 && parentRes.data.length > 0) {
-      
-        const parentData = parentRes.data[0];
-        
-        setAvailableParent({status:true,parent:parentData})
 
-      
+      if (parentRes.status === 200 && parentRes.data ) {
+        const parentData = parentRes.data;
+        setAvailableParent({status:true, parent:parentData})
       }
-      
     }
   }
-  // setAvailableParent({})
 }catch(err){
-    console.log(err)
-  }
+      setAvailableParent({status:false, parent: null})
+    }
   };
 
 
   const handleNidaRes = (res)=>{
-    if(res == 1){
-      const { nida_id, firstname, middlename, lastname, children, user } =
+    if(res === 1){
+      console.log(availableParent, "THIS IS THE PARENT")
+      const { nida_id, firstname, middlename,lastname, user } =
       availableParent.parent;
     setValue("nida_id", nida_id);
     setValue("par_first_name", firstname);
     setValue("par_middle_name", middlename);
     setValue("par_last_name", lastname);
+    setValue("contact", user.contacts);
 
-    if (user) {
-      setValue("contact", user.contacts);
-    }
-    
     setAvailableParent({status:false,parent:null})
     } else{
       setAvailableParent({status:false,parent:null})
@@ -116,7 +108,7 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
                   message: "Nida number can not have more than 20 numbers",
                 },
                 minLength: {
-                  value: 0,
+                  value: 20,
                   message: "Nida number can not have less than 20 numbers",
                 },
                 pattern: {
@@ -137,7 +129,7 @@ const ParentGuardianForm = ({ register, setValue, errors, control,errTouched }) 
                 <div className="font-bold text-xs ">{availableParent.parent?.firstname +" "+availableParent.parent?.lastname}</div>
                 <p className="text-gray-700 text-xs">NIDA No: {availableParent.parent?.nida_id}</p>
                 <p className="text-red-600 text-xs ">
-                User already exists, confirm and click to autofill                
+                User already exists, confirm and click to autofill
                 </p>
                <div className="flex justify-between">
                <div

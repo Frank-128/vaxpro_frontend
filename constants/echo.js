@@ -5,7 +5,7 @@ import { useState,useEffect } from "react";
 import axios from '../axios';
 
 
-window.Pusher = Pusher;
+
 
 export const useEcho = ()=>{
     const [echoInstance,setEchoInstance] = useState(null);
@@ -13,6 +13,7 @@ export const useEcho = ()=>{
    
     useEffect(()=>{
         if (!authenticatedToken) return;
+        window.Pusher = Pusher;
 
         const echo = new Echo({
             broadcaster: 'reverb',
@@ -23,10 +24,10 @@ export const useEcho = ()=>{
                         axios.post('/broadcasting/auth', {
                             socket_id: socketId,
                             channel_name: channel.name,
-                            headers: {
-                                Authorization: `Bearer ${authenticatedToken}`,
-                              },
-                        })
+                           
+                        },{ headers: {
+                            Authorization: `Bearer ${authenticatedToken}`,
+                          }})
                         .then(response => {
                             callback(false, response.data);
                         })
@@ -43,7 +44,7 @@ export const useEcho = ()=>{
             enabledTransports: ['ws', 'wss'],
         });
         setEchoInstance(echo)        
-    },[])
+    },[authenticatedToken])
 
     return echoInstance;
 }
