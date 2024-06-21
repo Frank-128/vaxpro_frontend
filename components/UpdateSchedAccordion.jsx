@@ -19,7 +19,7 @@ const CUSTOM_ANIMATION = {
   unmount: { scale: 0.9 },
 };
 
-export function UpdateSchedAccordion({ vaccines }) {
+export function UpdateSchedAccordion({ vaccines, date_of_birth }) {
   const [open, setOpen] = React.useState(false);
   const { register, handleSubmit } = useForm();
   const loggedInUser = globalUser((state) => state.loggedInUser);
@@ -59,7 +59,6 @@ export function UpdateSchedAccordion({ vaccines }) {
     };
 
     axios.post(`/updateSelectedVacs`, { data: dataToBackend }).then((res) => {
-    
       router.push(`/childdetails?cardNo=${childData}`);
     });
   };
@@ -81,7 +80,17 @@ export function UpdateSchedAccordion({ vaccines }) {
                       className="mb-2"
                       key={i}
                       type="date"
-                      {...register(`${vac.id + "_" + i}`)}
+                      {...register(`${vac.id + "_" + i}`, {
+                        validate: (value) => {
+                          const selectedDate = new Date(value);
+                          const today = new Date();
+                          const minDate = new Date(date_of_birth); 
+                          return (
+                            selectedDate <= today && selectedDate >= minDate
+                          );
+                        },
+                      })}
+                      min={new Date().toISOString().split("T")[0]}
                     />
                   </>
                 ))}
