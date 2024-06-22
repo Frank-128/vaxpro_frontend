@@ -65,6 +65,7 @@ export function Dashboard() {
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
         const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
+
         return (<text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
                 {`${(percent * 100).toFixed(0)}%`}
             </text>);
@@ -146,6 +147,7 @@ export function Dashboard() {
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
+
 
                         <div className="grid grid-cols-1 mt-20 gap-6 md:grid-cols-2 lg:grid-cols-2">
                           {/*<ChartGraph vaccineName="Vaccine: Polio" />*/}
