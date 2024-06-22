@@ -33,6 +33,7 @@ const InfoUpdate = () => {
       firstname: "",
       middlename: "",
       surname: "",
+      gender: "",
       date_of_birth: "",
       ward_id: "",
       house_no: "",
@@ -66,6 +67,7 @@ const InfoUpdate = () => {
           card_no: child.card_no,
           firstname: child.firstname,
           middlename: child.middlename,
+          gender: child.gender,
           surname: child.surname,
           date_of_birth: child.date_of_birth,
           ward: child.ward_id,
@@ -87,8 +89,8 @@ const InfoUpdate = () => {
           setValue("last_name", defaultValues[0].surname);
           setValue("house_no", defaultValues[0].house_no);
           setValue("ward_id", defaultValues[0].ward);
+          setValue('gender', defaultValues[0].gender);
           setValue("birth_date", defaultValues[0].date_of_birth);
-
           setValue("nida_id", defaultValues[0].nida_id);
           setValue("par_first_name", defaultValues[0].par_first_name);
           setValue("par_middle_name", defaultValues[0].par_middle_name);
@@ -298,7 +300,6 @@ const InfoUpdate = () => {
               control={control}
               ward={ward}
               register={register}
-              
             />
           </div>
           {errors.ward_id && (
@@ -330,8 +331,8 @@ const InfoUpdate = () => {
                     }}
                    // containerProps={{ className: "4xs:min-w-72 " }}
                   >
-                    <Option value="male">Male</Option>
-                    <Option value="female">Female</Option>
+                    <Option value="Male">Male</Option>
+                    <Option value="Female">Female</Option>
                   </Select>
                   {error && (
                     <p className="text-red-900 text-xs font-monte">
@@ -470,7 +471,7 @@ const InfoUpdate = () => {
                   },
                 })}
               />
-          
+
           </div>
           {errors.contact && (
             <p className="text-red-900 text-xs font-monte">

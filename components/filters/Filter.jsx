@@ -148,7 +148,7 @@ const Filter = ({ setAllChildren }) => {
   return (
     <div
       className={
-        "flex justify-around md:justify-end gap-2 overflow-x-scroll py-2"
+        "flex justify-around md:justify-end gap-2 overflow-x-scroll pb-2 md:mb-4"
       }
     >
       {filter_array
