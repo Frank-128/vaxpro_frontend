@@ -71,7 +71,7 @@ export function Dashboard() {
   ];
 
   
-
+  
   return (
     <section className="min-h-screen py-2 px-4">
       {loggedInUser &&

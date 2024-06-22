@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
+import { Button, Card, CardBody, CardFooter, Typography } from "@material-tailwind/react";
 
 import axios from "../../../axios";
 import Link from "next/link";
