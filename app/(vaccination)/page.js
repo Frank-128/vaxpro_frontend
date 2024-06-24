@@ -93,6 +93,8 @@ export function Dashboard() {
             </ul>);
     };
 
+
+    console.log(children)
     return (<section className="min-h-screen py-2 px-4">
             {loggedInUser && <>
                 {(loggedInUser.role?.account_type === "health_worker" || loggedInUser.role?.account_type === "branch_manager") ? (
@@ -132,7 +134,7 @@ export function Dashboard() {
                                         // onMouseLeave={handleMouseLeave}
                                     />
                                     <Pie
-                                        data={data}
+                                        data={children?.chart_data}
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
