@@ -16,12 +16,16 @@ export function LongDialog({ birthDate, childId, savedScheds, setSavedScheds }) 
   const [schedItems, setVacItems] = useState([]);
 
   const handleOpen = () => {
-    console.log(birthDate)
+    
+
+    //  fetch the data using the birthdate, ---> what if there is no birthdate
+
     axios.get(`/fetchVaccineIds`).then((res) => {
       axios
         .post(`/getAllChildSchedules`, {
           vaccines: res.data.vaccineIds,
           date: birthDate,
+        
         })
         .then((res) => {
           if (res.data) {
@@ -43,6 +47,7 @@ export function LongDialog({ birthDate, childId, savedScheds, setSavedScheds }) 
         <DialogHeader>Schedule Update:</DialogHeader>
         <DialogBody className="h-[42rem] overflow-scroll">
           <Typography className="font-normal mb-40">
+            {/* iterate the schedules from the backend */}
             {scheds &&
               Object.entries(scheds).map(([name, doses], index) => {
                 return (

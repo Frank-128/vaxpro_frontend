@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
+import { Button, Card, CardBody, Typography, CardFooter } from "@material-tailwind/react";
 
 import axios from "../../../axios";
 import Link from "next/link";
@@ -13,7 +13,7 @@ import {CertificateGenerator} from "@/constants/certificate_generator";
 
 
 
-function ChildCard({ ward, date_of_birth, card_no, house_no,certificate_status,handleGenerate }) {
+function ChildCard({ ward, date_of_birth, card_no,gender, house_no,certificate_status,handleGenerate }) {
   return (
     <Card className="rounded-lg shadow-lg bg-[#dce1e2] lg:w-1/2 4xs:w-full " shadow={true}>
       <CardBody className="text-left flex flex-col gap-3">
@@ -47,7 +47,7 @@ function ChildCard({ ward, date_of_birth, card_no, house_no,certificate_status,h
             Gender:
           </Typography>
           <Typography color="blue-gray" className="text-black lg:text-md">
-            Gender here
+          {gender}
           </Typography>
         </div>
         <div>
@@ -145,6 +145,7 @@ function TeamCard({
   date_of_birth,
   parents_guardians,
   ward,
+  gender,
 
   house_no,
 
@@ -159,6 +160,7 @@ function TeamCard({
         middlename={middlename}
         surname={surname}
         ward={ward}
+        gender={gender}
         house_no={house_no}
         card_no={card_no}
         date_of_birth={date_of_birth}
