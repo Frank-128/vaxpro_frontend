@@ -198,59 +198,12 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
          <Input
             label="House No:"
             type="number"
-            {...register("house_no",{
-              required:"This field is required"
-            })}
+            {...register("house_no")}
             className="  sm:w-56 lg:w-full "
           />
-          {errors.house_no && (
-            <span className="text-red-900 text-sm font-mono ">
-              {errors.house_no.message}
-            </span>
-          )}
          </div>
 
        <div>
-       {/* <Autocomplete
-            className="  sm:w-56  lg:w-full "
-            options={wards}
-            getOptionLabel={(option) =>
-              `${option.ward_name}-${option.district.district_name}-${option.id}`
-            }
-            onInputChange={handleWardChange}
-            renderInput={(params) => (
-              <TextField
-            
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    height: "40px",
-                    borderRadius: "6px",
-                    "& .MuiOutlinedInput-input": {
-                      padding: "10px 14px",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "black",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    "&.Mui-focused": {
-                      color: "black",
-                    },
-                  },
-                }}
-                size="small"
-                {...params}
-                label="Ward"
-                {...register("ward_id",{
-                  required:"This field is required"
-                })}
-              />
-              
-              
-           
-            )}
-            getOptionKey={(option) => option.id}
-          /> */}
 
           <AutoCompleteSearch name={"ward"} control={control} />
           {errors.ward_id && (
