@@ -33,6 +33,7 @@ const InfoUpdate = () => {
       firstname: "",
       middlename: "",
       surname: "",
+      gender: "",
       date_of_birth: "",
       ward_id: "",
       house_no: "",
@@ -66,6 +67,7 @@ const InfoUpdate = () => {
           card_no: child.card_no,
           firstname: child.firstname,
           middlename: child.middlename,
+          gender: child.gender,
           surname: child.surname,
           date_of_birth: child.date_of_birth,
           ward: child.ward_id,
@@ -88,9 +90,9 @@ const InfoUpdate = () => {
           setValue("last_name", defaultValues[0].surname);
           setValue("house_no", defaultValues[0].house_no);
           setValue("ward_id", defaultValues[0].ward);
-          setValue("gender", defaultValues[0].gender);
-          setValue("birth_date", defaultValues[0].date_of_birth);
 
+          setValue('gender', defaultValues[0].gender);
+          setValue("birth_date", defaultValues[0].date_of_birth);
           setValue("nida_id", defaultValues[0].nida_id);
           setValue("par_first_name", defaultValues[0].par_first_name);
           setValue("par_middle_name", defaultValues[0].par_middle_name);
@@ -437,33 +439,35 @@ const InfoUpdate = () => {
             </span>
 
             */}
-            <Input
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-              onFocus={() => setIsFocused(true)}
-              autoComplete="off"
-              // className="text-black font-monte-1 pl-16 border lg:w-64  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
-              size="lg"
-              placeholder="Contacts"
-              // containerProps={{ className: "4xs:min-w-72 " }}
-              {...register("contact", {
-                onBlur: () => setIsFocused(false),
-                required: "This field is required",
-                maxLength: {
-                  value: 9,
-                  message: "Phone number should be exactly 9 digits",
-                },
-                minLength: {
-                  value: 9,
-                  message: "Phone number should be exactly 9 digits",
-                },
-                pattern: {
-                  value: /^[67][123456789][0-9]+$/,
-                  message: "Please enter valid number",
-                },
-              })}
-            />
+
+              <Input
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                onFocus={() => setIsFocused(true)}
+                autoComplete="off"
+                // className="text-black font-monte-1 pl-16 border lg:w-64  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
+                size="lg"
+                placeholder="Contacts"
+               // containerProps={{ className: "4xs:min-w-72 " }}
+                {...register("contact", {
+                  onBlur: () => setIsFocused(false),
+                  required: "This field is required",
+                  maxLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  minLength: {
+                    value: 9,
+                    message: "Phone number should be exactly 9 digits",
+                  },
+                  pattern: {
+                    value: /^[67][123456789][0-9]+$/,
+                    message: "Please enter valid number",
+                  },
+                })}
+              />
+
           </div>
           {errors.contact && (
             <p className="text-red-900 text-xs font-monte">

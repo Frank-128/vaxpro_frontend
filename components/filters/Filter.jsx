@@ -144,11 +144,12 @@ const Filter = ({ setAllChildren }) => {
     fetchChildren();
   }, [setAllChildren, filterValues]);
 
-  console.log(loggedInUser);
+  
+  
   return (
     <div
       className={
-        "flex justify-around md:justify-end gap-2 overflow-x-scroll py-2"
+        "flex justify-around md:justify-end gap-2 overflow-x-scroll pb-2 md:mb-4"
       }
     >
       {filter_array
@@ -185,7 +186,7 @@ const Filter = ({ setAllChildren }) => {
                 <option value={"all"} className="">
                   All districts
                 </option>
-                {districts.length !== 0 ? (
+                {districts?.length !== 0 ? (
                   options?.map(({ district_name, id }, index) => (
                     <option value={id} key={index} className={""}>
                       {district_name}
