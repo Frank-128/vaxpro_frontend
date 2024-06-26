@@ -22,6 +22,7 @@ export function ScheduleAccordionAnimation({
   schedItems,
   savedScheds,
   setSavedScheds,
+  fetchVaccineIds
 }) {
   const [open, setOpen] = useState(0);
   const [currentDose, setCurrentDose] = useState(0);
@@ -121,7 +122,8 @@ export function ScheduleAccordionAnimation({
         });
       });
     fetchVaccineSchedule();
-    console.log(vaccines);
+    // fetch the schedules again from the backend
+    fetchVaccineIds()
   };
 
   
@@ -224,7 +226,7 @@ export function ScheduleAccordionAnimation({
                 )}
                 <p className="mt-1">{`${
                   doseType.charAt(0).toUpperCase() + doseType.slice(1)
-                }: ${isDoseSaved ? savedDoseDate : date || newsdoses}`}</p>
+                }: ${isDoseSaved ? savedDoseDate : date }`}</p>
               </div>
             );
           })}

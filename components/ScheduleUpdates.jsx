@@ -15,16 +15,13 @@ export function LongDialog({ birthDate, childId, savedScheds, setSavedScheds }) 
   const [scheds, setScheds] = useState();
   const [schedItems, setVacItems] = useState([]);
 
-  const handleOpen = () => {
-    
-
-    //  fetch the data using the birthdate, ---> what if there is no birthdate
-
+  const fetchVaccineIds = ()=>{
     axios.get(`/fetchVaccineIds`).then((res) => {
       axios
         .post(`/getAllChildSchedules`, {
           vaccines: res.data.vaccineIds,
           date: birthDate,
+          child_id:childId
         
         })
         .then((res) => {
@@ -36,6 +33,15 @@ export function LongDialog({ birthDate, childId, savedScheds, setSavedScheds }) 
           }
         });
     });
+  }
+
+  const handleOpen = () => {
+
+    
+    //  fetch the data using the birthdate, ---> what if there is no birthdate
+    fetchVaccineIds()
+
+    
 
     setOpen(!open);
   };
@@ -53,7 +59,7 @@ export function LongDialog({ birthDate, childId, savedScheds, setSavedScheds }) 
                 return (
                   <div key={index}>
                     <h2 className="flex gap-3">
-                      <ScheduleAccordionAnimation name={name} doses={doses} childId={childId} schedItems={schedItems} savedScheds={savedScheds} setSavedScheds={setSavedScheds} />
+                      <ScheduleAccordionAnimation fetchVaccineIds={fetchVaccineIds} name={name} doses={doses} childId={childId} schedItems={schedItems} savedScheds={savedScheds} setSavedScheds={setSavedScheds} />
                     </h2>
                   </div>
                 );
