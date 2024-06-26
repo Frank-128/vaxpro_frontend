@@ -48,8 +48,9 @@ const Children = () => {
 
 
     const today = new Date().toISOString().split('T')[0];
+    const {contacts} = data
 
-    axios.post(`/parentChildData`,{...data,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
+    axios.post(`/parentChildData`,{...data,contacts:'+255'+contacts,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
       console.log(res.status)
       if(res.status === 200){
 
