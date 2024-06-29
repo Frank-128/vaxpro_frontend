@@ -93,7 +93,7 @@ function ChangePassword() {
                             value: true, message: "Password is required"
                         }, onChange: onPasswordChange
                     })}
-                    className={'border-t-blue-gray-200 focus:border-t-blue-gray-900'}
+                    className={'border-t-gray-400 focus:border-t-black'}
                     labelProps={{
                         className: "before:content-none after:content-none",
                     }}
@@ -160,7 +160,7 @@ function ChangePassword() {
                         // validate: value => value === password || "Passwords do not match"
                     })}
 
-                    className={'border-t-blue-gray-200 focus:border-t-blue-gray-900'}
+                    className={'border-t-gray-400 focus:border-t-black'}
 
                     labelProps={{
                         className: "before:content-none after:content-none",
