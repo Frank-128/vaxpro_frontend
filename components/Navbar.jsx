@@ -111,11 +111,11 @@ function Navbar({ openSidebar, setOpenSidebar }) {
     setLogoutDialog(false);
   };
 
-  
+
 
   return (
     <nav
-      className={`bg-white sticky left-0 top-0 p-2 h-20 z-10 flex-col md:flex-row flex items-center w-screen justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
+      className={`bg-white sticky left-0 top-0 p-2 h-20 z-10 flex-col md:flex-row flex justify-center items-start  lg:items-center w-screen lg:justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
         openSidebar
           ? "md:left-[280px] md:w-[calc(100vw-280px)] "
           : "md:left-0  "
@@ -123,7 +123,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
     >
       <div className="flex gap-2 md:px-0 px-4 items-center">
         <Menu onClick={() => setOpenSidebar(!openSidebar)} />
-        { (loggedInUser?.role?.account_type == "branch_manager" ||  loggedInUser?.role?.account_type == "health_worker") && <AsyncSelect
+        { (loggedInUser?.role?.account_type === "branch_manager" ||  loggedInUser?.role?.account_type === "health_worker") && <AsyncSelect
           value={searchChild}
           styles={customStyles}
           loadOptions={loadOptions}

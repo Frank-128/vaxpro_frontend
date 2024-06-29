@@ -1,3 +1,4 @@
+
 import {
   Card,
   Input,
@@ -8,7 +9,6 @@ import {
 import { TextField } from "@mui/material";
 import axios from "../axios";
 import { useState } from "react";
-import Autocomplete from "@mui/material/Autocomplete";
 import AutoCompleteSearch from "./AutoCompleteSearch";
 import { Controller } from "react-hook-form";
 
@@ -31,15 +31,16 @@ const ChildRegistrationForm = ({ register, validate, errors, errTouched }) => {
     const selectedDate = new Date(value);
     const today = new Date();
     selectedDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0); // Set to midnight to compare only the date part
+    today.setHours(0, 0, 0, 0); // Set to midnight compare only the date part
     return selectedDate <= today || "Date should not exceed today's date";
   };
-
+  
   const handleCardNoChange = async (e) => {
     const currentCardNo = e.target.value.trim();
 
-    if (currentCardNo.length == 10) {
-      const result = await trigger("card_no");
+
+    if (currentCardNo.length === 10) {
+      const result = await trigger('card_no');
       if (result) {
         try {
           const res = await axios.get(`children?cardNo=${currentCardNo}`);
@@ -63,160 +64,179 @@ const ChildRegistrationForm = ({ register, validate, errors, errTouched }) => {
     }
   };
 
+
   return (
     <Card
       color="transparent "
-      className="items-center sm:w-full "
+      className="items-center w-full p-4 md:p-8"
       shadow={false}
     >
-      <Typography className="4xs:text-sm  " variant="h4" color="blue-gray">
-        Register Child
+      <Typography className="md:text-xl self-start lg:text-2xl font-monte-1 text-black">
+        Register New Child
       </Typography>
 
-      <div className="mt-8 mb-2 items-center sm:w-1/3  justify-center  max-w-screen-lg  ">
-        <div className="mb-1 flex  2xs:w-72 xs:w-full rounded-md 2xs:p-4 3xs:w-56 4xs:w-32 2xs:ml-0 xs:ml-0 flex-col gap-6">
-          <div>
-            <Input
-              label="Card No"
-              {...register("card_no", {
-                required: "This field is required",
-                maxLength: {
-                  value: 10,
-                  message: "Card no has to be ten numbers only",
-                },
-                minLength: {
-                  value: 10,
-                  message: "Card no has to be ten numbers only",
-                },
-                pattern: {
-                  value: /^[0-9]+$/,
-                  message: "Please enter valid number",
-                },
-                onChange: handleCardNoChange,
-              })}
-              className=" sm:w-56  lg:w-full "
-            />
-            {errors.card_no && (
-              <span className="text-red-900 text-sm font-mono ">
-                {errors.card_no.message}
-              </span>
-            )}
-          </div>
+        <div className="flex rounded-md w-full flex-col md:pt-3 lg:pt-8 pt-2 gap-4 md:gap-6">
 
-          <div>
-            <Input
-              label="First Name"
-              {...register("first_name", {
-                required: "This field is required",
-              })}
-              className="  sm:w-56  lg:w-full "
-            />
-            {errors.first_name && (
-              <span className="text-red-900 text-sm font-mono ">
-                {errors.first_name.message}
-              </span>
-            )}
-          </div>
-
-          <div>
-            <Input
-              label="Middle Name"
-              {...register("middle_name", {
-                required: "This field is required",
-              })}
-              className="   sm:w-56 lg:w-full "
-            />
-            {errors.middle_name && (
-              <span className="text-red-900 text-sm font-mono ">
-                {errors.middle_name.message}
-              </span>
-            )}
-          </div>
-
-          <div>
-            <Input
-              label="Last Name"
-              {...register("last_name", {
-                required: "This field is required",
-              })}
-              className="  sm:w-56 lg:w-full "
-            />
-            {errors.last_name && (
-              <span className="text-red-900 text-sm font-mono ">
-                {errors.last_name.message}
-              </span>
-            )}
-          </div>
-
-          <div>
-            <Input
-              label="Birth Date"
-              type="date"
-              {...register("birth_date", {
-                required: "This field is required",
-                validate: validateDate,
-              })}
-              className="  sm:w-56 lg:w-full "
-            />
-            {errors.birth_date && (
-              <span className="text-red-900 text-sm font-mono ">
-                {errors.birth_date.message}
-              </span>
-            )}
-          </div>
-          <div>
-            <Controller
-              control={control}
-              rules={{ required: "This field is required" }}
-              name="gender"
-              render={({
-                field: { onBlur, value, onChange },
-                fieldState: { error },
-              }) => (
-                <div>
-                  <Select
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    selected={value}
-                    value={value}
-                    label="Gender"
-                    className=" sm:w-64 pl-3 lg:w-full rounded-md  md:w-56"
-                    animate={{
-                      mount: { y: 0 },
-                      unmount: { y: 25 },
-                    }}
-                  >
-                    <Option value="male">Male</Option>
-                    <Option value="female">Female</Option>
-                  </Select>
-                  {error && (
-                    <p className="text-red-900 text-xs font-monte">
-                      {error.message}
-                    </p>
-                  )}{" "}
+            <div className={'flex flex-col md:flex-row md:gap-3 gap-4'}>
+                <div className={'w-[95%] sm:w-[85%] md:w-[70%] lg:w-[40%] flex flex-col gap-3'}>
+                    <Input
+                        label="Card No"
+                        {...register("card_no", {
+                            required: "This field is required",
+                            maxLength: {
+                                value: 10,
+                                message: "Card no has to be ten numbers only",
+                            },
+                            minLength: {
+                                value: 10,
+                                message: "Card no has to be ten numbers only",
+                            },
+                            pattern: {
+                                value: /^[0-9]+$/,
+                                message: "Please enter valid number",
+                            },
+                            onChange: handleCardNoChange
+                        })}
+                        className="h-[3.1rem]"
+                    />
+                    {errors.card_no && (
+                        <span className="text-red-900 text-xs px-2 ">
+              {errors.card_no.message}
+            </span>
+                    )}
                 </div>
-              )}
-            />
-          </div>
-          <div>
-            <Input
-              label="House No:"
-              type="number"
-              {...register("house_no")}
-              className="  sm:w-56 lg:w-full "
-            />
-          </div>
+                <div className={'w-[95%] sm:w-[85%] md:w-[70%] lg:w-[40%] flex flex-col gap-3'}>
+                    <Input
+                        label="Birth Date"
+                        type="date"
+                        {...register("birth_date", {
+                            required: "This field is required",
+                            validate: validateDate
+                        })}
+                        className="h-[3.1rem]"
+                    />
+                    {errors.birth_date && (
+                        <span className="text-red-900 text-xs px-2">
+              {errors.birth_date.message}
+            </span>
+                    )}
 
-          <div>
-            <AutoCompleteSearch name={"ward"} control={control} />
-            {errors.ward_id && (
-              <span className="text-red-900 text-sm font-mono ">
-                {errors.ward_id.message}
-              </span>
-            )}
-          </div>
+                </div>
+
+            </div>
+
+
+            <div className={'flex flex-col md:flex-row md:gap-3 gap-4'}>
+                <div className={'w-[95%] sm:w-[85%] md:w-[70%] lg:w-[40%] flex flex-col gap-3'}>
+                    <Input
+                        label="First Name"
+                        {...register("first_name", {
+                            required: "This field is required",
+                        })}
+                        className="h-[3.1rem]"
+                    />
+                    {errors.first_name && (
+                        <span className="text-red-900 text-xs px-2">
+              {errors.first_name.message}
+            </span>
+                    )}
+                </div>
+
+                <div className={'w-[95%] sm:w-[85%] md:w-[70%] lg:w-[40%] flex flex-col gap-3'}>
+                    <Input
+                        label="Middle Name"
+                        {...register("middle_name", {
+                            required: "This field is required"
+                        })}
+                        className="h-[3.1rem]"
+                    />
+                    {errors.middle_name && (
+                        <span className="text-red-900 text-xs px-2">
+              {errors.middle_name.message}
+            </span>
+                    )}
+                </div>
+
+            </div>
+
+            <div className={'flex flex-col md:flex-row md:gap-3 gap-4'}>
+                <div className={'w-[95%] sm:w-[85%] md:w-[70%] lg:w-[40%] flex flex-col gap-3'}>
+                    <Input
+                        label="Last Name"
+                        {...register("last_name", {
+                            required: "This field is required"
+                        })}
+                        className="h-[3.1rem]"
+                    />
+                    {errors.last_name && (
+                        <span className="text-red-900 text-xs px-2">
+              {errors.last_name.message}
+            </span>
+                    )}
+                </div>
+                <div className={'w-[95%] sm:w-[85%] md:w-[70%] lg:w-[40%]'}>
+                    <Controller
+                        control={control}
+                        rules={{required: "This field is required"}}
+                        name="gender"
+                        render={({field: {onBlur, value, onChange}, fieldState: {error}}) => (
+                            <div className={'flex flex-col gap-3'}>
+                                <Select
+                                    onChange={onChange}
+                                    onBlur={onBlur}
+                                    selected={value}
+                                    value={value}
+                                    label="Gender"
+                                    className="h-[3.1rem]"
+                                    animate={{
+                                        mount: {y: 0},
+                                        unmount: {y: 25},
+                                    }}
+                                >
+                                    <Option value="male">Male</Option>
+                                    <Option value="female">Female</Option>
+
+                                </Select>
+                                {error && (
+                                    <p className="text-red-900 text-xs px-2">
+                                        {error.message}
+                                    </p>
+                                )}{" "}
+                            </div>
+                        )}
+                    />
+                </div>
+
+            </div>
+
+            <div className={'flex flex-col w-full md:flex-row md:gap-3 gap-4'}>
+                <div className={'w-[95%] sm:w-[85%] md:w-[50%] lg:w-[40%] flex flex-col gap-3'}>
+                    <Input
+                        label="House No:"
+                        type="number"
+                        {...register("house_no", {
+                            required: "This field is required"
+                        })}
+                        className="h-[3.1rem]"
+                    />
+                    {errors.house_no && (
+                        <span className="text-red-900 text-xs px-2">
+              {errors.house_no.message}
+            </span>
+                    )}
+                </div>
+                <div className={'w-[95%] sm:w-[85%] md:w-[50%] lg:w-[40%]'}>
+                    <AutoCompleteSearch name={"ward"} control={control}/>
+                    {errors.ward_id && (
+                        <span className="text-red-900 text-xs">
+
+              {errors.ward_id.message}
+            </span>
+                    )}
+                </div>
+            </div>
+
         </div>
-      </div>
     </Card>
   );
 };

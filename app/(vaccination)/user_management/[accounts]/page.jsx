@@ -178,7 +178,7 @@ function UserManagement() {
                   color="blue-gray"
                   className="font-monte-1"
                 >
-                  Members list
+                  Accounts list
                 </Typography>
                 <Typography color="gray" className="mt-1 font-monte">
                   Table for
@@ -202,16 +202,16 @@ function UserManagement() {
                 </Typography>
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row ">
-                <Button variant="outlined" size="sm" className="font-monte-1">
-                  view all
-                </Button>
+                {/*<Button variant="outlined" size="sm" className="font-monte-1">*/}
+                {/*  view all*/}
+                {/*</Button>*/}
                 <Button
-                  className="flex items-center gap-3 font-monte-1 "
+                  className="flex bg-blue-900 items-center gap-3 font-monte-1 "
                   size="sm"
                   onClick={() => setAddUserForm(true)}
                 >
                   <Person />
-                  Add member
+                  Add Account
                 </Button>
               </div>
             </div>
@@ -371,8 +371,7 @@ function UserManagement() {
                                   <div className="flex font-monte-1 relative">
                                     <span
                                       className={clsx(
-                                        " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300",
-                                        {
+                                          { " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300":true,
                                           'border-r border-2 border-black': isFocused,
                                           "border-r border-gray-500":
                                             !isFocused,

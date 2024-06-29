@@ -7,7 +7,7 @@ import globalUser from "@/store/user";
 import axios from "@/axios";
 import "../../axios";
 
-const Filter = ({ setAllChildren }) => {
+const ReportFilter = ({ setReportData }) => {
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const [filterValues, setFilterValues] = useState(
     loggedInUser?.role?.account_type === "regional"
@@ -15,30 +15,31 @@ const Filter = ({ setAllChildren }) => {
           region: loggedInUser.region_id,
           district: null,
           year: null,
-          vaccine: null,
-          gender: null,
+          month: null,
         }
       : loggedInUser?.role?.account_type === "district"
       ? {
           region: loggedInUser.region_id,
           district: loggedInUser.district_id,
           year: null,
-          vaccine: null,
-          gender: null,
+          month: null,
         }
-      : {
+      :  loggedInUser?.role?.account_type === "ministry" ? {
           region: null,
           district: null,
           year: null,
-          vaccine: null,
-          gender: null,
-        }
+          month: null,
+        }:{
+            region: loggedInUser.region_id,
+            district: loggedInUser.district_id,
+            facility:loggedInUser?.facilities?.facility_reg_no,
+            year: null,
+            month: null,
+          }
   );
   const regions = globalAddress((state) => state.regions);
-  const vaccines = globalVaccines((state) => state.vaccines);
   const [districts, setDistricts] = useState([]);
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
-
 
   const filter_array = [
     {
@@ -51,23 +52,24 @@ const Filter = ({ setAllChildren }) => {
       options: districts,
       authorized_accounts: ["ministry", "regional"],
     },
-    {
-      option_type: "gender",
-      options: ["Male", "Female"],
-      authorized_accounts: ["ministry", "regional", "district"],
-    },
-    {
-      option_type: "year",
-      options: [
-        2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
-      ],
-      authorized_accounts: ["ministry", "regional", "district"],
-    },
-    {
-      option_type: "vaccine",
-      options: vaccines,
-      authorized_accounts: ["ministry", "regional", "district"],
-    },
+    // {
+    //   option_type: "year",
+    //   options: [
+    //     2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+    //   ],
+    //   authorized_accounts: ["ministry", "regional", "district"],
+    // },
+    // {
+    //   option_type: "month",
+    //   options: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 111],
+    //   authorized_accounts: [
+    //     "ministry",
+    //     "regional",
+    //     "district",
+    //     "branch_admin",
+    //     "health_worker",
+    //   ],
+    // },
   ];
 
   const handleSelect = (option_type, target_value) => {
@@ -91,15 +93,12 @@ const Filter = ({ setAllChildren }) => {
       case "district":
         setFilterValues({ ...filterValues, district: target_value });
         break;
-      case "gender":
-        setFilterValues({ ...filterValues, gender: target_value });
-        break;
-      case "age":
-        setFilterValues({ ...filterValues, age: target_value });
-        break;
-      case "year":
-        setFilterValues({ ...filterValues, year: target_value });
-        break;
+    //   case "year":
+    //     setFilterValues({ ...filterValues, year: target_value });
+    //     break;
+    //   case "month":
+    //     setFilterValues({ ...filterValues, month: target_value });
+    //     break;
       default:
         break;
     }
@@ -136,20 +135,27 @@ const Filter = ({ setAllChildren }) => {
   }, [loggedInUser, authenticatedToken]);
 
   useEffect(() => {
-    const fetchChildren = () => {
-      axios.post("all_children", filterValues).then((res) => {
-        setAllChildren(res.data);
-      });
+    const fetchReportData = () => {
+      
+      axios.post('/reports',filterValues,
+        {
+          headers: {
+            Authorization: `Bearer ${authenticatedToken}`,
+          },
+        }
+      ).then((res)=>{
+        setReportData(res.data)
+      }).catch((err)=>{
+        console.log(err)
+      })
     };
-    fetchChildren();
-  }, [setAllChildren, filterValues]);
+    fetchReportData();
+  }, [setReportData, filterValues]);
 
-  
-  
   return (
     <div
       className={
-        "flex justify-around md:justify-end gap-2 overflow-x-scroll pb-2 md:mb-4"
+         `flex justify-around md:justify-end gap-2 overflow-x-scroll pb-2 md:mb-4 `
       }
     >
       {filter_array
@@ -195,64 +201,64 @@ const Filter = ({ setAllChildren }) => {
                 ) : (
                   <option disabled>Select region first</option>
                 )}
-              </>
-            ) : option_type === "gender" ? (
-              <>
-                <option option={"all"}>Gender</option>
-                {options?.map((i, index) => (
-                  <option value={i} key={index} className={""}>
-                    {i}
-                  </option>
-                ))}
-              </>
-            ) : option_type === "vaccine" ? (
-              <>
-                <option value={"all"}>Vaccine</option>
-                {options?.map((vaccine, index) => (
-                  <option value={vaccine.id} key={index} className={""}>
-                    {vaccine.name}
-                  </option>
-                ))}
-              </>
-            ) : (
-              <>
-                <option value={"all"}>Year</option>
-                {options?.map((year, index) => (
-                  <option value={year} key={index} className={""}>
-                    {year}
-                  </option>
-                ))}
-              </>
-            )}
+              </>)
+              :
+              <></>
+            // ) : option_type === "month" ? (
+            //   <>
+            //     <option option={"all"}>Month</option>
+            //     {options?.map((i, index) => (
+            //       <option value={i} key={index} className={""}>
+            //         {i}
+            //       </option>
+            //     ))}
+            //   </>
+            // ) :(
+            //   <>
+            //     <option value={"all"}>Year</option>
+            //     {options?.map((year, index) => (
+            //       <option value={year} key={index} className={""}>
+            //         {year}
+            //       </option>
+            //     ))}
+            //   </>
+            }
           </select>
         ))}
       <Button
         onClick={() => {
-            setDistricts([])
+          setDistricts([]);
           if (loggedInUser?.role.account_type === "ministry") {
             setFilterValues({
               region: null,
               district: null,
               year: null,
-              vaccine: null,
-              gender: null,
+              month:null
             });
           } else if (loggedInUser?.role.account_type === "regional") {
             setFilterValues({
               region: loggedInUser?.region_id,
               district: null,
               year: null,
-              vaccine: null,
-              gender: null,
+              month:null
             });
           } else if (loggedInUser?.role.account_type === "district") {
             setFilterValues({
               region: loggedInUser?.region_id,
               district: loggedInUser?.district_id,
               year: null,
-              vaccine: null,
-              gender: null,
+              month:null
             });
+          }
+          else {
+                setFilterValues({
+                  region: loggedInUser?.region_id,
+                  district: loggedInUser?.district_id,
+                  facility:loggedInUser?.facilities.facility_reg_no,    
+                  year: null,
+                  month:null
+                });
+              
           }
         }}
         className={
@@ -265,4 +271,4 @@ const Filter = ({ setAllChildren }) => {
   );
 };
 
-export default Filter;
+export default ReportFilter;

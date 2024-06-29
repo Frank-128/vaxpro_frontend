@@ -50,6 +50,8 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
     setExistingUser({ error: false, message: "" });
   };
 
+  const innerWidth = window.innerWidth;
+
   const registerUser = (data) => {
     setLoading(true);
     var data2 = [];
@@ -83,7 +85,7 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
     }
 
     // console.log(data2, "the data to be submitted");
-   
+
       axios
         .post(`register`, data2, {
           headers: {
@@ -107,14 +109,14 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
               message: "Unauthenticated please log in",
               type: "error",
             });
-          } else if (res.data.status == 409) {
+          } else if (res.data.status === 409) {
             setExistingUser({ message: res.data.message, error: true });
           }
         }).catch((err)=>{
-          
+
           setLoading(false);
           console.log(err)
-          if(err?.response?.status == 400 && err?.response?.data.error == "contacts"){
+          if(err?.response?.status === 400 && err?.response?.data.error === "contacts"){
             setError('contacts',{type:err.status,message:err.response.data.message});
           }
           else{
@@ -122,17 +124,17 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
             setAlert({ visible: true, message: err.message, type: "error" });
           }
         }
-       
+
         );
     }
 
- 
+
 console.log(errors)
   return (
     <Dialog
-      className={`font-monte`}
+      className={`font-monte ${innerWidth<768 &&'flex  justify-center'}`}
       open={addUserForm}
-      size="sm"
+      size={innerWidth>768 ? "sm" : "xxl"}
       handler={handleClose}
       animate={{
         mount: { scale: 1, y: 0 },
@@ -187,11 +189,11 @@ console.log(errors)
                   >
                     {roles
                       .filter(({ role, account_type }) => {
-                        /* 
-                          account type === subPathname returns all the roles in the respective level 
+                        /*
+                          account type === subPathname returns all the roles in the respective level
                           example all roles in the ministry,or region according to the pathname
 
-                          loggedInUser.role.account_type == subPathname checks to see if the logged in 
+                          loggedInUser.role.account_type == subPathname checks to see if the logged in
                           user is actually the account is of the ministry level for example
 
                         */
@@ -423,12 +425,11 @@ console.log(errors)
           <div className="">
             <div className="flex font-monte-1 relative">
               <span
-                className={clsx(
-                  " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300",
-                  {
-                    "border-r-2 border-black": isFocused,
-                    "border-r border-gray-500": !isFocused,
-                  }
+                className={clsx({
+                  " absolute inset-y-0 left-0 px-2 text-black flex items-center bg-gray-300":true,
+                  "border-r-2 border-black": isFocused,
+                  "border-r border-gray-500": !isFocused,
+                }
                 )}
               >
                 +255
