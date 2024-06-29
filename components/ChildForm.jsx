@@ -88,7 +88,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                             },
                             onChange: handleCardNoChange
                         })}
-                        className="h-[3rem]"
+                        className="h-[3.1rem]"
                     />
                     {errors.card_no && (
                         <span className="text-red-900 text-xs px-2 ">
@@ -104,7 +104,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                             required: "This field is required",
                             validate: validateDate
                         })}
-                        className="h-[3rem]"
+                        className="h-[3.1rem]"
                     />
                     {errors.birth_date && (
                         <span className="text-red-900 text-xs px-2">
@@ -124,7 +124,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                         {...register("first_name", {
                             required: "This field is required",
                         })}
-                        className="h-[3rem]"
+                        className="h-[3.1rem]"
                     />
                     {errors.first_name && (
                         <span className="text-red-900 text-xs px-2">
@@ -139,7 +139,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                         {...register("middle_name", {
                             required: "This field is required"
                         })}
-                        className="h-[3rem]"
+                        className="h-[3.1rem]"
                     />
                     {errors.middle_name && (
                         <span className="text-red-900 text-xs px-2">
@@ -157,7 +157,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                         {...register("last_name", {
                             required: "This field is required"
                         })}
-                        className="h-[3rem]"
+                        className="h-[3.1rem]"
                     />
                     {errors.last_name && (
                         <span className="text-red-900 text-xs px-2">
@@ -178,7 +178,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                                     selected={value}
                                     value={value}
                                     label="Gender"
-                                    className="h-[3rem]"
+                                    className="h-[3.1rem]"
                                     animate={{
                                         mount: {y: 0},
                                         unmount: {y: 25},
@@ -208,7 +208,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                         {...register("house_no", {
                             required: "This field is required"
                         })}
-                        className="h-[3rem]"
+                        className="h-[3.1rem]"
                     />
                     {errors.house_no && (
                         <span className="text-red-900 text-xs px-2">

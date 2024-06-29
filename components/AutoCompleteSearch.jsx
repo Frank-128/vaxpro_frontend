@@ -72,7 +72,7 @@ const AutoCompleteSearch = ({ name, control, ward = null }) => {
                                 onBlur();
                             }}
                             autoComplete="off"
-                            className={'h-[3rem] w-full'}
+                            className={'h-[3.1rem] w-full'}
                             // containerProps={{className: 'min-w-[95%] sm:min-w-[85%] md:min-w-[70%] lg:min-w-[]'}}
                         />
                         {isDropdownVisible && options.length > 0 && (
