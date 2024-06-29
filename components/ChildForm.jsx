@@ -1,14 +1,20 @@
-import { Card, Input, Option, Select, Typography } from "@material-tailwind/react";
+
+import {
+  Card,
+  Input,
+  Option,
+  Select,
+  Typography,
+} from "@material-tailwind/react";
+import { TextField } from "@mui/material";
 import axios from "../axios";
 import { useState } from "react";
 import AutoCompleteSearch from "./AutoCompleteSearch";
 import { Controller } from "react-hook-form";
 
-
-
-const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
+const ChildRegistrationForm = ({ register, validate, errors, errTouched }) => {
   const [wards, setWards] = useState([]);
-  const {clearErrors,setError,trigger,control} = errTouched;
+  const { clearErrors, setError, trigger, control } = errTouched;
 
   const handleWardChange = (event) => {
     const searchQuery = event.target.value;
@@ -28,10 +34,10 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
     today.setHours(0, 0, 0, 0); // Set to midnight compare only the date part
     return selectedDate <= today || "Date should not exceed today's date";
   };
-
-
+  
   const handleCardNoChange = async (e) => {
     const currentCardNo = e.target.value.trim();
+
 
     if (currentCardNo.length === 10) {
       const result = await trigger('card_no');
@@ -39,13 +45,16 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
         try {
           const res = await axios.get(`children?cardNo=${currentCardNo}`);
           if (res.status === 200) {
-            if (res.data.length === 1 && res.data[0].card_no === currentCardNo) {
-              setError('card_no', {
-                type: 'manual',
-                message: 'This child already exists'
+            if (
+              res.data.length === 1 &&
+              res.data[0].card_no === currentCardNo
+            ) {
+              setError("card_no", {
+                type: "manual",
+                message: "This child already exists",
               });
             } else {
-              clearErrors('card_no');
+              clearErrors("card_no");
             }
           }
         } catch (error) {
@@ -226,7 +235,6 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                     )}
                 </div>
             </div>
-
 
         </div>
     </Card>
