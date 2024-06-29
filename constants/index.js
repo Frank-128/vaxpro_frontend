@@ -10,7 +10,8 @@ import {
   Note,
   Person,
   Report,
-    Group
+    Group,
+    BarChart
 } from "@mui/icons-material";
 
 
@@ -112,9 +113,9 @@ export const navlinks = [
   {
     name: "Reports",
     link: "/reports",
-    icon: <Report />,
-    role: ["IT admin", "regional", "district", "branch_manager"],
-    account_type: ["ministry", "regional", "district","branch_manager"],
+    icon: <BarChart />,
+    role: ["default"],
+    account_type: ["default"],
   },
 
   {
