@@ -75,7 +75,7 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
                                     value: /^[0-9]+$/, message: "Please enter valid Nida number",
                                 }, onChange: handleNidaChange
                             })}
-                            className={'h-[3rem]'}
+                            className={'h-[3.1rem]'}
                         />
                         {errors.nida_id && (<p className="text-red-900 text-xs px-2">
                                 {errors.nida_id.message}
@@ -112,7 +112,7 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
                             {...register("par_first_name", {
                                 required: "This field is required",
                             })}
-                            className="h-[3rem]"
+                            className="h-[3.1rem]"
                         />
                         {errors.par_first_name && (<p className="text-red-900 text-xs px-2">
                                 {errors.par_first_name.message}
@@ -127,7 +127,7 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
                             {...register("par_middle_name", {
                                 required: "This field is required",
                             })}
-                            className="h-[3rem]"
+                            className="h-[3.1rem]"
                         />
                         {errors.par_middle_name && (<p className="text-red-900 text-xs px-2">
                                 {errors.par_middle_name.message}
@@ -139,7 +139,7 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
                             {...register("par_last_name", {
                                 required: "This field is required",
                             })}
-                            className={'h-[3rem]'}
+                            className={'h-[3.1rem]'}
                         />
                         {errors.par_last_name && (<p className="text-red-900 text-xs px-2">
                                 {errors.par_last_name.message}
@@ -150,9 +150,9 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
 
                 <div className={'flex flex-col md:flex-row gap-4 md:gap-3 w-full'}>
                     <div className={'w-[95%] sm:w-[85%] md:[70%] lg:w-[40%] flex flex-col gap-1'}>
-                        <div className="flex h-[3rem] font-monte-1 relative">
+                        <div className="flex h-[3.1rem] font-monte-1 relative">
               <span
-                  className={clsx(" absolute inset-y-0 left-0 px-2 text-black flex items-center rounded bg-gray-300", {
+                  className={clsx({" absolute inset-y-0 left-0 px-2 text-black flex items-center rounded bg-gray-300":true,
                       "border-r-2 border-black": isFocused, "border-r border-gray-500": !isFocused,
                   })}
               >
@@ -165,7 +165,7 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
                                 }}
                                 onFocus={() => setIsFocused(true)}
                                 autoComplete="off"
-                                className="h-[3rem] text-black font-monte-1 pl-16 border focus:border-2 !border-t-blue-gray-200 focus:!border-t-gray-900"
+                                className="h-[3.1rem] text-black font-monte-1 pl-16 border focus:border-2 !border-t-blue-gray-200 focus:!border-t-gray-900"
                                 size="lg"
                                 placeholder="Contacts"
                                 {...register("contact", {
@@ -195,7 +195,7 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
                                     selected={value}
                                     value={value}
                                     label="Relation with Child"
-                                    className=" pl-3 lg:w-full  h-[3rem]"
+                                    className="h-[3.1rem]"
                                     animate={{
                                         mount: {y: 0}, unmount: {y: 25},
                                     }}
