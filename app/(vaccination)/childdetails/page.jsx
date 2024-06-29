@@ -1,6 +1,6 @@
 "use client";
-
 import {Button, Card, CardBody, CardFooter, Typography} from "@material-tailwind/react";
+
 import axios from "../../../axios";
 import Link from "next/link";
 import {useRouter, useSearchParams} from "next/navigation";
@@ -134,29 +134,36 @@ function ParentCard({parents_guardians}) {
 }
 
 function TeamCard({
-                      firstname, middlename, surname, card_no, date_of_birth, parents_guardians, ward, gender,
+  firstname,
+  middlename,
+  surname,
+  card_no,
+  date_of_birth,
+  parents_guardians,
+  ward,
+  gender,
 
-                      house_no,
+  house_no,
 
-                      certificates, handleGenerate,
+  certificates,
+  handleGenerate,
 
-                  }) {
-    return (<div className="flex gap-4 lg:flex-row  flex-col">
-            <ChildCard
-                firstname={firstname}
-                middlename={middlename}
-                surname={surname}
-                ward={ward}
-                gender={gender}
-                house_no={house_no}
-                card_no={card_no}
-                date_of_birth={date_of_birth}
-                certificate_status={certificates != null}
-                handleGenerate={handleGenerate}
-            />
-            {/* <div className="!text-2xl font-bold lg:!text-2xl self-center flex mb-1 ml-6">
-        Parent / Guardian Details:
-      </div> */}
+}) {
+  return (
+    <div className="flex gap-4 lg:flex-row  flex-col">
+      <ChildCard
+        firstname={firstname}
+        middlename={middlename}
+        surname={surname}
+        ward={ward}
+        gender={gender}
+        house_no={house_no}
+        card_no={card_no}
+        date_of_birth={date_of_birth}
+        certificate_status={certificates != null}
+        handleGenerate={handleGenerate}
+      />
+
             <ParentCard parents_guardians={parents_guardians}/>
         </div>);
 }

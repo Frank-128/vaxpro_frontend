@@ -220,6 +220,7 @@ const ChildRegistrationForm = ({ register,validate, errors,errTouched }) => {
                     <AutoCompleteSearch name={"ward"} control={control}/>
                     {errors.ward_id && (
                         <span className="text-red-900 text-xs">
+
               {errors.ward_id.message}
             </span>
                     )}

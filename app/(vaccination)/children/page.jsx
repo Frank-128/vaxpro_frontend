@@ -40,17 +40,31 @@ const Children = () => {
     //                               errTouched={{isValid, touchedFields, watch, trigger, isSubmitted}}/>,
     // },];
 
-    const submitFunction = (data) => {
-
-        setLoading(true)
-
-        function getDaysDifference(startDate, endDate) {
-            const oneDay = 24 * 60 * 60 * 1000; // Milliseconds in one day
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const diffDays = Math.round((end - start) / oneDay);
-            return diffDays;
+  
         }
+ 
+
+
+  const submitFunction = (data) => {
+
+
+    function getDaysDifference(startDate, endDate) {
+      const oneDay = 24 * 60 * 60 * 1000; // Milliseconds in one day
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diffDays = Math.round((end - start) / oneDay);
+      return diffDays;
+    }
+
+
+
+    const today = new Date().toISOString().split('T')[0];
+    const {contacts} = data
+
+    axios.post(`/parentChildData`,{...data,contacts:'+255'+contacts,facility_id:loggedInUser?.facility_id,modified_by:loggedInUser?.id}).then((res)=>{
+      console.log(res.status)
+      if(res.status === 200){
+
 
 
         const today = new Date().toISOString().split('T')[0];

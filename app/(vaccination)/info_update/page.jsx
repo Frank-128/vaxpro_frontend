@@ -71,6 +71,7 @@ const InfoUpdate = () => {
           surname: child.surname,
           date_of_birth: child.date_of_birth,
           ward: child.ward_id,
+          gender: child.gender,
           house_no: child.house_no,
           nida_id: child.parents_guardians[0].nida_id,
           par_first_name: child.parents_guardians[0].firstname,
@@ -89,6 +90,7 @@ const InfoUpdate = () => {
           setValue("last_name", defaultValues[0].surname);
           setValue("house_no", defaultValues[0].house_no);
           setValue("ward_id", defaultValues[0].ward);
+
           setValue('gender', defaultValues[0].gender);
           setValue("birth_date", defaultValues[0].date_of_birth);
           setValue("nida_id", defaultValues[0].nida_id);
@@ -216,7 +218,7 @@ const InfoUpdate = () => {
                 required: "This field is required",
               })}
               // className="  sm:w-56  lg:w-64 "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.first_name && (
@@ -232,7 +234,7 @@ const InfoUpdate = () => {
                 required: "This field is required",
               })}
               // className="   sm:w-56 lg:w-64 "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.middle_name && (
@@ -248,7 +250,7 @@ const InfoUpdate = () => {
                 required: "This field is required",
               })}
               // className="  sm:w-56 lg:w-64 "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.last_name && (
@@ -268,7 +270,7 @@ const InfoUpdate = () => {
                 validate: validateDate,
               })}
               // className="  sm:w-56 lg:w-64 "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.birth_date && (
@@ -281,18 +283,11 @@ const InfoUpdate = () => {
             <Input
               label="House No:"
               type="number"
-              {...register("house_no", {
-                required: "This field is required",
-              })}
-              // className="sm:w-56 lg:w-64"
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              {...register("house_no")}
+              
             />
           </div>
-          {errors.house_no && (
-            <span className="text-red-900 text-sm font-mono ">
-              {errors.house_no.message}
-            </span>
-          )}
+          
 
           <div className="w-full sm:w-56 lg:w-64 md:w-56 xs:w-64">
             <AutoCompleteSearch
@@ -329,7 +324,7 @@ const InfoUpdate = () => {
                       mount: { y: 0 },
                       unmount: { y: 25 },
                     }}
-                   // containerProps={{ className: "4xs:min-w-72 " }}
+                    // containerProps={{ className: "4xs:min-w-72 " }}
                   >
                     <Option value="Male">Male</Option>
                     <Option value="Female">Female</Option>
@@ -357,7 +352,7 @@ const InfoUpdate = () => {
                 required: "This field is required",
               })}
               // className="  md:w-56 lg:w-64  sm:w-64 "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.par_first_name && (
@@ -373,7 +368,7 @@ const InfoUpdate = () => {
                 required: "This field is required",
               })}
               // className="  md:w-56 lg:w-64 sm:w-64 "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.par_middle_name && (
@@ -389,7 +384,7 @@ const InfoUpdate = () => {
                 required: "This field is required",
               })}
               // className="  md:w-56 lg:w-64  sm:w-64  "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.par_last_name && (
@@ -421,7 +416,7 @@ const InfoUpdate = () => {
                 //   onChange: handleNidaChange,
               })}
               // className="  md:w-56 lg:w-64 sm:w-64 "
-             // containerProps={{ className: "4xs:min-w-72 " }}
+              // containerProps={{ className: "4xs:min-w-72 " }}
             />
           </div>
           {errors.nida_id && (
@@ -444,6 +439,7 @@ const InfoUpdate = () => {
             </span>
 
             */}
+
               <Input
                 labelProps={{
                   className: "before:content-none after:content-none",
@@ -493,7 +489,7 @@ const InfoUpdate = () => {
                     onChange={onChange}
                     onBlur={onBlur}
                     selected={value}
-                   // containerProps={{ className: "4xs:min-w-72 " }}
+                    // containerProps={{ className: "4xs:min-w-72 " }}
                     value={value}
                     label="Relation with Child"
                     // className=" sm:w-64 pl-3 lg:w-64 rounded-md  md:w-56"
