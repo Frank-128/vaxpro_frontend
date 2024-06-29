@@ -77,7 +77,7 @@ const BookingDetails = () => {
             setReason(false);
           });
       }
-      
+
     }
     // setLoading(false)
   };
@@ -101,13 +101,13 @@ const BookingDetails = () => {
   // console.log(bookingDetails);
 
   return (
-  bookingDetails ?  
+  bookingDetails ?
   <main className="flex flex-col gap-12">
    { bookingDetails ?  <div
         className={clsx({
           "bg-green-50": bookingDetails?.status === "confirmed",
           "bg-red-50": bookingDetails?.status === "cancelled",
-          "flex justify-between  shadow-sm px-4 py-16 min-h-[20rem] border rounded": true,
+          "flex flex-col md:flex-row  justify-between  shadow-sm px-4 py-16 min-h-[20rem] border rounded": true,
         })}
       >
         <div className="flex flex-col gap-2">
@@ -135,20 +135,20 @@ const BookingDetails = () => {
               {bookingDetails?.vaccination_date}
             </span>
           </div>
-        </div> 
+        </div>
         {!reason && bookingDetails?.status === "pending" && (
           <div className="flex gap-3 justify-center items-center">
             <Button
               loading={loading}
               onClick={() => bookingHandler(1)}
               ripple={false}
-              className="bg-green-700 shadow-none rounded h-[25%] py-1 px-12"
+              className="bg-green-700 shadow-none rounded h-[25%] px-6 md:px-12"
             >
               confirm
             </Button>
             <Button
               ripple={false}
-              className="bg-red-700 shadow-none px-12 h-[25%] rounded "
+              className="bg-red-700 shadow-none px-6 md:px-12 h-[25%] rounded "
               onClick={() => setReason(true)}
             >
               cancel
@@ -178,7 +178,7 @@ const BookingDetails = () => {
           className="flex flex-col gap-4 font-monte-3 p-4 rounded border shadow-sm "
         >
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-1  w-[60%]">
+            <div className="flex flex-col gap-1 w-[99%] md:w-[60%]">
               <span className="md:text-2xl capitalize">
                 Select reason for cancelling this booking
               </span>
@@ -213,7 +213,7 @@ const BookingDetails = () => {
                         {reason}
                       </Option>
                     ))}
-                  
+
                   </Select>
                    {error && (
                     <p className="text-red-900 text-xs font-monte">
@@ -223,10 +223,10 @@ const BookingDetails = () => {
                   </div>
                 )}
               />
-             
+
             </div>
             {watch("reason_for_booking_cancellation") === "Other reason" && (
-              <div className="flex flex-col gap-1 w-[60%]">
+              <div className="flex flex-col gap-1 w-[99%] md:w-[60%]">
                 <span>Write the specific reason here</span>
                 <Input
                   {...register("other_reason", {
@@ -245,15 +245,15 @@ const BookingDetails = () => {
               type="submit"
               loading={loading}
               ripple={false}
-              className="bg-[#212b36] shadow-none rounded py-3 px-12"
+              className="bg-[#212b36] shadow-none rounded py-3 px-6 md:px-12"
             >
               submit
             </Button>
             <Button
               onClick={() => {setReason(false); clearErrors()}}
-            
+
               ripple={false}
-              className="bg-red-800 shadow-none rounded py-3 px-12"
+              className="bg-red-800 shadow-none rounded py-3 px-6 md:px-12"
             >
               cancel
             </Button>
