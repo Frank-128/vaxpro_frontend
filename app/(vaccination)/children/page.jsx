@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Children = () => {
+
     const {
         register,
         handleSubmit,
@@ -31,6 +32,7 @@ const Children = () => {
             const end = new Date(endDate);
             const diffDays = Math.round((end - start) / oneDay);
             return diffDays;
+
         }
 
         const today = new Date().toISOString().split('T')[0];
