@@ -16,9 +16,10 @@ import { useEcho } from "@/constants/echo";
 import { Howl } from "howler";
 
 function Main({ children }) {
+  const [openSidebar, setOpenSidebar] = useState( innerWidth>768);
+    
   const { initialRequest, getInitialUsers, getBookings, getRoles } =
     useInitial();
-  const [openSidebar, setOpenSidebar] = useState(true);
   const isIdle = useIdle(1000 * 60 * 60 * 2);
   const router = useRouter();
   const alertObj = globalAlert((state) => state.alert);
@@ -30,6 +31,16 @@ function Main({ children }) {
   const sound = new Howl({
     src: ["/sound/new_message.wav"],
   });
+  
+  useEffect(() => {
+        const handleResize = () => {
+            setOpenSidebar(innerWidth>768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+    }, []);
+
 
   useEffect(() => {
     if (echo) {
@@ -48,6 +59,7 @@ function Main({ children }) {
   }, [echo, loggedInUser?.id]);
 
   useEffect(() => {
+
     initialRequest();
   }, [initialRequest]);
 
@@ -82,14 +94,15 @@ function Main({ children }) {
 
   console.log(loggedInUser);
 
+
   return (
     <main>
       <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
       <Navbar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
       <section
-        className={clsx("z-10 p-5 max-h-[calc(100vh-80px)] overflow-y-scroll", {
-          "ml-[280px]": openSidebar,
-          "ml-0": !openSidebar,
+        className={clsx({"z-10 p-5 max-h-[calc(100vh-80px)] overflow-y-scroll":true,
+            "ml-[280px]": openSidebar,
+            "ml-0": !openSidebar,
         })}
       >
         {children}
