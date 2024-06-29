@@ -52,15 +52,15 @@ const AutoCompleteSearch = ({ name, control, ward = null }) => {
     return (
         <div className="select-search">
             <Controller
+                className={'w-full bg-red-200'}
                 name={name}
                 control={control}
                 rules={{ required: "This field is required" }}
                 defaultValue={ward ? ward.id : ''} // Set default value to ward.id if ward is provided
                 render={({ field: { onChange, value, onBlur } ,fieldState: { error },}) => (
-                    <div className='relative'>
+                    <div className={'relative w-full'}>
                         <Input
                             label='Ward'
-
                             value={searchTerm} // Control the input value with searchTerm state
                             onChange={(e) => handleSearch(e, onChange)}
                             onFocus={() => setIsDropdownVisible(true)}
@@ -72,6 +72,8 @@ const AutoCompleteSearch = ({ name, control, ward = null }) => {
                                 onBlur();
                             }}
                             autoComplete="off"
+                            className={'h-[3rem] w-full'}
+                            // containerProps={{className: 'min-w-[95%] sm:min-w-[85%] md:min-w-[70%] lg:min-w-[]'}}
                         />
                         {isDropdownVisible && options.length > 0 && (
                             <List className="max-h-72 bg-gray-100 w-full overflow-y-scroll absolute top-10 left-0 z-10">
@@ -82,12 +84,12 @@ const AutoCompleteSearch = ({ name, control, ward = null }) => {
                                         onMouseUp={() => setIsSelecting(false)}
                                         onClick={() => handleOptionClick(option, onChange)}
                                     >
-                                        {option.ward_name}
+                                        {option.ward_name},  {option.district.district_name}
                                     </ListItem>
                                 ))}
                             </List>
                         )}
-                    
+
                     </div>
                 )}
             />

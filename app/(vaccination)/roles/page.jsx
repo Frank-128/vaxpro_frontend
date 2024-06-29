@@ -317,6 +317,16 @@ const Roles = () => {
                           className={'flex w-full flex-col gap-8 md:gap-2'}>
                         <div className={'md:w-5/6'}>
                             <span className={'text-black'}>Select Level For The Role:</span>
+
+                            <select
+                                className="border border-gray-200 focus:border-gray-900 rounded-md md:w-full h-10"
+                            >
+                                {levels.map((level, index) => (
+                                    <option className="px-12" key={index} value={index}>{level}</option>
+                                ))}
+                            </select>
+
+
                             {/*<Controller*/}
                             {/*    control={editControl}*/}
                             {/*    rules={{required: "Select level at which the role is going to be used"}}*/}
@@ -324,33 +334,33 @@ const Roles = () => {
                             {/*    render={({*/}
                             {/*                 field: {onChange, onBlur, value, defaultValues, ref}, fieldState: {error},*/}
                             {/*             }) => (<div className="font-monte-1 text-black">*/}
-                                        <Select
-                                            defaultValue={getEditValues("account_type") || ""}                                            className="text-black font-monte-1 !border-t-blue-gray-200 focus:!border-gray-900 "
-                                            labelProps={{
-                                                className: "before:content-none after:content-none",
-                                            }}
-                                            // onChange={onChange}
-                                            // onBlur={onBlur}
-                                            selected={getEditValues("account_type")}
-                                            // value={value}
-                                            size="lg"
-                                            animate={{
-                                                mount: {y: 0}, unmount: {y: 25},
-                                            }}
-                                        >
-                                            {levels.map((level, index) => (<Option
-                                                    key={index}
-                                                    className="text-black font-monte-1"
-                                                    value={level}
-                                                >
-                                                    {level}
-                                                </Option>))}
-                                        </Select>
+                            {/*            <Select*/}
+                            {/*                defaultValue={getEditValues("account_type") || ""}                                            className="text-black font-monte-1 !border-t-blue-gray-200 focus:!border-gray-900 "*/}
+                            {/*                labelProps={{*/}
+                            {/*                    className: "before:content-none after:content-none",*/}
+                            {/*                }}*/}
+                            {/*                // onChange={onChange}*/}
+                            {/*                // onBlur={onBlur}*/}
+                            {/*                selected={getEditValues("account_type")}*/}
+                            {/*                // value={value}*/}
+                            {/*                size="lg"*/}
+                            {/*                animate={{*/}
+                            {/*                    mount: {y: 0}, unmount: {y: 25},*/}
+                            {/*                }}*/}
+                            {/*            >*/}
+                            {/*                {levels.map((level, index) => (<Option*/}
+                            {/*                        key={index}*/}
+                            {/*                        className="text-black font-monte-1"*/}
+                            {/*                        value={level}*/}
+                            {/*                    >*/}
+                            {/*                        {level}*/}
+                            {/*                    </Option>))}*/}
+                            {/*            </Select>*/}
 
-                                        {/*{error && (<p className="text-red-900 text-xs font-monte">*/}
-                                        {/*        {error.message}*/}
-                                        {/*    </p>)}*/}
-                                    {/*</div>)}*/}
+                            {/*{error && (<p className="text-red-900 text-xs font-monte">*/}
+                            {/*        {error.message}*/}
+                            {/*    </p>)}*/}
+                            {/*</div>)}*/}
                             {/*/>*/}
                         </div>
 

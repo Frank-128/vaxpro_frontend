@@ -94,8 +94,7 @@ export function Dashboard() {
     };
 
 
-    console.log(children)
-    return (<section className="min-h-screen py-2 px-4">
+    return (<section className="min-h-screen py-2 md:px-4 ">
             {loggedInUser && <>
                 {(loggedInUser.role?.account_type === "health_worker" || loggedInUser.role?.account_type === "branch_manager") ? (
                     <HealthWorker/>) : (<div className="container mx-auto">
