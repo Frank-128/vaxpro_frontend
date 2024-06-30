@@ -226,7 +226,9 @@ const ReportFilter = ({ setReportData }) => {
           </select>
         ))}
       <Button
+
         disabled={loggedInUser?.role?.account_type === "branch_manager" || loggedInUser?.role?.account_type === "health_worker"}
+
         onClick={() => {
           setDistricts([]);
           if (loggedInUser?.role.account_type === "ministry") {
