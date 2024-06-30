@@ -136,7 +136,7 @@ const ReportFilter = ({ setReportData }) => {
 
   useEffect(() => {
     const fetchReportData = () => {
-      
+
       axios.post('/reports',filterValues,
         {
           headers: {
@@ -226,6 +226,7 @@ const ReportFilter = ({ setReportData }) => {
           </select>
         ))}
       <Button
+        disabled={loggedInUser?.role?.account_type === "branch_manager" || loggedInUser?.role?.account_type === "health_worker"}
         onClick={() => {
           setDistricts([]);
           if (loggedInUser?.role.account_type === "ministry") {
@@ -254,15 +255,15 @@ const ReportFilter = ({ setReportData }) => {
                 setFilterValues({
                   region: loggedInUser?.region_id,
                   district: loggedInUser?.district_id,
-                  facility:loggedInUser?.facilities.facility_reg_no,    
+                  facility:loggedInUser?.facilities.facility_reg_no,
                   year: null,
                   month:null
                 });
-              
+
           }
         }}
         className={
-          "bg-transparent w-28 h-8 p-2 text-xs border border-black text-black rounded-[0.25rem] flex justify-center items-center gap-2"
+          "bg-transparent shadow-none w-28 h-8 p-2 text-xs border border-black text-black rounded-[0.25rem] flex justify-center items-center gap-2"
         }
       >
         <span> Reset all</span>

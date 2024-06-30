@@ -4,10 +4,8 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import ScheduleUpdates, { LongDialog } from "./ScheduleUpdates";
 import axios from "../axios";
 import globalUser from "@/store/user";
-import { ConfirmDialog } from "./ConfirmDialog";
 import { addDays, format } from "date-fns";
 
 const CUSTOM_ANIMATION = {

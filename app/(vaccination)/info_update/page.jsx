@@ -47,7 +47,7 @@ const InfoUpdate = () => {
   });
 
   const loggedInUser = globalUser((state) => state.loggedInUser);
-  const setAlert = globalAlert((state) => state.setAlert);
+ 
 
   const router = useRouter();
 
@@ -56,8 +56,10 @@ const InfoUpdate = () => {
   const [ward, setWard] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [originalNidaId, setOriginalNidaId] = useState(null);
+  
 
   const [wards, setWards] = useState([]);
+
 
   useEffect(() => {
     axios.get(`/getChildData/${card_number}`).then((res) => {
