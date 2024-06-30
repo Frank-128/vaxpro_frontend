@@ -41,19 +41,19 @@ function Reports() {
     setIsClient(true);
   }, []);
 
-  useEffect(()=>{
-    axios.post('/reports',null,
-      {
-        headers: {
-          Authorization: `Bearer ${authenticatedToken}`,
-        },
-      }
-    ).then((res)=>{
-      setReportData(res.data)
-    }).catch((err)=>{
-      console.log(err)
-    })
-  },[authenticatedToken])
+  // useEffect(()=>{
+  //   axios.post('/reports',null,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${authenticatedToken}`,
+  //       },
+  //     }
+  //   ).then((res)=>{
+  //     setReportData(res.data)
+  //   }).catch((err)=>{
+  //     console.log(err)
+  //   })
+  // },[authenticatedToken])
 
   return (
     <div className="h-screen space-y-3">
@@ -82,7 +82,8 @@ function Reports() {
         )}
       </header>
       <div className="w-full">
-     {(loggedInUser?.role?.account_type === "ministry" || (loggedInUser?.role?.account_type === "regional") || (loggedInUser?.role?.account_type === "district")) && <ReportFilter  setReportData={setReportData}/>}
+     {/* {(loggedInUser?.role?.account_type === "ministry" || (loggedInUser?.role?.account_type === "regional") || (loggedInUser?.role?.account_type === "district")) && <ReportFilter  setReportData={setReportData}/>} */}
+     <ReportFilter  setReportData={setReportData}/>
       </div>
       </div>
 
