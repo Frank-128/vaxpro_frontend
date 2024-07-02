@@ -1,11 +1,17 @@
 "use client"
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import SarufiChatbox from "react-sarufi-chatbox"
   
 // usage
 
 function ChatPage() {
+
+  const [isLoaded,setIsLoaded] = useState(false);
+
+  useEffect(()=>{
+    setIsLoaded(true)
+  },[])
  
   return (
     <div className='w-screen h-screen  flex items-center justify-center'>
@@ -17,7 +23,7 @@ function ChatPage() {
                  </p>
 
         </div>
-        <SarufiChatbox botId={3506} />
+      {isLoaded &&  <SarufiChatbox botId={3506} />}
     </div>
   )
 }

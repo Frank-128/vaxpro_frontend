@@ -125,8 +125,8 @@ export default function BookingTile() {
                         className="md:w-[90%]  h-8 flex items-center justify-center bg-[#212b36] "
                     >
                       <Link
-                          href={`/booking/booking_details/`}
-                          as={{pathname: `/booking/${id}`, query: {id: id}}}
+                            href={`/booking/${id}`}
+
                       >
                         {isHovered === index ? (
                             <div className="flex  gap-2 justify-center items-center text-3xl">

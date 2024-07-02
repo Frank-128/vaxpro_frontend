@@ -59,7 +59,7 @@ export function UpdateSchedAccordion({ vaccines, date_of_birth }) {
     };
 
     axios.post(`/updateSelectedVacs`, { data: dataToBackend }).then((res) => {
-      router.push(`/childdetails?cardNo=${childData}`);
+      router.push(`/children/childdetails/${childData}`);
     });
   };
 

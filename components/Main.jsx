@@ -16,8 +16,8 @@ import { useEcho } from "@/constants/echo";
 import { Howl } from "howler";
 
 function Main({ children }) {
-  const [openSidebar, setOpenSidebar] = useState( innerWidth>768);
-
+  const [openSidebar, setOpenSidebar] = useState(false);
+    
   const { initialRequest, getInitialUsers, getBookings, getRoles } =
     useInitial();
   const isIdle = useIdle(1000 * 60 * 60 * 2);
@@ -31,7 +31,7 @@ function Main({ children }) {
   const sound = new Howl({
     src: ["/sound/new_message.wav"],
   });
-
+  
   useEffect(() => {
         const handleResize = () => {
             setOpenSidebar(innerWidth>768);
@@ -69,13 +69,9 @@ function Main({ children }) {
     getRoles();
   }, [getBookings, getInitialUsers, getRoles]);
 
-  // useEffect(() => {
-  //     if(echo){
-  //         echo.channel(`testChannel`).listen('testingEvent',event=>{
-  //           console.log('Real time event received',event)
-  //         })
-  //       }
-  // }, [echo]);
+  useEffect(() => {
+     setOpenSidebar(innerWidth>768)
+  }, []);
 
   useEffect(() => {
     if (isIdle) {
@@ -92,7 +88,7 @@ function Main({ children }) {
     }
   }, [authenticatedToken, isIdle, router]);
 
-  // console.log(loggedInUser);
+  console.log(loggedInUser);
 
 
   return (
