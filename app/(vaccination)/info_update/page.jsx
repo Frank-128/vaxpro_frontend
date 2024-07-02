@@ -70,7 +70,6 @@ const InfoUpdate = () => {
           surname: child.surname,
           date_of_birth: child.date_of_birth,
           ward: child.ward_id,
-          gender: child.gender,
           house_no: child.house_no,
           nida_id: child.parents_guardians[0].nida_id,
           par_first_name: child.parents_guardians[0].firstname,
@@ -90,7 +89,9 @@ const InfoUpdate = () => {
           setValue("house_no", defaultValues[0].house_no);
           setValue("ward_id", defaultValues[0].ward);
 
+
           setValue("gender", defaultValues[0].gender);
+
           setValue("birth_date", defaultValues[0].date_of_birth);
           setValue("nida_id", defaultValues[0].nida_id);
           setValue("par_first_name", defaultValues[0].par_first_name);
@@ -164,7 +165,7 @@ const InfoUpdate = () => {
             type: "success",
           });
 
-          router.push(`/childdetails?cardNo=${res.data.child_card_number}`);
+          router.push(`/children/childdetails/${res.data.child_card_number}`);
         } else {
           setAlert({ message: res.data.error, visible: true, type: "error" });
         }
@@ -279,8 +280,15 @@ const InfoUpdate = () => {
           )}
 
           <div className="w-full sm:w-56 lg:w-64 md:w-56 xs:w-64">
-            <Input label="House No:" type="number" {...register("house_no")} />
+            <Input
+              label="House No:"
+              type="number"
+              {...register("house_no")}
+
+            />
           </div>
+
+
 
           <div className="w-full sm:w-56 lg:w-64 md:w-56 xs:w-64">
             <AutoCompleteSearch

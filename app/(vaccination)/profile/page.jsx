@@ -44,7 +44,7 @@ const Profile = () => {
         <div className="w-full items-center  justify-center xs:w-3/4 lg:w-1/2 flex flex-col">
           <Avatar
             className="mb-4"
-            src="https://www.freeiconspng.com/uploads/person-icon-8.png"
+            src="images/avatar.png"
             alt="avatar"
             size={'lg'?'xxl':'xl'}
           />

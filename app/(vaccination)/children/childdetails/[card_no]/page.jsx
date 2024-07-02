@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-import axios from "../../../axios";
+import axios from "../../../../../axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -88,6 +88,7 @@ function ChildCard({
           </Typography>
         </div>
 
+
         {ward && (
           <div>
             <Typography
@@ -106,15 +107,15 @@ function ChildCard({
           </div>
         )}
       </CardBody>
-      <CardFooter className="flex lg:justify-start justify-center items-center ">
-        <Certificates
-          card_no={card_no}
-          certificate_status={certificate_status}
-          handleGenerate={handleGenerate}
-        />
-      </CardFooter>
+      <CardFooter className="flex justify-end">
+                <Certificates firstname={firstname}
+                              middlename={middlename}
+                              surname={surname} card_no={card_no} certificate_status={certificate_status}
+                              handleGenerate={handleGenerate}/>
+            </CardFooter>
     </Card>
   );
+
 }
 
 function ParentCard({ parents_guardians }) {
@@ -205,18 +206,20 @@ function TeamCard({
   );
 }
 
-export default function TeamSection12() {
-  const [childData, setChildData] = useState([]);
-  const searchParams = useSearchParams();
-  const card_no = searchParams.get("cardNo");
-  const [openUpdateInfo, setOpenUpdateInfo] = useState(false);
-  const [open_date_viewer, setOpenDateViewer] = useState(false);
-  const [vacShdls, setVacScheds] = useState([]);
-  const [scheds, setScheds] = useState();
-  const [allVaccines, setAllVaccines] = useState([]);
-  const [savedScheds, setSavedScheds] = useState([]);
-  const [birth_date, setBirthDate] = useState();
-  const { loading } = CertificateGenerator();
+
+export default function TeamSection12({params}) {
+    const [childData, setChildData] = useState([]);
+    const searchParams = useSearchParams();
+    const card_no = params.card_no;
+    const [openUpdateInfo, setOpenUpdateInfo] = useState(false);
+    const [open_date_viewer, setOpenDateViewer] = useState(false);
+    const [vacShdls, setVacScheds] = useState([]);
+    const [scheds, setScheds] = useState();
+    const [allVaccines, setAllVaccines] = useState([]);
+    const [savedScheds, setSavedScheds] = useState([]);
+    const [birth_date, setBirthDate] = useState();
+    const {loading} = CertificateGenerator();
+
 
   const router = useRouter();
 

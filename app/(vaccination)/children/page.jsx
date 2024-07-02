@@ -56,7 +56,7 @@ const Children = () => {
                     return router.push(`/children/` + res.data.cardNo);
                 }
                 setLoading(false);
-                return router.push(`/childdetails?cardNo=${res.data.cardNo}`);
+                return router.push(`/children/childdetails/${res.data.cardNo}`);
             } else {
                 console.log(res.data.message);
                 setLoading(false);

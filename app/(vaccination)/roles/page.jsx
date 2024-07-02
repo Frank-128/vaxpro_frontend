@@ -87,23 +87,27 @@ const Roles = () => {
                     setAlert({visible: true, type: "error", message: res.data});
                 }
             });
-        } else if (action === "edit") {
-            setLoading(true);
-            axios.put(`update_role/${id}`, data).then(res => {
-                if (res.status === 200) {
-                    getRoles();
-                    setAlert({visible: true, type: "success", message: res.data});
-                    setLoading(false);
-                    resetEdit();
-                    setSelectedRow({id: "", level: "", role: "", action: ""});
-                } else if (res.data.status === 409) {
-                    setLoading(false);
-                    setEditError("role", {message: res.data.message});
-                } else {
-                    setLoading(false);
-                }
-            }).catch(() => setLoading(false));
         }
+    }
+
+    const roleEdit = (data) =>{
+        console.log(data)
+            setLoading(true);
+            // axios.put(`update_role/${id}`, data).then(res => {
+            //     if (res.status === 200) {
+            //         getRoles();
+            //         setAlert({visible: true, type: "success", message: res.data});
+            //         setLoading(false);
+            //         resetEdit();
+            //         setSelectedRow({id: "", level: "", role: "", action: ""});
+            //     } else if (res.data.status === 409) {
+            //         setLoading(false);
+            //         setEditError("role", {message: res.data.message});
+            //     } else {
+            //         setLoading(false);
+            //     }
+            // }).catch(() => setLoading(false));
+
     }
 
     const handleEditClick = (id, role, account_type) => {
@@ -113,9 +117,15 @@ const Roles = () => {
         });
         setEditValue("role", role);
         setEditValue("account_type", account_type);
-
-
     };
+
+    const splittingAccountType = (account_type) =>{
+        const splitAccountType = account_type.split("_");
+        if(splitAccountType.length > 1){
+            return splitAccountType.slice().join(" ");
+        }
+        return splitAccountType;
+    }
 
     return (<main className={'flex flex-col'}>
             <div className={'py-4 px-2 md:py-8 flex flex-col gap-6 md:gap-8 border-b border-black'}>
@@ -157,7 +167,7 @@ const Roles = () => {
                                         {error && (<p className="text-red-900 text-xs font-monte">
                                                 {error.message}
                                             </p>)}
-                                    </div>)}
+                                         </div>)}
                             />
                         </div>
                     </div>
@@ -230,7 +240,7 @@ const Roles = () => {
                                     <td className={classes}>
                                         <Typography variant="small" color="blue-gray"
                                                     className="font-normal capitalize">
-                                            {account_type}
+                                            {splittingAccountType(account_type)}
                                         </Typography>
                                     </td>
 
@@ -239,13 +249,6 @@ const Roles = () => {
                                             <IconButton
                                                 variant="text"
                                                 onClick={() => handleEditClick(id,role, account_type)}
-                                                // onClick={() => {
-                                                //     setSelectedRow({...selectedRow,
-                                                //         id: id, action: "edit",
-                                                //     });
-                                                //     setEditValue("role", role);
-                                                //     setEditValue("account_type", account_type);
-                                                // }}
                                             >
                                                 <Edit/>
                                             </IconButton>
@@ -313,65 +316,61 @@ const Roles = () => {
                     handler={() => setSelectedRow({id: "", action: "", role: "", level: ""})}>
                 <DialogHeader> Edit Role</DialogHeader>
                 <DialogBody className={'w-full'}>
-                    <form onSubmit={handleEditSubmit(roleHandler)}
+                    <form onSubmit={handleEditSubmit(roleEdit)}
                           className={'flex w-full flex-col gap-8 md:gap-2'}>
                         <div className={'md:w-5/6'}>
                             <span className={'text-black'}>Select Level For The Role:</span>
 
-                            <select
-                                className="border border-gray-200 focus:border-gray-900 rounded-md md:w-full h-10"
-                            >
-                                {levels.map((level, index) => (
-                                    <option className="px-12" key={index} value={index}>{level}</option>
-                                ))}
-                            </select>
+                            {/*<Input {...registerEdit('account_type')}/>*/}
 
 
-                            {/*<Controller*/}
-                            {/*    control={editControl}*/}
-                            {/*    rules={{required: "Select level at which the role is going to be used"}}*/}
-                            {/*    name="account_type"*/}
-                            {/*    render={({*/}
-                            {/*                 field: {onChange, onBlur, value, defaultValues, ref}, fieldState: {error},*/}
-                            {/*             }) => (<div className="font-monte-1 text-black">*/}
-                            {/*            <Select*/}
-                            {/*                defaultValue={getEditValues("account_type") || ""}                                            className="text-black font-monte-1 !border-t-blue-gray-200 focus:!border-gray-900 "*/}
-                            {/*                labelProps={{*/}
-                            {/*                    className: "before:content-none after:content-none",*/}
-                            {/*                }}*/}
-                            {/*                // onChange={onChange}*/}
-                            {/*                // onBlur={onBlur}*/}
-                            {/*                selected={getEditValues("account_type")}*/}
-                            {/*                // value={value}*/}
-                            {/*                size="lg"*/}
-                            {/*                animate={{*/}
-                            {/*                    mount: {y: 0}, unmount: {y: 25},*/}
-                            {/*                }}*/}
-                            {/*            >*/}
-                            {/*                {levels.map((level, index) => (<Option*/}
-                            {/*                        key={index}*/}
-                            {/*                        className="text-black font-monte-1"*/}
-                            {/*                        value={level}*/}
-                            {/*                    >*/}
-                            {/*                        {level}*/}
-                            {/*                    </Option>))}*/}
-                            {/*            </Select>*/}
+                            <Controller
+                                name="account_type"
+                                defaultValue={getEditValues("account_type")}
+                                value={getEditValues("account_type")}
+                                control={editControl}
+                                rules={{ required: "Level for this role is required" }}
+                                render={({
+                                             field: { onChange, onBlur, value, ref },
+                                             fieldState: { error },
+                                         }) => (
 
-                            {/*{error && (<p className="text-red-900 text-xs font-monte">*/}
-                            {/*        {error.message}*/}
-                            {/*    </p>)}*/}
-                            {/*</div>)}*/}
-                            {/*/>*/}
+                                    <div>
+                                        <Select
+                                            value={value}
+                                            onChange={(val) => {
+                                                console.log("Selected value:", val);
+                                                setEditValue('account_type', val)// Debug log
+                                                onChange(val);
+                                            }}
+                                            onBlur={onBlur}
+                                            ref={ref}
+                                            className="border border-gray-500 focus:border-gray-900 rounded-md md:w-full h-10"
+                                        >
+                                            {levels.map((level, index) => (
+                                                <Option className="px-12" key={index} value={index}>{level}</Option>
+                                            ))}
+                                        </Select>
+
+                                        {
+                                            error?.account_type && <p className={'text-red-900 text-xs'}>
+                                            {error?.account_type.message}
+                                            </p>
+                                        }
+                                    </div>
+                                )}
+                            />
+
                         </div>
 
                         <div className={'md:w-5/6'}>
                             <span className={'text-black'}>Enter Name For The Role:</span>
                             <Input
-                                defaultValue={getEditValues("role")}
+                                // defaultValue={getEditValues("role")}
                                 {...registerEdit("role", {required: "Role name is required"})}
                                 labelProps={{
                                     className: "before:content-none after:content-none",
-                                }} className={'md:w-full !border-t-blue-gray-200 focus:!border-t-gray-900'}/>
+                                }} className={'md:w-full !border-t-blue-gray-200 focus:!border-blue-700'}/>
 
                             {editErrors.role && (<p className="text-red-900 text-xs font-monte">
                                     {editErrors.role.message}
@@ -381,11 +380,14 @@ const Roles = () => {
                         <DialogFooter className={' w-full rounded py-5 px-3'}>
                             <div className={'md:w-3/6 flex md:justify-start gap-6'}>
                                 <Button loading={loading} type={'submit'}
-                                        className={'rounded-[0.25rem] text-center w-full md:w-24 bg-blue-900'}>
+                                        className={'rounded-[0.25rem] flex justify-center items-center capitalize w-20 md:w-24 bg-blue-900'}>
                                     {loading ? 'editing' : 'edit'}
                                 </Button>
-                                <Button onClick={() => setSelectedRow({id: "", level: "", role: "", action: ""})}
-                                        className={'rounded-[0.25rem] text-center w-full md:w-24 bg-red-900'}>
+                                <Button onClick={() => {
+                                    setSelectedRow({id: "", level: "", role: "", action: ""});
+                                    setEditValue('account_type', '')
+                                }}
+                                        className={'rounded-[0.25rem] flex justify-center items-center capitalize w-20 text-center  md:w-24 bg-red-900'}>
                                     cancel
                                 </Button>
                             </div>
