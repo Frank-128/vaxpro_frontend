@@ -18,6 +18,9 @@ import { CertificateGenerator } from "@/constants/certificate_generator";
 
 function ChildCard({
   ward,
+  firstname,
+  middlename,
+  surname,
   date_of_birth,
   card_no,
   gender,
@@ -34,73 +37,57 @@ function ChildCard({
         <div>
           <Typography
             color="blue-gray"
-            className="text-black font-bold  text-xs lg:text-base"
+            className="text-black font-bold lg:text-md"
           >
             Card Number:
           </Typography>
-          <Typography
-            color="blue-gray"
-            className="text-black text-xs lg:text-base"
-          >
+          <Typography color="blue-gray" className="text-black lg:text-md">
             {card_no}
           </Typography>
         </div>
         <div>
           <Typography
             color="blue-gray"
-            className="text-black font-bold  text-xs lg:text-base"
+            className="text-black font-bold lg:text-md"
           >
             Date of Birth:
           </Typography>
-          <Typography
-            color="blue-gray"
-            className="text-black text-xs lg:text-base"
-          >
+          <Typography color="blue-gray" className="text-black lg:text-md">
             {date_of_birth}
           </Typography>
         </div>
         <div>
           <Typography
             color="blue-gray"
-            className="text-black font-bold  text-xs lg:text-base"
+            className="text-black font-bold lg:text-md"
           >
             Gender:
           </Typography>
-          <Typography
-            color="blue-gray"
-            className="text-black text-xs lg:text-base"
-          >
+          <Typography color="blue-gray" className="text-black lg:text-md">
             {gender}
           </Typography>
         </div>
         <div>
           <Typography
             color="blue-gray"
-            className="text-black font-bold  text-xs lg:text-base"
+            className="text-black font-bold lg:text-md"
           >
             House Number:
           </Typography>
-          <Typography
-            color="blue-gray"
-            className="text-black text-xs lg:text-base"
-          >
+          <Typography color="blue-gray" className="text-black lg:text-md">
             {house_no}
           </Typography>
         </div>
-
 
         {ward && (
           <div>
             <Typography
               color="blue-gray"
-              className="text-black font-bold  text-xs lg:text-base"
+              className="text-black font-bold lg:text-md"
             >
               Residence:
             </Typography>
-            <Typography
-              color="blue-gray"
-              className="text-black text-xs lg:text-base"
-            >
+            <Typography color="blue-gray" className="text-black lg:text-md">
               {ward.ward_name} - {ward.district.district_name} -{" "}
               {ward.district.region.region_name}
             </Typography>
@@ -108,14 +95,17 @@ function ChildCard({
         )}
       </CardBody>
       <CardFooter className="flex justify-end">
-                <Certificates firstname={firstname}
-                              middlename={middlename}
-                              surname={surname} card_no={card_no} certificate_status={certificate_status}
-                              handleGenerate={handleGenerate}/>
-            </CardFooter>
+        <Certificates
+          firstname={firstname}
+          middlename={middlename}
+          surname={surname}
+          card_no={card_no}
+          certificate_status={certificate_status}
+          handleGenerate={handleGenerate}
+        />
+      </CardFooter>
     </Card>
   );
-
 }
 
 function ParentCard({ parents_guardians }) {
@@ -130,7 +120,7 @@ function ParentCard({ parents_guardians }) {
             <div key={index} className="gap-3 flex flex-col">
               <Typography
                 color="blue-gray"
-                className="text-black text-xs lg:text-base flex flex-col"
+                className="text-black lg:text-md flex flex-col"
               >
                 <div className="font-bold"> Parent Firstname:</div>{" "}
                 {parent.firstname}
@@ -138,28 +128,28 @@ function ParentCard({ parents_guardians }) {
 
               <Typography
                 color="blue-gray"
-                className="text-black text-xs lg:text-base flex flex-col"
+                className="text-black lg:text-md flex flex-col"
               >
                 <div className="font-bold"> Parent Middlename:</div>{" "}
                 {parent.middlename}
               </Typography>
               <Typography
                 color="blue-gray"
-                className="text-black text-xs lg:text-base flex flex-col"
+                className="text-black lg:text-md flex flex-col"
               >
                 <div className="font-bold"> Parent Lastname:</div>{" "}
                 {parent.lastname}
               </Typography>
               <Typography
                 color="blue-gray"
-                className="text-black text-xs lg:text-base flex flex-col"
+                className="text-black lg:text-md flex flex-col"
               >
                 <div className="font-bold ">Relation with child:</div>{" "}
                 {parent.pivot.relationship_with_child}
               </Typography>
               <Typography
                 color="blue-gray"
-                className="text-black text-xs lg:text-base flex flex-col"
+                className="text-black lg:text-md flex flex-col"
               >
                 <div className="font-bold">Contacts:</div>{" "}
                 {parent.user.contacts}
@@ -206,20 +196,18 @@ function TeamCard({
   );
 }
 
-
-export default function TeamSection12({params}) {
-    const [childData, setChildData] = useState([]);
-    const searchParams = useSearchParams();
-    const card_no = params.card_no;
-    const [openUpdateInfo, setOpenUpdateInfo] = useState(false);
-    const [open_date_viewer, setOpenDateViewer] = useState(false);
-    const [vacShdls, setVacScheds] = useState([]);
-    const [scheds, setScheds] = useState();
-    const [allVaccines, setAllVaccines] = useState([]);
-    const [savedScheds, setSavedScheds] = useState([]);
-    const [birth_date, setBirthDate] = useState();
-    const {loading} = CertificateGenerator();
-
+export default function TeamSection12({ params }) {
+  const [childData, setChildData] = useState([]);
+  const searchParams = useSearchParams();
+  const card_no = params.card_no;
+  const [openUpdateInfo, setOpenUpdateInfo] = useState(false);
+  const [open_date_viewer, setOpenDateViewer] = useState(false);
+  const [vacShdls, setVacScheds] = useState([]);
+  const [scheds, setScheds] = useState();
+  const [allVaccines, setAllVaccines] = useState([]);
+  const [savedScheds, setSavedScheds] = useState([]);
+  const [birth_date, setBirthDate] = useState();
+  const { loading } = CertificateGenerator();
 
   const router = useRouter();
 
@@ -312,7 +300,7 @@ export default function TeamSection12({params}) {
             <Typography
               variant="h1"
               color="blue-gray"
-              className="my-2 float-start flex justify-between w-full !text-sm lg:!text-4xl"
+              className="my-2 float-start flex justify-between w-full !text-2xl lg:!text-4xl"
             >
               {/* <div> VaxPro</div> */}
               <div className="flex justify-end w-full gap-2">
@@ -325,22 +313,15 @@ export default function TeamSection12({params}) {
 
                 <Button
                   onClick={handleClickOpenUpdateInfo}
-                  className=" text-white p-2 flex w-44 rounded-md  items-center justify-center text-xs  float-end font-bold"
+                  className=" text-white p-2 flex w-44 rounded-md uppercase items-center justify-center text-xs  float-end font-bold"
                 >
                   <p className=" mt-1">Update info</p>
-                </Button>
-
-                <Button
-                  onClick={handleClickOpenDateViewer}
-                  className=" text-white p-2 flex w-44 rounded-md  items-center justify-center text-xs  float-end font-bold"
-                >
-                  View Schedule
                 </Button>
               </div>
             </Typography>
           </div>
         </div>
-        <div className="!text-sm 4xs:self-center 4xs:items-center 4xs:justify-center lg:!text-3xl shadow-lg text-black  bg-[#e8dcc5] p-2 md:p-6 md:self-left font-bold flex lg:rounded-l-full lg:rounded-r-full mb-6">
+        <div className="!text-2xl lg:!text-3xl shadow-lg text-black bg-[#e8dcc5] p-6 self-left font-bold flex rounded-r-full mb-6">
           {childData.map((child, index) => (
             <div key={index}>
               {child.firstname} {child.middlename} {child.surname}
@@ -354,6 +335,12 @@ export default function TeamSection12({params}) {
           ))}
         </div>
 
+        <button
+          onClick={handleClickOpenDateViewer}
+          className="bg-[#212B36] text-white rounded-md p-2"
+        >
+          Click to View Schedule
+        </button>
         <div>
           <DateCalendarComp
             handleClickCloseDateViewer={handleClickCloseDateViewer}
