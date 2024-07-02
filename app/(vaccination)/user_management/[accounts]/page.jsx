@@ -14,10 +14,8 @@ import {
   Tooltip,
   IconButton,
   Dialog,
-  DialogHeader,
   DialogBody,
   DialogFooter,
-  Chip,
   Input,
 
 } from "@material-tailwind/react";
@@ -276,7 +274,7 @@ function UserManagement() {
                             <Typography
                                 variant="small"
                                 color="blue-gray"
-                                className="font-monte"
+                                className="font-monte pl-4"
                             >
                               {index+1}
                             </Typography>
@@ -309,7 +307,7 @@ function UserManagement() {
                             <div>{contacts}</div>
                           </td>
 
-                          <td className="flex justify-between">
+                          <td className="flex justify-around">
                             <Tooltip content="Edit Account">
                               <IconButton
                                   variant="text"
@@ -329,7 +327,7 @@ function UserManagement() {
                                 <Edit/>
                               </IconButton>
                             </Tooltip>
-                            <Tooltip content="View Account">
+                            {/* <Tooltip content="View Account">
                               <IconButton
                                   variant="text"
                                   onClick={() =>
@@ -338,7 +336,7 @@ function UserManagement() {
                               >
                                 <VisibilityOutlined/>
                               </IconButton>
-                            </Tooltip>
+                            </Tooltip> */}
                             {loggedInUser.id !== id ? (
                                 <Tooltip content="Delete Account">
                                   <IconButton
@@ -463,7 +461,7 @@ function UserManagement() {
               </tbody>
             </table>
           </CardBody>
-          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+          {/* <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
             <Typography
               variant="small"
               color="blue-gray"
@@ -479,7 +477,7 @@ function UserManagement() {
                 Next
               </Button>
             </div>
-          </CardFooter>
+          </CardFooter> */}
         </Card>
       </div>
 
@@ -493,16 +491,19 @@ function UserManagement() {
         />
       )}
 
+
+
       <Dialog
-        className="flex flex-col items-center"
+        className="flex flex-col items-center bg-transparent shadow-none"
         size="xs"
         open={selectedRow.action === "delete"}
         handler={() => setSelectedRow({ id: "", action: "" })}
       >
+        <Card className="md:p-4 p-2">
         <DialogBody className="font-monte-1 text-black">
           Confirm to delete this account
         </DialogBody>
-        <DialogFooter className="flex gap-8">
+        <DialogFooter className="flex md:gap-8 gap-4">
           <Button
             color=""
             className="font-monte-1"
@@ -521,6 +522,7 @@ function UserManagement() {
             Confirm
           </Button>
         </DialogFooter>
+        </Card>
       </Dialog>
     </main>
   );

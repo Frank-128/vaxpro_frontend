@@ -88,7 +88,6 @@ function Main({ children }) {
     }
   }, [authenticatedToken, isIdle, router]);
 
-  console.log(loggedInUser);
 
 
   return (
