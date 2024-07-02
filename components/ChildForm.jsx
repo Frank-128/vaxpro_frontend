@@ -72,6 +72,7 @@ const ChildRegistrationForm = ({ register, validate, errors, errTouched }) => {
         Register New Child
       </Typography>
 
+
       <div className="flex rounded-md w-full flex-col md:pt-3 lg:pt-8 pt-2 gap-4 md:gap-6">
         <div className={"flex flex-col md:flex-row md:gap-3 gap-4"}>
           <div
@@ -128,7 +129,6 @@ const ChildRegistrationForm = ({ register, validate, errors, errTouched }) => {
             )}
           </div>
         </div>
-
         <div className={"flex flex-col md:flex-row md:gap-3 gap-4"}>
           <div
             className={

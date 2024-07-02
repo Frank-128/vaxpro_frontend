@@ -58,16 +58,16 @@ const CommunityFeedback = () => {
 
   const handleSubmitInfo = (data) => {
     console.log(data);
-    axios.post(`/submitFeedback`, { feedback: data }).then((res) => {
-      if (res.data.status === 200) {
-        console.log("goods");
-        setAlert({
-          message: res.data.response,
-          visible: true,
-          type: "success",
-        });
-      }
-    });
+    // axios.post(`/submitFeedback`, { feedback: data }).then((res) => {
+    //   if (res.data.status === 200) {
+    //     console.log("goods");
+    //     setAlert({
+    //       message: res.data.response,
+    //       visible: true,
+    //       type: "success",
+    //     });
+    //   }
+    // });
   };
 
   const resetFacility = () => {
