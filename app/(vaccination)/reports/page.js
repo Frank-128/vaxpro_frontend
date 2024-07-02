@@ -15,13 +15,13 @@ function Reports() {
   const authenticatedToken = globalUser((state) => state.authenticatedToken);
   const loggedInUser = globalUser(state=>state.loggedInUser)
 
-  
+
 
   const title = () => {
     if (!loggedInUser) {
       return <Spinner />;
     }
-  
+
     if (loggedInUser?.role?.account_type === "ministry") {
       return "Ministry";
     } else if (loggedInUser?.role?.account_type === "regional") {
@@ -143,12 +143,10 @@ function Reports() {
                 </tbody>
               </table>
             </td>
-              
-              
             </tr>
           ))}
         </tbody>
-      
+
       </table>}
     </div>
   );

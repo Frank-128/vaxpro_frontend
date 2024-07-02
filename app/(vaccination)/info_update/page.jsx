@@ -47,7 +47,7 @@ const InfoUpdate = () => {
   });
 
   const loggedInUser = globalUser((state) => state.loggedInUser);
- 
+
 
   const router = useRouter();
 
@@ -56,7 +56,7 @@ const InfoUpdate = () => {
   const [ward, setWard] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [originalNidaId, setOriginalNidaId] = useState(null);
-  
+
 
   const [wards, setWards] = useState([]);
 
@@ -73,7 +73,6 @@ const InfoUpdate = () => {
           surname: child.surname,
           date_of_birth: child.date_of_birth,
           ward: child.ward_id,
-          gender: child.gender,
           house_no: child.house_no,
           nida_id: child.parents_guardians[0].nida_id,
           par_first_name: child.parents_guardians[0].firstname,
@@ -92,7 +91,6 @@ const InfoUpdate = () => {
           setValue("last_name", defaultValues[0].surname);
           setValue("house_no", defaultValues[0].house_no);
           setValue("ward_id", defaultValues[0].ward);
-
           setValue('gender', defaultValues[0].gender);
           setValue("birth_date", defaultValues[0].date_of_birth);
           setValue("nida_id", defaultValues[0].nida_id);
@@ -286,10 +284,10 @@ const InfoUpdate = () => {
               label="House No:"
               type="number"
               {...register("house_no")}
-              
+
             />
           </div>
-          
+
 
           <div className="w-full sm:w-56 lg:w-64 md:w-56 xs:w-64">
             <AutoCompleteSearch

@@ -17,7 +17,7 @@ import { Howl } from "howler";
 
 function Main({ children }) {
   const [openSidebar, setOpenSidebar] = useState( innerWidth>768);
-    
+
   const { initialRequest, getInitialUsers, getBookings, getRoles } =
     useInitial();
   const isIdle = useIdle(1000 * 60 * 60 * 2);
@@ -31,7 +31,7 @@ function Main({ children }) {
   const sound = new Howl({
     src: ["/sound/new_message.wav"],
   });
-  
+
   useEffect(() => {
         const handleResize = () => {
             setOpenSidebar(innerWidth>768);
@@ -92,7 +92,7 @@ function Main({ children }) {
     }
   }, [authenticatedToken, isIdle, router]);
 
-  console.log(loggedInUser);
+  // console.log(loggedInUser);
 
 
   return (

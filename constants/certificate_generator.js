@@ -1,223 +1,177 @@
+import {Document, Image, Page, pdf, StyleSheet, Text, View} from '@react-pdf/renderer';
+import globalUser from "@/store/user";
 
-import axios from '../axios'
-import React, { useState } from "react";
-import { jsPDF } from "jspdf";
-import globalAlert from "@/store/alert";
-import {useRouter} from "next/navigation";
+export const CertificateGenerator = () => {
 
-export const CertificateGenerator = () =>{
-
-const alert = globalAlert((state) => state.alert);
-  const setAlert = globalAlert((state) => state.setAlert);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter()
-  const [name, setName] = useState("DENIS MGAYA");
-  const [vaccine, setVaccine] = useState("BCG");
-
-  const base64ToFile = (base64, filename, mime) => {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new File([byteArray], filename, { type: mime });
-  };
-
-    const generateCertificate = async (card_no,handleGenerate) => {
-        setLoading(true);
-        const certificate = new jsPDF({
-          orientation: "portrait",
-          unit: "mm",
-          // format: [190, 190],
-        });
-        var startX = 0;
-        var startY = 0;
-
-        const pageWidth = certificate.internal.pageSize.getWidth();
-        const pageHeight = certificate.internal.pageSize.getHeight();
-        var pageSize = { width: 210, height: 297 };
-
-        const color = "#1e3a8a";
-        const fontSizeColoredText = 14;
-        const fontSizeNormalText = 12;
-
-        const imageUrl = "images/file.png";
-        // const base64Image = await getBase64Image(imageUrl);
-
-        certificate.addImage(imageUrl, "PNG", 100, 20, 18, 20);
-
-        certificate
-          .setFillColor(color)
-          .setFont("Helvetica", "bold")
-          .setFontSize(20)
-          .rect(startX, startY, pageWidth, 15, "F")
-          .setTextColor("#1e3a8a")
-          .text("VACCINATION CERTIFICATE", 60, 50);
-
-        const text = "This is to certify that";
-        const textWidth = certificate.getTextWidth(text) + 2;
-        certificate
-          .setTextColor("black")
-          .setFontSize(fontSizeNormalText)
-          .setFont("Helvetica", "normal")
-          .text(`${text}`, 30, 70);
-
-        const nameWidth = certificate.getTextWidth(name);
-        const nameX = textWidth;
-        const nameY = 70;
-        const underlineY = nameY + 1;
-        certificate
-          .setFont("Helvetica", "bold")
-          .setTextColor(color)
-          .setFontSize(fontSizeColoredText)
-          .text(`${name}`, nameX, 70)
-          .moveTo(nameX, underlineY)
-          .lineTo(nameX + nameWidth, underlineY)
-          .stroke();
-
-        certificate
-          .setFont("Helvetica", "normal")
-          .setTextColor("black")
-          .setFontSize(fontSizeNormalText)
-          .text(
-            `has successfully completed the following vaccinations:
-    
-          `,
-            30,
-            80
-          );
-
-        const vaccineWidth = certificate.getTextWidth(vaccine) + 10;
-        certificate
-          .setTextColor(color)
-          .setFont("Helvetica", "bold")
-          .setFontSize(fontSizeColoredText)
-          .text(`${vaccine}`, 115, 80)
-          .moveTo(115, 81)
-          .lineTo(vaccineWidth + 115, 81)
-          .stroke();
-
-        const text2 = "Certificate made at";
-        const text2Width = certificate.getTextWidth(text2);
-        certificate
-          .setTextColor("black")
-          .setFont("Helvetica", "normal")
-          .setFontSize(fontSizeNormalText)
-          .text("Certificate made at", 30, 100);
-
-        certificate
-          .setTextColor(color)
-          .setFont("Helvetica", "bold")
-          .setFontSize(fontSizeColoredText)
-          .text("Mbeya regional hospital", text2Width + 23, 100)
-          .moveTo(66, 101)
-          .lineTo(certificate.getTextWidth("Mbeya regional hospital") + 69, 101)
-          .stroke();
-
-        // console.log(certificate.getTextWidth("Mbeya regional hospital"));
-
-        certificate
-          .setTextColor("black")
-          .setFont("Helvetica", "normal")
-          .setFontSize(fontSizeNormalText)
-          .text("Date:", 150, 100);
-
+    const loggedInUser = globalUser((state) => state.loggedInUser);
+    const generateCertificate = async (card_no, firstname, middlename, surname) => {
         const currentDate = new Date();
-        const monthNames = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const day = currentDate.getDate();
         const month = monthNames[currentDate.getMonth()];
         const year = currentDate.getFullYear();
 
         const formattedDate = `${day} ${month} ${year}`;
 
-        certificate
-          .setTextColor(color)
-          .setFont("Helvetica", "bold")
-          .setFontSize(fontSizeColoredText)
-          .text(formattedDate, 162, 100)
-          .moveTo(162, 101)
-          .lineTo(certificate.getTextWidth(formattedDate) + 162, 101)
-          .stroke();
+        const pdfContent = (<Document>
+                <Page style={styles.page} size={{width: 595.28, height: 600}}>
 
-        certificate
-          .setTextColor("black")
-          .setFontSize(12)
-          .setFont("", "normal")
-          .text("Signature", 30, 135);
+                    <View style={styles.section}>
+                    </View>
+                    <View style={styles.backgroundSection}>
+                    </View>
+                    <View style={styles.contentSection}>
+                        <View style={styles.imageContainer}>
+                            <Image style={styles.image} src={'images/file.png'}/>
+                        </View>
+                        <View style={styles.titleContainer}>
+                            <Text style={[styles.title, {fontFamily: "Helvetica"}]}>VACCINATION CERTIFICATE</Text>
+                        </View>
+                        <View style={styles.contentSectionExceptTitleAndImage}>
 
-        certificate.setFont("", "bold").text("Denis Mgaya", 30, 140);
+                            <View style={styles.textContainer1}>
+                                <Text style={styles.text}>
+                                    This is to certify that
+                                </Text>
+                                <Text
+                                    style={[styles.importantText, styles.underlinedText]}>{firstname} {middlename} {surname}</Text>
+                                <Text>,</Text>
+                            </View>
 
-        certificate.setFont("", "normal").text("Chief Doctor", 30, 145);
+                            <View style={styles.sectionWithStatementAndVaccines}>
+                                <Text style={styles.text}>
+                                    has successfully completed the following vaccinations:
+                                </Text>
+                                <Text style={[styles.importantText, styles.underlinedText, styles.sectionWithVaccines]}>
+                                    BCG, OPV, MR1, MR2
+                                </Text>
+                            </View>
 
-        certificate.text("Ministry of health", 30, 180);
+                            <View style={styles.textContainer3}>
+                                <View style={styles.sectionWithStatementAndHospital}>
+                                    <Text style={styles.text}>Certificate made at </Text>
+                                    <Text style={[styles.importantText, styles.underlinedText]}>
+                                        {loggedInUser.facilities?.facility_name}
+                                    </Text>
+                                </View>
+                                <View style={styles.textContainer1}>
+                                    <Text style={styles.text}>
+                                        Date:
+                                    </Text>
+                                    <Text style={[styles.importantText, styles.underlinedText]}>{formattedDate}</Text>
+                                </View>
+                            </View>
 
-        certificate.text("Ministry of health", 162, 180);
+                            <View style={styles.sectionWithSignatureNameAndPosition}>
+                                <Text style={styles.text}>
+                                    Signature
+                                </Text>
+                                <Text
+                                    style={[styles.importantText, styles.underlinedText, styles.sectionWithNameOfTheOneWhoSignCertificate]}>
+                                    Denis Mgaya
+                                </Text>
+                                <Text style={styles.text}>
+                                    Chief Doctor
+                                </Text>
+                            </View>
 
-        const pdfBase64 = certificate.output("datauristring").split(",")[1];
-        const pdfFile = base64ToFile(
-          pdfBase64,
-          "certificate.pdf",
-          "application/pdf"
-        );
-        // setPdfContent(pdfBase64);
+                            <View style={styles.sectionWithMinistry}>
+                                <Text style={styles.text}>
+                                    Ministry of health office
+                                </Text>
+                                <Text style={styles.text}>
+                                    Ministry of health
+                                </Text>
+                            </View>
+                        </View>
+
+                    </View>
+                </Page>
+
+            </Document>);
+
+        const blob = await pdf(pdfContent).toBlob();
 
         const formData = new FormData();
         formData.append("child_id", card_no);
-        formData.append("certificate", pdfFile);
+        formData.append("certificate", blob, "certificate.pdf");
 
-        for (let pair of formData.entries()) {
-          console.log(pair[0] + ", " + pair[1]);
-        }
 
-        setTimeout(() => {
-          axios
-            .post("certificates", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            })
-            .then((res) => {
-              if (res.data.status) {
-                setAlert({
-                  alert,
-                  visible: true,
-                  message: res.data.message,
-                  type: "success",
-                });
-
-                setLoading(false);
-              } else {
-                setAlert({
-                  alert,
-                  visible: true,
-                  message: res.data.message,
-                  type: "error",
-                });
-                setLoading(false);
-              }
-            });
-        }, [3000]);
-
-        // setLoading(false);
-
-        handleGenerate();
-
+        return formData;
     };
 
-      return {generateCertificate, loading, setLoading};
-}
+    return {generateCertificate};
+};
+
+const styles = StyleSheet.create({
+
+
+    page: {
+        flexDirection: 'column',
+
+    }, section: {
+        backgroundColor: "#1e3a8a", height: '42px',
+    }, imageContainer: {
+        // justifyContent: "center",
+        alignItems: "center", marginBottom: 20, marginTop: 10
+    }, image: {
+        width: 60, height: 60,
+    }, titleContainer: {
+        alignItems: "center",
+
+    }, title: {
+        color: "#1e3a8a", fontWeight: '800px', fontSize: "20px",
+    }, contentSection: {
+        paddingHorizontal: 40,
+    },
+
+    contentSectionExceptTitleAndImage: {
+        marginTop: 20, flexDirection: 'column', // justifyContent:"space-around",
+        gap: 28, height: '70%'
+        // , backgroundColor:'yellow'
+    },
+
+    sectionWithStatementAndVaccines: {
+        flexDirection: 'column', gap: 4,
+    },
+
+    sectionWithVaccines: {
+        marginLeft: 280, marginRight: 75,
+    },
+
+    sectionWithStatementAndHospital: {
+        flexDirection: 'row',
+    }, sectionWithNameOfTheOneWhoSignCertificate: {
+        width: 96, marginHorizontal: 0
+    }, sectionWithMinistry: {
+        marginTop: 40, flexDirection: 'row', justifyContent: 'space-between',
+    }, sectionWithSignatureNameAndPosition: {
+        flexDirection: 'column', gap: 6, width: 84,
+    },
+
+    backgroundSection: {
+        position: "absolute", top: 540, left: 0, right: 0, bottom: 0, backgroundColor: "#1e3a8a",
+    },
+
+    textContainer: {
+
+        marginTop: 20, flexDirection: 'column',
+
+    }, textContainer1: {
+
+        flexDirection: 'row',
+
+    }, textContainer3: {
+        flexDirection: 'row', justifyContent: "space-between"
+    }, text: {
+        fontSize: "14px",
+    }
+
+    , importantText: {
+        fontSize: "16px", color: "#1e3a8a", marginHorizontal: 6
+
+    }, underlinedText: {
+        borderBottomWidth: 1, borderBottomColor: "#1e3a8a", // paddingBottom: 1,
+    },
+
+})
