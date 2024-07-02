@@ -60,6 +60,7 @@ const AutoCompleteSearch = ({ name, control, ward = null }) => {
                 render={({ field: { onChange, value, onBlur } ,fieldState: { error },}) => (
                     <div className={'relative w-full'}>
                         <Input
+                                        size="lg"
                             label='Ward'
                             value={searchTerm} // Control the input value with searchTerm state
                             onChange={(e) => handleSearch(e, onChange)}
