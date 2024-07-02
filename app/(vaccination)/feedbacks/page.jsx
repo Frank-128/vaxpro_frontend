@@ -23,7 +23,9 @@ const Feedbacks = () => {
 
           axios.get(`/getFeedback/${facilitiesParam}`).then((res) => {
             if (res.status === 200) {
-              console.log(res.data.feedbacks);
+              console.log(res.data.feedbacks,"this is the feedback");
+
+
               setFeedbacks(res.data.feedbacks);
             }
           });
