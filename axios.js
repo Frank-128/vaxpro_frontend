@@ -6,7 +6,7 @@ import globalUser from './store/user';
 //     (state) => state.authenticatedToken
 //   );
 
-axios.defaults.baseURL = "http://48.216.219.220/";
+axios.defaults.baseURL = "http://localhost:8000/api/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.post["Accept"] = "application/json";
 axios.defaults.withCredentials = true;
