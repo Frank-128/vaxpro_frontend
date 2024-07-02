@@ -3,6 +3,8 @@ import {
   Accordion,
   AccordionHeader,
   AccordionBody,
+  Input,
+  Button,
 } from "@material-tailwind/react";
 import axios from "../axios";
 import globalUser from "@/store/user";
@@ -20,7 +22,7 @@ export function ScheduleAccordionAnimation({
   schedItems,
   savedScheds,
   setSavedScheds,
-  fetchVaccineIds
+  fetchVaccineIds,
 }) {
   const [open, setOpen] = useState(0);
   const [currentDose, setCurrentDose] = useState(0);
@@ -32,6 +34,8 @@ export function ScheduleAccordionAnimation({
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
   console.log(formattedDate); // Output: "2024-06-21"
+
+  const [radiovalue, setRadioaValue] = useState(null);
 
   const fetchVaccineSchedule = () => {
     axios
@@ -54,7 +58,7 @@ export function ScheduleAccordionAnimation({
     setSelectedDate(event.target.value);
   };
 
-  const handleUpdate = (index, date) => {
+  const handleUpdate = (index, date, vaccination_area) => {
     setCurrentDose(index);
 
     const currentItem = schedItems.find((item) => item.name === name);
@@ -98,6 +102,7 @@ export function ScheduleAccordionAnimation({
         child_id: childId,
         facility_id: loggedInUser?.facility_id,
         health_worker_id: loggedInUser?.id,
+        vaccination_area: vaccination_area,
       })
       .then((res) => {
         const doseDatesArray = [];
@@ -112,7 +117,7 @@ export function ScheduleAccordionAnimation({
           }
         );
 
-        setNewDoseDates(doseDatesArray)
+        setNewDoseDates(doseDatesArray);
 
         axios.get(`/getSavedSchedules/${childId}`).then((res) => {
           console.log(res.data);
@@ -121,10 +126,8 @@ export function ScheduleAccordionAnimation({
       });
     fetchVaccineSchedule();
     // fetch the schedules again from the backend
-    fetchVaccineIds()
+    fetchVaccineIds();
   };
-
-  
 
   return (
     <>
@@ -138,19 +141,43 @@ export function ScheduleAccordionAnimation({
             const [doseType, date] = Object.entries(dose)[0];
             const currentItem = schedItems.find((item) => item.name === name); // schedItems is all vaccines
 
-            const isVaccineIdNotInSavedScheds = !savedScheds.some( //only the provided vaccines list are displayed here
+            const isVaccineIdNotInSavedScheds = !savedScheds.some(
+              //only the provided vaccines list are displayed here
               (sched) => sched.vaccine_id === currentItem.id
             );
 
+            const formatDoseType = (doseType) => {
+              const parts = doseType.split("_");
+              const capitalizedFirstPart =
+                parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+              return `${capitalizedFirstPart} ${parts[1]}`;
+            };
+
+            const formatDate = (date) => {
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, "0");
+              const day = String(date.getDate()).padStart(2, "0");
+              return `${year}-${month}-${day}`;
+            };
+
             const vaccinationDate = new Date(date);
-            const todayIsAfterVacDate = vaccinationDate < today;
+            const today = new Date();
+
+            const formattedVaccinationDate = formatDate(vaccinationDate);
+            const formattedToday = formatDate(today);
+
+            const todayIsAfterVacDate =
+              formattedVaccinationDate < formattedToday;
+            const todayIsVaccinationDate =
+              formattedVaccinationDate === formattedToday;
+
+            console.log(formattedVaccinationDate);
+            console.log(formattedToday);
 
             let savedDoseDate = null;
-            let savedNextDoseDate = null;
 
             const isDoseSaved = savedScheds.some((sched) => {
               savedDoseDate = sched.vaccination_date;
-              savedNextDoseDate = sched.next_vaccination_date;
 
               return (
                 sched.frequency == index + 1 &&
@@ -174,12 +201,20 @@ export function ScheduleAccordionAnimation({
               isVaccineIdNotInSavedScheds
             ) {
               divColorClass = "bg-red-500";
+              buttonText = "Update";
+            } else if (
+              !isDoseSaved &&
+              todayIsVaccinationDate &&
+              isVaccineIdNotInSavedScheds
+            ) {
+              buttonText = "Administer Vaccine";
+              divColorClass = "bg-green-200";
             } else if (
               (!isDoseSaved && isVaccineIdNotInSavedScheds && index === 0) ||
               isNextVaccinationDate
             ) {
               divColorClass = "bg-orange-500";
-              buttonText = "Next";
+              buttonText = "Upcoming";
             } else {
               divColorClass = "bg-gray-500";
               buttonText = "Pending";
@@ -187,20 +222,50 @@ export function ScheduleAccordionAnimation({
 
             return (
               <div
-                className={`flex gap-2 rounded-md p-2 mb-2 w-96 justify-start ${divColorClass}`}
+                className={` ${
+                  isDoseSaved
+                    ? "justify-end flex flex-col"
+                    : "justify-between flex flex-col"
+                }  gap-2 rounded-md p-2 mb-2 w-full md:w-96 flex-col-reverse  ${divColorClass}`}
                 key={index}
               >
                 {!isDoseSaved && !todayIsAfterVacDate && (
-                  <button
-                    onClick={() => handleUpdate(index, date)}
-                    className="p-1 rounded-md bg-[#212B36] w-24 text-white"
-                    disabled={
-                      !isNextVaccinationDate &&
-                      !(isVaccineIdNotInSavedScheds && index === 0)
-                    }
-                  >
-                    {buttonText}
-                  </button>
+                  <div className="flex flex-col-reverse gap-2">
+                    <Button
+                      onClick={() => handleUpdate(index, date, radiovalue)}
+                      className="p-1 rounded-md bg-[#212B36] w-full capitalize"
+                      disabled={
+                        (!isNextVaccinationDate &&
+                          !(isVaccineIdNotInSavedScheds && index === 0)) ||
+                        radiovalue == null ||
+                        !todayIsVaccinationDate
+                      }
+                    >
+                      {buttonText}
+                    </Button>
+                    <div className="flex flex-col">
+                      <div className="flex flex-row-reverse justify-end gap-2">
+                        <label>Within facility</label>
+                        <input
+                          disabled={!todayIsVaccinationDate}
+                          onClick={() => setRadioaValue(true)}
+                          type="radio"
+                          name="vac_area"
+                          value={radiovalue}
+                        />
+                      </div>
+                      <div className="flex flex-row-reverse justify-end gap-2">
+                        <label>Outside facility</label>
+                        <input
+                          disabled={!todayIsVaccinationDate}
+                          onClick={() => setRadioaValue(false)}
+                          type="radio"
+                          name="vac_area"
+                          value={radiovalue}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 )}
 
                 {!isDoseSaved && todayIsAfterVacDate && (
@@ -210,21 +275,49 @@ export function ScheduleAccordionAnimation({
                       onChange={handleDateChange}
                       className="p-1 w-48 rounded-md"
                     />
-                    <button
-                      onClick={() => handleUpdate(index, selectedDate)}
-                      className="p-1 rounded-md bg-[#212B36] w-24 text-white"
-                      disabled={
-                        !isNextVaccinationDate &&
-                        !(isVaccineIdNotInSavedScheds && index === 0)
-                      }
-                    >
-                      {buttonText}
-                    </button>
+                    <div className="flex flex-col-reverse gap-2">
+                      <Button
+                        onClick={() =>
+                          handleUpdate(index, selectedDate, radiovalue)
+                        }
+                        className="p-1 rounded-md bg-[#212B36] capitalize w-full text-white"
+                        disabled={
+                          (!isNextVaccinationDate &&
+                            !(isVaccineIdNotInSavedScheds && index === 0)) ||
+                          radiovalue == null ||
+                          !todayIsVaccinationDate
+                        }
+                      >
+                        {buttonText}
+                      </Button>
+                      <div className="flex flex-col">
+                        <div className="flex flex-row-reverse justify-end gap-2">
+                          <label>Within facility</label>
+                          <input
+                            disabled={!todayIsVaccinationDate}
+                            onClick={() => setRadioaValue(true)}
+                            type="radio"
+                            name="vac_area"
+                            value={radiovalue}
+                          />
+                        </div>
+                        <div className="flex flex-row-reverse justify-end gap-2">
+                          <label>Outside facility</label>
+                          <input
+                            disabled={!todayIsVaccinationDate}
+                            onClick={() => setRadioaValue(false)}
+                            type="radio"
+                            name="vac_area"
+                            value={radiovalue}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
-                <p className="mt-1">{`${
-                  doseType.charAt(0).toUpperCase() + doseType.slice(1)
-                }: ${isDoseSaved ? savedDoseDate : date }`}</p>
+                <p className="mt-1 font-bold text-black">{`${formatDoseType(
+                  doseType
+                )}: ${isDoseSaved ? savedDoseDate : date}`}</p>
               </div>
             );
           })}

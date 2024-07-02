@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
-import { Select, Option, Textarea, MenuItem } from "@material-tailwind/react";
+import { Select, Option, Textarea, Input } from "@material-tailwind/react";
 import {
   Dialog,
   DialogActions,
@@ -12,7 +12,11 @@ import {
 
 import axios from "../axios";
 
-const VaccinationReg = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVaccine }) => {
+const VaccinationReg = ({
+  openAddVaccine,
+  handleClickCloseAddVacc,
+  notifyAddVaccine,
+}) => {
   const [vaccine_name, setVaccineName] = useState("");
   const [frequency, setFrequency] = useState("");
   const [vaccine_against, setVaccineAgainst] = useState("");
@@ -40,27 +44,21 @@ const VaccinationReg = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVacc
     formData.append("admin_via", admin_via);
     formData.append("side_effects", side_effects);
 
-
     axios.post(`createVaccine`, formData).then((res) => {
-
       if (res.data.status === 200) {
-        setVaccineName('')
-        setVaccineAgainst('')
-        setFrequency('')
-        setFirstDose('')
-        setSecondDose('')
-        setThirdDose('')
-        setFourthDose('')
-        setFifthDose('')
-        setAdminVia('')
-        setSideEffects('')
-        handleClickCloseAddVacc()
+        setVaccineName("");
+        setVaccineAgainst("");
+        setFrequency("");
+        setFirstDose("");
+        setSecondDose("");
+        setThirdDose("");
+        setFourthDose("");
+        setFifthDose("");
+        setAdminVia("");
+        setSideEffects("");
+        handleClickCloseAddVacc();
 
         notifyAddVaccine(res.data.vaccine);
-
-
-        
-
       }
     });
   };
@@ -101,18 +99,6 @@ const VaccinationReg = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVacc
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56  2xs:w-80 xs:w-96"
               name="frequency"
               type="number"
-              margin="normal"
-            />
-            <TextField
-              label="Vaccine Against"
-              variant="outlined"
-              required
-              onChange={(e) => setVaccineAgainst(e.target.value)}
-              value={vaccine_against}
-              type="text"
-              className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96"
-              fullWidth
-              name="vaccine_against"
               margin="normal"
             />
 
@@ -179,37 +165,8 @@ const VaccinationReg = ({ openAddVaccine, handleClickCloseAddVacc, notifyAddVacc
               name="fifth_dose_after"
               margin="normal"
             />
-            <div >
-              <select
-               className="flex 4xs:w-40 self-center pl-3 xs:text-sm rounded-md h-16 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96 mb-8 mt-4"
-                required
-                onChange={(e) => {setAdminVia(e.target.value); console.log(e.target.value)}}
-                value={admin_via}
-                name="admin_via"
-                label="Administered Via:"
-              
-              >
-                <option value="">Select</option>
-                <option value="Injection">Injection</option>
-                <option value="Orally">Orally</option>
-              </select>
-            </div>
 
-            <div className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96 mt-4">
-              <Textarea
-                name="side_effects"
-                onChange={(e) => setSideEffects(e.target.value)}
-                value={side_effects}
-                required
-                label="Side Effects"
-              />
-            </div>
-
-            <Button
-              variant="contained"
-              type="submit"
-              className="w-56 self-center bg-[#212B36] mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
-            >
+            <Button variant="contained" type="submit" className="w-full">
               Submit
             </Button>
           </form>

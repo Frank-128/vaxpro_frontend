@@ -47,7 +47,6 @@ const InfoUpdate = () => {
   });
 
   const loggedInUser = globalUser((state) => state.loggedInUser);
- 
 
   const router = useRouter();
 
@@ -56,10 +55,8 @@ const InfoUpdate = () => {
   const [ward, setWard] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [originalNidaId, setOriginalNidaId] = useState(null);
-  
 
   const [wards, setWards] = useState([]);
-
 
   useEffect(() => {
     axios.get(`/getChildData/${card_number}`).then((res) => {
@@ -93,7 +90,7 @@ const InfoUpdate = () => {
           setValue("house_no", defaultValues[0].house_no);
           setValue("ward_id", defaultValues[0].ward);
 
-          setValue('gender', defaultValues[0].gender);
+          setValue("gender", defaultValues[0].gender);
           setValue("birth_date", defaultValues[0].date_of_birth);
           setValue("nida_id", defaultValues[0].nida_id);
           setValue("par_first_name", defaultValues[0].par_first_name);
@@ -180,7 +177,7 @@ const InfoUpdate = () => {
   return (
     <form
       onSubmit={handleSubmit(handleSubmitUpdates)}
-      className="flex flex-col gap-4 items-center justify-center "
+      className="flex flex-col gap-4 items-center w-full justify-center "
     >
       <div className="font-bold">Child Information</div>
       <div className="flex gap-6 flex-col w-full lg:flex-row items-center justify-center lg:w-1/2 ">
@@ -282,14 +279,8 @@ const InfoUpdate = () => {
           )}
 
           <div className="w-full sm:w-56 lg:w-64 md:w-56 xs:w-64">
-            <Input
-              label="House No:"
-              type="number"
-              {...register("house_no")}
-              
-            />
+            <Input label="House No:" type="number" {...register("house_no")} />
           </div>
-          
 
           <div className="w-full sm:w-56 lg:w-64 md:w-56 xs:w-64">
             <AutoCompleteSearch
@@ -442,34 +433,33 @@ const InfoUpdate = () => {
 
             */}
 
-              <Input
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
-                onFocus={() => setIsFocused(true)}
-                autoComplete="off"
-                // className="text-black font-monte-1 pl-16 border lg:w-64  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
-                size="lg"
-                placeholder="Contacts"
-               // containerProps={{ className: "4xs:min-w-72 " }}
-                {...register("contact", {
-                  onBlur: () => setIsFocused(false),
-                  required: "This field is required",
-                  maxLength: {
-                    value: 9,
-                    message: "Phone number should be exactly 9 digits",
-                  },
-                  minLength: {
-                    value: 9,
-                    message: "Phone number should be exactly 9 digits",
-                  },
-                  pattern: {
-                    value: /^[67][123456789][0-9]+$/,
-                    message: "Please enter valid number",
-                  },
-                })}
-              />
-
+            <Input
+              labelProps={{
+                className: "before:content-none after:content-none",
+              }}
+              onFocus={() => setIsFocused(true)}
+              autoComplete="off"
+              // className="text-black font-monte-1 pl-16 border lg:w-64  focus:border-2  !border-t-blue-gray-200 focus:!border-t-gray-900"
+              size="lg"
+              placeholder="Contacts"
+              // containerProps={{ className: "4xs:min-w-72 " }}
+              {...register("contact", {
+                onBlur: () => setIsFocused(false),
+                required: "This field is required",
+                maxLength: {
+                  value: 9,
+                  message: "Phone number should be exactly 9 digits",
+                },
+                minLength: {
+                  value: 9,
+                  message: "Phone number should be exactly 9 digits",
+                },
+                pattern: {
+                  value: /^[67][123456789][0-9]+$/,
+                  message: "Please enter valid number",
+                },
+              })}
+            />
           </div>
           {errors.contact && (
             <p className="text-red-900 text-xs font-monte">
@@ -515,7 +505,7 @@ const InfoUpdate = () => {
           </div>
         </div>
       </div>
-      <button type="submit" className="p-2 rounded-md bg-[#212B36] text-white">
+      <button type="submit" className="p-2 rounded-md bg-[#212B36] w-64 text-white">
         Update
       </button>
     </form>

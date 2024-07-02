@@ -193,8 +193,8 @@ const ChildRegistrationForm = ({ register, validate, errors, errTouched }) => {
                                         unmount: {y: 25},
                                     }}
                                 >
-                                    <Option value="male">Male</Option>
-                                    <Option value="female">Female</Option>
+                                    <Option value="Male">Male</Option>
+                                    <Option value="Female">Female</Option>
 
                                 </Select>
                                 {error && (
