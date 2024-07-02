@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
       fontSize: 10,
     },
   });
-  
+
   const ReportPdf = ({reportData,title}) => {
-    
+
     return (
-    
+
     <Document>
       <Page size="A4" style={{ padding: 10 }}>
 
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
               <Text style={styles.tableCell}>Total</Text>
             </View>
           </View>
-        { reportData?.map((item,index)=> 
+        { reportData?.map((item,index)=>
              <View key={index} style={styles.tableRow}>
             <View style={styles.tableCol1}>
               <Text style={styles.tableCell}>{item.No}</Text>
@@ -115,14 +115,11 @@ const styles = StyleSheet.create({
               <Text style={styles.tableCell}>{item.Total}</Text>
             </View>
           </View>)}
-         
-         
-      
         </View>
       </Page>
     </Document>)}
-  
-  
+
+
 
 export default ReportPdf
 

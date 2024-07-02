@@ -11,7 +11,7 @@ import Certificates from "@/components/certificates/Certificate";
 import {CertificateGenerator} from "@/constants/certificate_generator";
 
 
-function ChildCard({ward, date_of_birth, card_no, gender, house_no, certificate_status, handleGenerate}) {
+function ChildCard({ward, firstname, middlename, surname, date_of_birth, card_no, gender, house_no, certificate_status, handleGenerate}) {
     return (<Card className="rounded-lg shadow-lg bg-[#dce1e2] lg:w-1/2 4xs:w-full " shadow={true}>
             <CardBody className="text-left flex flex-col gap-3">
                 <div>
@@ -73,7 +73,9 @@ function ChildCard({ward, date_of_birth, card_no, gender, house_no, certificate_
                     </div>)}
             </CardBody>
             <CardFooter className="flex justify-end">
-                <Certificates card_no={card_no} certificate_status={certificate_status}
+                <Certificates firstname={firstname}
+                              middlename={middlename}
+                              surname={surname} card_no={card_no} certificate_status={certificate_status}
                               handleGenerate={handleGenerate}/>
             </CardFooter>
         </Card>);
