@@ -29,10 +29,11 @@ const DateCalendarComp = ({
   const colors = [
     "bg-green-500",
     "bg-purple-500",
-    "bg-yellow-500",
-    "bg-pink-500",
-    "bg-blue-500",
+    "bg-indigo-500",
+    "bg-orange-500",
+    "bg-blue-300",
     "bg-red-500",
+    "bg-brown-500",
   ];
 
   useEffect(() => {
@@ -68,12 +69,12 @@ const DateCalendarComp = ({
         maxWidth="md"
         fullWidth={true}
       >
-        <DialogTitle id="alert-dialog-title" className="font-bold">
-          {"Vaccine Dates"}
+        <DialogTitle id="alert-dialog-title" className="font-bold self-center">
+          {"Vaccination Dates"}
         </DialogTitle>
         <DialogContent className="scrollbar-hidden">
           <DialogContentText
-            className="flex gap-10"
+            className="flex gap-10 flex-col sm:flex-row justify-center"
             id="alert-dialog-description"
           >
             <DayPicker
@@ -87,19 +88,20 @@ const DateCalendarComp = ({
                 "bg-green-500": "bg-green-500",
                 "bg-yellow-500": "bg-yellow-500",
                 "bg-purple-500": "bg-purple-500",
-                "bg-pink-500": "bg-pink-500",
-                "bg-blue-500": "bg-blue-500",
+                "bg-pink-500": "bg-indigo-500",
+                "bg-blue-300": "bg-blue-300",
                 "bg-red-500": "bg-red-500",
+                "bg-brown-500": "bg-brown-500",
               }}
               classNames={{
-                caption: "flex justify-center py-2 mb-4 relative items-center",
+                caption: "flex justify-center py-2 mb-4 mt-10 relative items-center",
                 caption_label: "text-sm font-medium text-gray-900",
                 nav: "flex items-center",
                 nav_button:
                   "h-6 w-6 bg-transparent hover:bg-blue-gray-50 p-1 rounded-md transition-colors duration-300",
                 nav_button_previous: "absolute left-1.5",
                 nav_button_next: "absolute right-1.5",
-                table: "w-full border-collapse",
+                table: "w-full border-collapse flex flex-col justify-center items-center",
                 head_row: "flex font-medium text-gray-900",
                 head_cell: "m-0.5 w-9 font-normal text-sm",
                 row: "flex w-full mt-2",
@@ -115,7 +117,7 @@ const DateCalendarComp = ({
                 day_hidden: "invisible",
               }}
             />
-            <Card className="mt-6 w-96">
+            <Card className="mt-6 w-full sm:w-96">
               <CardBody>
                 <Typography variant="h5" color="blue-gray" className="mb-2">
                   Key
@@ -124,6 +126,7 @@ const DateCalendarComp = ({
                   {scheduleData &&
                     Object.entries(scheduleData).map(([name, doses], index) => {
                       const color = colors[index % colors.length];
+                      
                       return (
                         <div key={index}>
                           <h2 className="flex gap-3">
@@ -135,7 +138,10 @@ const DateCalendarComp = ({
                                 height: "20px",
                               }}
                             ></span>
-                            <AccordionCustomAnimation name={name} doses={doses} />
+                            <AccordionCustomAnimation
+                              name={name}
+                              doses={doses}
+                            />
                           </h2>
                         </div>
                       );

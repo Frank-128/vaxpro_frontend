@@ -21,7 +21,11 @@ const CUSTOM_ANIMATION = {
 
 export function UpdateSchedAccordion({ vaccines, date_of_birth }) {
   const [open, setOpen] = React.useState(false);
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const pathname = usePathname();
   const router = useRouter();
@@ -80,18 +84,26 @@ export function UpdateSchedAccordion({ vaccines, date_of_birth }) {
                       className="mb-2"
                       key={i}
                       type="date"
-                      {...register(`${vac.id + "_" + i}`, {
+                      {...register(`${vac.id}_${i}`, {
+                        required: "This field is required",
+
                         validate: (value) => {
                           const selectedDate = new Date(value);
                           const today = new Date();
-                          const minDate = new Date(date_of_birth); 
+                          const minDate = new Date(date_of_birth);
                           return (
-                            selectedDate <= today && selectedDate >= minDate
+                            (selectedDate <= today &&
+                              selectedDate >= minDate) ||
+                            "Selected date must be between date of birth and today"
                           );
                         },
                       })}
-                      min={new Date().toISOString().split("T")[0]}
+                      min={new Date(date_of_birth).toISOString().split("T")[0]}
+                      max={new Date().toISOString().split("T")[0]}
                     />
+                    {errors[`${vac.id}_${i}`] && (
+                      <p>{errors[`${vac.id}_${i}`].message}</p>
+                    )}
                   </>
                 ))}
               </AccordionBody>

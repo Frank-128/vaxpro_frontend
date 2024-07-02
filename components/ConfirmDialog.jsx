@@ -9,17 +9,12 @@ import {
 
 export function ConfirmDialog({
   isDialogOpen,
-  setIsDialogOpen,
-  handleUpdate,
-  selectedDate,
-  index,
+  handleClickCloseView
 }) {
-  const handleClose = (value) => {
-    setIsDialogOpen(value);
-  };
+  
   return (
     <>
-      <Dialog open={isDialogOpen}>
+      <Dialog open={isDialogOpen} onClose={handleClickCloseView}>
         <DialogHeader>Its a simple dialog.</DialogHeader>
         <DialogBody>
           The key to more success is to have a lot of pillows. Put it this way,
@@ -28,19 +23,10 @@ export function ConfirmDialog({
           getting started. I&apos;m up to something. Fan luv.
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={() => handleClose(false)}
-            className="mr-1"
-          >
+          <Button variant="text" color="red" className="mr-1">
             <span>Cancel</span>
           </Button>
-          <Button
-            variant="gradient"
-            color="green"
-            onClick={()=> handleUpdate(index, selectedDate)}
-          >
+          <Button variant="gradient" color="green">
             <span>Confirm</span>
           </Button>
         </DialogFooter>
