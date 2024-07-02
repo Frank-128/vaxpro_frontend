@@ -1,12 +1,11 @@
 "use client";
-import { Card, CardBody, Typography } from "@material-tailwind/react";
+import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
 import globalUser from "@/store/user";
 import globalAllUsers from "@/store/all_users";
 import HealthWorker from "@/components/dashboards/HealthWorker";
 import Filter from "@/components/filters/Filter";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { useEffect, useState } from "react";
-import axios from "../../axios";
+import { useRouter } from "next/navigation";
 
 function TeamCard({ name, title, bg, textColor, valueColor }) {
   return (
@@ -32,20 +31,14 @@ export function Dashboard() {
   const setAllChildren = globalAllUsers((state) => state.setAllChildren);
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-  const [districtData, setDistrictData] = useState([]);
-  const [feedbacks, setFeedbacks] = useState([]);
 
   console.log(loggedInUser);
 
-  useEffect(() => {
-    if (loggedInUser?.role?.account_type == 'district') {
-      axios.get(`/district_wards/${loggedInUser?.district_id}`).then((res)=>{
-       if(res.status == 200){
-        console.log(res.data)
-       }
-      })
-    }
-  });
+  const router = useRouter();
+
+  const goToFeedbacks = () => {
+    router.push(`/feedbacks`);
+  };
 
   const members = [
     {
@@ -179,6 +172,16 @@ export function Dashboard() {
                   ) : (
                     <TeamCard key={key} {...props} />
                   )
+                )}
+                {loggedInUser?.role?.account_type === "district" && (
+                  <div className="w-full">
+                    <Button
+                      onClick={goToFeedbacks}
+                      className="self-end w-full bg-blue-900"
+                    >
+                      Feedbacks
+                    </Button>
+                  </div>
                 )}
               </div>
               <div

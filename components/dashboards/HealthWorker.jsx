@@ -28,24 +28,12 @@ const HealthWorker = () => {
   const router = useRouter();
   const bookings = globalBookings((state) => state.bookings);
   const [pendingBookings, setPendingBookings] = useState([]);
-  const [feedbacks, setFeedbacks] = useState([]);
 
   useEffect(() => {
     const filteredBookings = bookings.filter(({ status }) => {
       return status === "confirmed";
     });
     setPendingBookings(filteredBookings);
-
-    console.log(loggedUser)
-
-    axios
-      .get(`/getFacilityFeedback/${loggedUser?.facilities?.facility_reg_no}`)
-      .then((res) => {
-        if (res.status == 200) {
-          setFeedbacks(res.data.feedbacks);
-          console.log(res.data.feedbacks)
-        }
-      });
   }, [bookings]);
 
   console.log(pendingBookings, "this is the bookings list");
@@ -244,12 +232,6 @@ const HealthWorker = () => {
                 {/*</DemoContainer>*/}
               </LocalizationProvider>
             </div>
-          </div>
-          <div className="mt-10">
-            <Typography className="font-bold flex items-center justify-center">
-              Children Feedback from Community Health Worker
-            </Typography>
-            <FeedBackView feedbacks={feedbacks} />
           </div>
         </div>
       )}
