@@ -1,7 +1,15 @@
 "use client";
+import { Button, TextField } from "@mui/material";
+import { Select, Option, Textarea } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
-
-import { Card, Typography, Button } from "@material-tailwind/react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import VaccinationReg from "@/components/VaccinationReg";
 import VaccinationEdit from "@/components/VaccinationEdit";
 import VaccinationDel from "@/components/VaccinationDel";
@@ -15,16 +23,18 @@ const Vaccinaions = () => {
   const [vaccineId, setVaccineId] = useState(0);
 
   const [childVaccines, setVaccineFetch] = useState([]);
-  const setVaccines = globalVaccines((state) => state.setVaccines);
+  const setVaccines = globalVaccines(state=>state.setVaccines)
 
   useEffect(() => {
+
     axios.get(`getVaccines`).then((res) => {
+
       if (res.data.status === 200) {
-        setVaccines(res.data.vaccines);
+        setVaccines(res.data.vaccines)
         setVaccineFetch(res.data.vaccines);
       }
     });
-  }, []);
+  },[]);
 
   const handleClickOpenAddVacc = () => {
     setOpenAddVaccine(true);
@@ -52,7 +62,7 @@ const Vaccinaions = () => {
   };
 
   const notifyDeleteVaccine = (id) => {
-    setVaccineFetch(childVaccines.filter((vaccine) => vaccine.id !== id));
+    setVaccineFetch(childVaccines.filter(vaccine => vaccine.id !== id));
   };
 
   const notifyAddVaccine = (newVaccine) => {
@@ -60,12 +70,10 @@ const Vaccinaions = () => {
   };
 
   const notifyEditVaccine = (editedVaccine) => {
-    setVaccineFetch(
-      childVaccines.map((vaccine) =>
-        vaccine.id === editedVaccine.id ? editedVaccine : vaccine
-      )
-    );
-  };
+    setVaccineFetch(childVaccines.map(vaccine => vaccine.id === editedVaccine.id ? editedVaccine : vaccine ));
+  }
+
+
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -75,210 +83,70 @@ const Vaccinaions = () => {
         </span>
         <Button
           onClick={handleClickOpenAddVacc}
-          className="bg-blue-900 h-12 mt-2 text-white hover:bg-[#787a7c]"
+          className="bg-[#212B36] h-12 mt-2 text-white hover:bg-[#787a7c]"
         >
           Add Vaccine
         </Button>
       </div>
-      <Card className="h-full w-full overflow-scroll m-4">
-        <table className="w-full min-w-max table-auto text-center">
-          <thead className="border-b h-12 bg-blue-gray-50 p-4">
-            <tr>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  S/No
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  Vaccine Name
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  Frequency
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  1st Dose After
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  2nd Dose After
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  3rd Dose After
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  4th Dose After
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  5th Dose After
-                </Typography>
-              </th>
-              <th className="w-1/9 p-2 font-bold">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none opacity-70"
-                >
-                  Action
-                </Typography>
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>S/No</TableCell>
+              <TableCell>Vaccine Name</TableCell>
+              <TableCell>Frequency</TableCell>
+              <TableCell>First Dose After (days)</TableCell>
+              <TableCell>Second Dose After (days)</TableCell>
+              <TableCell>Third Dose After (days)</TableCell>
+              <TableCell>Fourth Dose After (days)</TableCell>
+              <TableCell>Fifth Dose After (days)</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {childVaccines.length > 0 ? (
               childVaccines.map((vaccine, index) => {
                 return (
-                  <tr
-                    key={index}
-                    className={`odd:bg-gray-100 even:bg-gray-200`}
-                  >
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {index + 1}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {vaccine.name}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {vaccine.frequency}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {vaccine.first_dose_after}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {vaccine.second_dose_after}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {vaccine.third_dose_after}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {vaccine.fourth_dose_after}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {vaccine.fifth_dose_after}
-                      </Typography>
-                    </td>
-                    <td className="p-4 w-1/9 flex gap-2">
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{vaccine.name}</TableCell>
+                    <TableCell>{vaccine.frequency}</TableCell>
+                    <TableCell>{vaccine.first_dose_after}</TableCell>
+                    <TableCell>{vaccine.second_dose_after}</TableCell>
+                    <TableCell>{vaccine.third_dose_after}</TableCell>
+                    <TableCell>{vaccine.fourth_dose_after}</TableCell>
+                    <TableCell>{vaccine.fifth_dose_after}</TableCell>
+                    <TableCell className="flex gap-4">
                       <Button
                         onClick={() => handleClickOpenEdit(vaccine.id)}
-                        className="bg-blue-500 w-24"
+                        className="bg-blue-200"
                       >
                         Edit
                       </Button>
                       <Button
                         onClick={() => handleOpenDelete(vaccine.id)}
-                        className="bg-red-400 w-24"
+                        className="bg-red-400 text-white"
                       >
                         Delete
                       </Button>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })
             ) : (
-              <tr className=" mt-10">
-                <td
+              <TableRow className=" mt-10">
+                <TableCell
                   className="font-bold"
                   colSpan={12}
                   style={{ textAlign: "center" }}
                 >
                   No Vaccines Found!
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
-      </Card>
+          </TableBody>
+        </Table>
+      </TableContainer>
       <VaccinationReg
         openAddVaccine={openAddVaccine}
         handleClickCloseAddVacc={handleClickCloseAddVacc}

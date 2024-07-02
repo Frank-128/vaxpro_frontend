@@ -58,7 +58,7 @@ const ParentGuardianForm = ({register, setValue, errors, control, errTouched, lo
             shadow={false}
         >
             <Typography className="self-start font-monte-1 text-black capitalize lg:text-2xl">
-                parent/Guardian details 
+                parent/Guardian details
             </Typography>
 
             <div className="flex flex-col md:gap-6 gap-4 w-full pt-6">
