@@ -16,7 +16,7 @@ import { useEcho } from "@/constants/echo";
 import { Howl } from "howler";
 
 function Main({ children }) {
-  const [openSidebar, setOpenSidebar] = useState( innerWidth>768);
+  const [openSidebar, setOpenSidebar] = useState(false);
     
   const { initialRequest, getInitialUsers, getBookings, getRoles } =
     useInitial();
@@ -69,13 +69,9 @@ function Main({ children }) {
     getRoles();
   }, [getBookings, getInitialUsers, getRoles]);
 
-  // useEffect(() => {
-  //     if(echo){
-  //         echo.channel(`testChannel`).listen('testingEvent',event=>{
-  //           console.log('Real time event received',event)
-  //         })
-  //       }
-  // }, [echo]);
+  useEffect(() => {
+     setOpenSidebar(innerWidth>768)
+  }, []);
 
   useEffect(() => {
     if (isIdle) {

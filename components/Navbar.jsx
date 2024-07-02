@@ -62,7 +62,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
   };
 
   const handleSelectedChild = (selectedChild) => {
-    router.push(`/childdetails?cardNo=${selectedChild?.value}`);
+    router.push(`/children/childdetails/${selectedChild?.value}`);
     setSearchChild(null);
   };
 

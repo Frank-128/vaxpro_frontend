@@ -167,7 +167,7 @@ const InfoUpdate = () => {
             type: "success",
           });
 
-          router.push(`/childdetails?cardNo=${res.data.child_card_number}`);
+          router.push(`/children/childdetails/${res.data.child_card_number}`);
         } else {
           setAlert({ message: res.data.error, visible: true, type: "error" });
         }

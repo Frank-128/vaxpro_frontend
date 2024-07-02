@@ -53,7 +53,7 @@ function NewChild({ params }) {
   }, []);
 
   const goToDashboard = () =>{
-    router.push(`/childdetails?cardNo=${params.new_child}`);
+    router.push(`/children/childdetails/${params.new_child}`);
   }
 
 

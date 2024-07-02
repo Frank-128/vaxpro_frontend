@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import axios from "../../../../axios";
 import { Button, Select, Option, Input } from "@material-tailwind/react";
 import { useForm, Controller } from "react-hook-form";
@@ -10,8 +9,8 @@ import { BlockRounded, CheckCircleOutlineRounded } from "@mui/icons-material";
 import { useInitial } from "@/constants/functions";
 import Loading from "../../loading";
 
-const BookingDetails = () => {
-  const searchParams = useSearchParams();
+const BookingDetails = ({params}) => {
+  
   const {getBookings} = useInitial();
   const [bookingDetails, setBookingDetails] = useState();
   const [loading, setLoading] = useState(false);
@@ -26,7 +25,7 @@ const BookingDetails = () => {
   } = useForm();
 
   const [reason, setReason] = useState(false);
-  const id = searchParams.get("id");
+  const id = params.booking_details;
 
   const reasonForCancellation = [
     "We are full booked",

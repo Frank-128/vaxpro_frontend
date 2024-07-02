@@ -1,7 +1,7 @@
 "use client";
 import {Button, Card, CardBody, CardFooter, Typography} from "@material-tailwind/react";
 
-import axios from "../../../axios";
+import axios from "../../../../../axios";
 import Link from "next/link";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
@@ -168,10 +168,10 @@ function TeamCard({
         </div>);
 }
 
-export default function TeamSection12() {
+export default function TeamSection12({params}) {
     const [childData, setChildData] = useState([]);
     const searchParams = useSearchParams();
-    const card_no = searchParams.get("cardNo");
+    const card_no = params.card_no;
     const [openUpdateInfo, setOpenUpdateInfo] = useState(false);
     const [open_date_viewer, setOpenDateViewer] = useState(false);
     const [vacShdls, setVacScheds] = useState([]);
