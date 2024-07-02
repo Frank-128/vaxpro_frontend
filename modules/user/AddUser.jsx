@@ -50,7 +50,7 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
     setExistingUser({ error: false, message: "" });
   };
 
-  const innerWidth = window.innerWidth;
+  const innerWidth = typeof window !== "undefined" && window.innerWidth ;
 
   const registerUser = (data) => {
     setLoading(true);
