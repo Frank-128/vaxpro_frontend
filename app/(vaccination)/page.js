@@ -94,6 +94,8 @@ export function Dashboard() {
     };
 
 
+    
+
     return (<section className="min-h-screen py-2 md:px-4 ">
             {loggedInUser && <>
                 {(loggedInUser.role?.account_type === "health_worker" || loggedInUser.role?.account_type === "branch_manager") ? (
@@ -133,7 +135,7 @@ export function Dashboard() {
                                         // onMouseLeave={handleMouseLeave}
                                     />
                                     <Pie
-                                        data={children?.chart_data}
+                                        data={children?.chart_data.filter((item)=>item.value !== 0)}
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
