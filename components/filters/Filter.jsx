@@ -137,7 +137,7 @@ const Filter = ({setAllChildren}) => {
                                             {district_name}
                                         </option>))) : (<option disabled>Select region first</option>)}
                             </>) : option_type === "gender" ? (<>
-                                <option option={"all"}>Gender</option>
+                                <option value={"all"}>Gender</option>
                                 {options?.map((i, index) => (<option value={i} key={index} className={""}>
                                         {i}
                                     </option>))}

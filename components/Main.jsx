@@ -15,8 +15,13 @@ import globalUser from "@/store/user";
 import { useEcho } from "@/constants/echo";
 import { Howl } from "howler";
 
+
+
 function Main({ children }) {
-  const [openSidebar, setOpenSidebar] = useState(false);
+
+
+
+  const [openSidebar, setOpenSidebar] = useState(typeof innerWidth !=="undefined" && innerWidth>768);
     
   const { initialRequest, getInitialUsers, getBookings, getRoles } =
     useInitial();
