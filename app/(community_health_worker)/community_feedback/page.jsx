@@ -22,13 +22,13 @@ const CommunityFeedback = () => {
   const [facilityData, setFacility] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [facility, setShowFacility] = useState(null);
+  const [res, setRes] = useState({ show: false, message: "" });
 
   const router = useRouter();
 
   const setAlert = globalAlert((state) => state.setAlert);
 
-  const { control, handleSubmit, register } = useForm();
-
+  const { control, handleSubmit, register, reset } = useForm();
 
   const handleOtherReasons = () => {
     setOpenReasonsForm(true);
@@ -65,11 +65,11 @@ const CommunityFeedback = () => {
     console.log(data);
     axios.post(`/submitFeedback`, { feedback: data }).then((res) => {
       if (res.data.status === 200) {
-        setAlert({
-          message: res.data.response,
-          visible: true,
-          type: "success",
-        });
+        setRes({ ...res, show: true, message: "Feedback sent successfully" });
+        reset();
+        setTimeout(() => {
+          setRes({ ...res, show: false, message: "" });
+        }, [4000]);
       }
     });
   };
@@ -282,6 +282,11 @@ const CommunityFeedback = () => {
           </Button>
         </form>
       </div>
+      {res.show && (
+        <div className="bg-green-300 w-2/6 h-20 rounded absolute top-10 flex justify-center items-center text-xs">
+          {res.message}
+        </div>
+      )}
     </div>
   );
 };

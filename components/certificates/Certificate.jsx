@@ -114,7 +114,7 @@ function Certificates({
     <main className="flex flex-col gap-4 ">
       {certificateStatus === false ? (
         <Button
-          disabled={activeCertificateBtn == false}
+          // disabled={activeCertificateBtn == false}
           ripple={false}
           loading={loading}
           className="bg-[#212b36] rounded-[0.25rem] shadow-none flex justify-center items-center w-full"
