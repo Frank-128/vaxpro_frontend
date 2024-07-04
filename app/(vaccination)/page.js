@@ -147,6 +147,7 @@ export function Dashboard() {
     );
   };
 
+
   return (
     <section className="min-h-screen py-2 md:px-4 ">
       {loggedInUser && (
@@ -182,6 +183,7 @@ export function Dashboard() {
                   )
                 )}
               </div>
+
 
               <div
                 className={
