@@ -22,7 +22,7 @@ export const CertificateGenerator = () => {
                     </View>
                     <View style={styles.contentSection}>
                         <View style={styles.imageContainer}>
-                            <Image style={styles.image} src={'images/file.png'}/>
+                            <Image style={styles.image}  alt="images" src={'/images/file.png'}/>
                         </View>
                         <View style={styles.titleContainer}>
                             <Text style={[styles.title, {fontFamily: "Helvetica"}]}>VACCINATION CERTIFICATE</Text>
