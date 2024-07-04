@@ -24,6 +24,10 @@ function ChildCard({
   house_no,
   certificate_status,
   handleGenerate,
+  firstname,
+  middlename,
+  surname,
+
 }) {
   const [activeCertificateBtn, setCertificateBtnStatus] = useState(false);
 
@@ -122,6 +126,9 @@ function ChildCard({
         <Certificates
           activeCertificateBtn={activeCertificateBtn}
           card_no={card_no}
+          firstname={firstname}
+          middlename={middlename}
+          surname={surname}
           certificate_status={certificate_status}
           handleGenerate={handleGenerate}
         />
