@@ -10,6 +10,7 @@ import {
 import globalUser from "@/store/user";
 
 export const CertificateGenerator = () => {
+
   const loggedInUser = globalUser((state) => state.loggedInUser);
   const generateCertificate = async (
     card_no,
@@ -129,6 +130,7 @@ export const CertificateGenerator = () => {
   };
 
   return { generateCertificate };
+
 };
 
 const styles = StyleSheet.create({
