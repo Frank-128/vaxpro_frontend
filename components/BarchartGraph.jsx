@@ -14,46 +14,46 @@ import {
 const BarchartGraph = () => {
   const data = [
     {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
+      name: "PCV",
+      male: 400,
+      female: 240,
+      amt: 240,
     },
     {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
+      name: "OPV",
+      male: 300,
+      female: 139,
+      amt: 221,
     },
     {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
+      name: "Pentavalent",
+      male: 200,
+      female: 580,
+      amt: 220,
     },
     {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
+      name: "Rota",
+      male: 270,
+      female: 398,
+      amt: 200,
     },
     {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
+      name: "MR",
+      male: 189,
+      female: 480,
+      amt: 211,
     },
     {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
+      name: "BCG",
+      male: 230,
+      female: 380,
+      amt: 250,
     },
     {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      name: "HPV",
+      male: 0,
+      female: 430,
+      amt: 210,
     },
   ];
 
@@ -78,12 +78,12 @@ const BarchartGraph = () => {
           <Tooltip />
           <Legend />
           <Bar
-            dataKey="pv"
+            dataKey="female"
             fill="#8884d8"
             activeBar={<Rectangle fill="pink" stroke="blue" />}
           />
           <Bar
-            dataKey="uv"
+            dataKey="male"
             fill="#82ca9d"
             activeBar={<Rectangle fill="gold" stroke="purple" />}
           />

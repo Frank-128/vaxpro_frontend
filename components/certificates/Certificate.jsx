@@ -115,6 +115,7 @@ function Certificates({
       {certificateStatus === false ? (
         <Button
         //   disabled={activeCertificateBtn == false}
+
           ripple={false}
           loading={loading}
           className="bg-[#212b36] rounded-[0.25rem] shadow-none flex justify-center items-center w-full"

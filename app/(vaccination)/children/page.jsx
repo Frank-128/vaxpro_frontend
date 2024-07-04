@@ -36,13 +36,13 @@ const Children = () => {
         }
 
         const today = new Date().toISOString().split('T')[0];
-        const { contacts } = data;
+        const { contact } = data;
 
         setLoading(true);
 
         axios.post(`/parentChildData`, {
             ...data,
-            contacts: '+255' + contacts,
+            contact: '+255' + contact,
             facility_id: loggedInUser?.facility_id,
             modified_by: loggedInUser?.id
         }).then((res) => {

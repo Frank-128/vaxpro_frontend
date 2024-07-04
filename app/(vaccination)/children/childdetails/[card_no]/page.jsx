@@ -23,6 +23,9 @@ function ChildCard({
   gender,
   house_no,
   certificate_status,
+  firstname,
+  middlename,
+  surname,
   handleGenerate,
   firstname,
   middlename,
@@ -125,6 +128,9 @@ function ChildCard({
       <CardFooter className="flex lg:justify-start justify-center items-center ">
         <Certificates
           activeCertificateBtn={activeCertificateBtn}
+          firstname={firstname}
+          middlename={middlename}
+          surname={surname}
           card_no={card_no}
           firstname={firstname}
           middlename={middlename}
