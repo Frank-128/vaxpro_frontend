@@ -8,29 +8,39 @@ import {
   DialogTitle,
 } from "@mui/material";
 import axios from "../axios";
+import globalAlert from "@/store/alert";
 
 const VaccinationDel = ({
   openDeleteVaccine,
   handleCloseDelete,
   vaccineId,
   notifyDeleteVaccine,
-
 }) => {
-
-
+  const setAlert = globalAlert((state) => state.setAlert);
 
   const handleDeleteVaccine = (e, id) => {
     e.preventDefault();
 
-
     axios.delete(`deleteVaccine/` + id).then((res) => {
-
       if (res.data.status === 200) {
+        setAlert({
+          message: "Vaccine deleted successfully!",
+          visible: true,
+          type: "success",
+        });
         console.log(res.data.message);
         handleCloseDelete();
 
         notifyDeleteVaccine(id);
+      } else {
+        setAlert({
+          message: "Error occured when deleting!",
+          visible: true,
+          type: "error",
+        });
       }
+    }).catch((error)=>{
+      console.log(error)
     });
   };
 

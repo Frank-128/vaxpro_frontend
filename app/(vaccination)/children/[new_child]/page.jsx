@@ -7,7 +7,6 @@ import { LongDialog } from "@/components/ScheduleUpdates";
 import NewChildUpdates from "@/components/NewChildUpdates";
 import { useRouter } from "next/navigation";
 
-
 function NewChild({ params }) {
   const [vaccinations, setVaccinations] = useState([]);
   const [childData, setChildData] = useState(null);
@@ -52,10 +51,9 @@ function NewChild({ params }) {
       });
   }, []);
 
-  const goToDashboard = () =>{
+  const goToDashboard = () => {
     router.push(`/children/childdetails/${params.new_child}`);
-  }
-
+  };
 
   const handleCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -77,55 +75,70 @@ function NewChild({ params }) {
         }
       });
     });
-    setVaccines(matchedVaccines); 
+    setVaccines(matchedVaccines);
     setOpenVacUpdate(true);
-    console.log(vaccines)
+    console.log(vaccines);
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <span>Which of these vaccines has the child received:</span>
-        {vaccinations
-          .filter((item) => {
-            return (
-              (item.fifth_dose_after !== null &&
-                item.fifth_dose_after <= daysDifference) ||
-              (item.fourth_dose_after !== null &&
-                item.fourth_dose_after <= daysDifference) ||
-              (item.third_dose_after !== null &&
-                item.third_dose_after <= daysDifference) ||
-              (item.second_dose_after !== null &&
-                item.second_dose_after <= daysDifference) ||
-              (item.first_dose_after !== null &&
-                item.first_dose_after <= daysDifference)
-            );
-          })
-          .map((vaccine, index) => {
-            return (
-              <div key={index} className="flex flex-col">
-                <Checkbox
-                  label={vaccine.name}
-                  value={vaccine.id}
-                  onChange={handleCheckboxChange}
-                />
-              </div>
-            );
-          })}
-        <Button
-          type="submit"
-          className="w-56 self-center bg-[#212B36] mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
-        >
-          Submit
-        </Button>
-        <Button
-          onClick={goToDashboard}
-          className="w-56 self-center bg-[#212B36] mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
-        >
-          Go to Dashboard
-        </Button>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col justify-center items-center mt-16"
+      >
+        <span className="flex text-sm lg:text-lg">
+          Which of these vaccines has the child received:
+        </span>
+        <div className="flex flex-col w-80">
+          {vaccinations
+            .filter((item) => {
+              return (
+                (item.fifth_dose_after !== null &&
+                  item.fifth_dose_after <= daysDifference) ||
+                (item.fourth_dose_after !== null &&
+                  item.fourth_dose_after <= daysDifference) ||
+                (item.third_dose_after !== null &&
+                  item.third_dose_after <= daysDifference) ||
+                (item.second_dose_after !== null &&
+                  item.second_dose_after <= daysDifference) ||
+                (item.first_dose_after !== null &&
+                  item.first_dose_after <= daysDifference)
+              );
+            })
+            .map((vaccine, index) => {
+              return (
+                <div key={index} className="flex text-sm lg:text-lg">
+                  <Checkbox
+                    label={vaccine.name}
+                    value={vaccine.id}
+                    onChange={handleCheckboxChange}
+                  />
+                </div>
+              );
+            })}
+        </div>
+        <div className="flex flex-col text-sm lg:text-lg">
+          <Button
+            disabled={selectedVaccines.length <= 0}
+            type="submit"
+            className="w-56 self-center bg-[#212B36] mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
+          >
+            Submit
+          </Button>
+          <Button
+            onClick={goToDashboard}
+            className="w-56 self-center bg-[#212B36] mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
+          >
+            Go to Dashboard
+          </Button>
+        </div>
       </form>
-      <NewChildUpdates  handleCloseVaccUpdate={handleCloseVaccUpdate} openVacUpdate={openVacUpdate} vaccines={vaccines} date_of_birth={childData?.date_of_birth}   />
+      <NewChildUpdates
+        handleCloseVaccUpdate={handleCloseVaccUpdate}
+        openVacUpdate={openVacUpdate}
+        vaccines={vaccines}
+        date_of_birth={childData?.date_of_birth}
+      />
     </div>
   );
 }

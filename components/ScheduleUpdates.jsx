@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -21,22 +21,27 @@ export function LongDialog({
   const [schedItems, setVacItems] = useState([]);
 
   const fetchVaccineIds = () => {
-    axios.get(`/fetchVaccineIds`).then((res) => {
-      axios
-        .post(`/getAllChildSchedules`, {
-          vaccines: res.data.vaccineIds,
-          date: birthDate,
-          child_id: childId,
-        })
-        .then((res) => {
-          if (res.data) {
-            setScheds(res.data.vaccineSchedule);
-            console.log(res.data.vaccineSchedule);
-            setVacItems(res.data.vacItems);
-            console.log(res.data.vacItems);
-          }
-        });
-    });
+    axios
+      .get(`/fetchVaccineIds/${childId}`)
+      .then((res) => {
+        axios
+          .post(`/getAllChildSchedules`, {
+            vaccines: res.data.vaccineIds,
+            date: birthDate,
+            child_id: childId,
+          })
+          .then((res) => {
+            if (res.data) {
+              setScheds(res.data.vaccineSchedule);
+              console.log(res.data.vaccineSchedule);
+              setVacItems(res.data.vacItems);
+              console.log(res.data.vacItems);
+            }
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleOpen = () => {
@@ -79,11 +84,12 @@ export function LongDialog({
           </Typography>
         </DialogBody>
         <DialogFooter className="space-x-2">
-          <Button variant="text" color="blue-gray" onClick={handleOpen}>
-            cancel
-          </Button>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
-            confirm
+          <Button
+            variant="text"
+            className="bg-gray-700 text-white"
+            onClick={handleOpen}
+          >
+            close
           </Button>
         </DialogFooter>
       </Dialog>
