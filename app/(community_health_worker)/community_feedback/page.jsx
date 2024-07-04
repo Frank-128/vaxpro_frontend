@@ -13,6 +13,8 @@ import axios from "../../../axios";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import globalAlert from "@/store/alert";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const CommunityFeedback = () => {
   const [openReasonsForm, setOpenReasonsForm] = useState(false);
@@ -21,9 +23,12 @@ const CommunityFeedback = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [facility, setShowFacility] = useState(null);
 
+  const router = useRouter();
+
   const setAlert = globalAlert((state) => state.setAlert);
 
   const { control, handleSubmit, register } = useForm();
+
 
   const handleOtherReasons = () => {
     setOpenReasonsForm(true);
@@ -58,16 +63,22 @@ const CommunityFeedback = () => {
 
   const handleSubmitInfo = (data) => {
     console.log(data);
-    // axios.post(`/submitFeedback`, { feedback: data }).then((res) => {
-    //   if (res.data.status === 200) {
-    //     console.log("goods");
-    //     setAlert({
-    //       message: res.data.response,
-    //       visible: true,
-    //       type: "success",
-    //     });
-    //   }
-    // });
+    axios.post(`/submitFeedback`, { feedback: data }).then((res) => {
+      if (res.data.status === 200) {
+        setAlert({
+          message: res.data.response,
+          visible: true,
+          type: "success",
+        });
+      }
+    });
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("USER_TOKEN_CHW");
+    setTimeout(() => {
+      router.push("/chw_login");
+    }, 2000);
   };
 
   const resetFacility = () => {
@@ -75,7 +86,13 @@ const CommunityFeedback = () => {
   };
 
   return (
-    <div className="relative w-full h-screen flex flex-col justify-center items-center">
+    <div className="relative w-full h-screen flex flex-col items-center">
+      <Button
+        onClick={handleLogout}
+        className="flex bg-blue-900 self-end  w-fit m-2 rounded-md p-2"
+      >
+        sign out
+      </Button>
       <div
         style={{
           backgroundImage: 'url("/images/unicef.jpeg")',
@@ -91,7 +108,7 @@ const CommunityFeedback = () => {
           zIndex: -1, // Ensures the background is behind the content
         }}
       />
-      <div className="relative z-10 flex flex-col justify-center items-center">
+      <div className="relative z-10 flex mt-20 flex-col justify-center items-center">
         <Typography
           style={{ fontWeight: "bold", fontSize: "24px" }}
           className="mt-10"

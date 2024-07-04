@@ -29,7 +29,7 @@ export const navlinks = [
     name: "User management",
     icon: <Person />,
     suffixIcon: <KeyboardArrowDown />,
-    role: ["IT admin"],
+    role: ["IT admin","IT Branch admin"],
     account_type: ["ministry", "regional","district","branch_manager"],
 
 
@@ -82,7 +82,7 @@ export const navlinks = [
     name: "Vaccination",
     link: "/vaccination",
     icon: <Medication />,
-    role: ["IT admin","Nurse"],
+    role: ["IT admin","Nurse","IT Branch admin"],
     account_type: ["ministry", "branch_manager", "health_worker"],
   }
 ,
@@ -106,7 +106,7 @@ export const navlinks = [
     name: "Bookings",
     link: "/booking",
     icon: <Book />,
-    role: ["Nurse"],
+    role: ["Nurse", "IT Branch admin"],
     account_type: ["branch_manager","health_worker"],
   },
 
@@ -124,6 +124,14 @@ export const navlinks = [
     icon: <Person />,
     role: ["default"],
     account_type: ["default"],
+  },
+
+  {
+    name: "Feedback",
+    link: "/feedbacks",
+    icon: <Person />,
+    role: ["IT admin"],
+    account_type: ["district"],
   },
 ];
 
