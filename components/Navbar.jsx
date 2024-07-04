@@ -131,7 +131,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
       </div>
 
       {loggedInUser ? (
-        <div className="hidden xl:flex gap-6 justify-center items-center capitalize">
+        <div className="hidden lg:flex gap-6 justify-center items-center capitalize">
           <div className="flex gap-2">
             <p>Level:</p>
             <h1 className=" md:block hidden font-monte-1">
