@@ -244,15 +244,15 @@ const Roles = () => {
                                         </Typography>
                                     </td>
 
-                                    <td className={`${classes} flex justify-around bg-blue-gray-50/50`}>
-                                        <Tooltip content="Edit Role">
+                                    <td className={`${classes} flex h-full justify-around bg-blue-gray-50/50`}>
+                                        {/* <Tooltip content="Edit Role">
                                             <IconButton
                                                 variant="text"
                                                 onClick={() => handleEditClick(id,role, account_type)}
                                             >
                                                 <Edit/>
                                             </IconButton>
-                                        </Tooltip>
+                                        </Tooltip> */}
 
                                         {(loggedInUser.role.account_type !== account_type) || (loggedInUser.role.role !== role) ? (
                                             <Tooltip content="Delete Role">

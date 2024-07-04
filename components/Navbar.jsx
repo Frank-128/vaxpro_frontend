@@ -111,8 +111,6 @@ function Navbar({ openSidebar, setOpenSidebar }) {
     setLogoutDialog(false);
   };
 
-
-
   return (
     <nav
       className={`bg-white sticky left-0 top-0 p-2 h-20 z-10 flex-col md:flex-row flex justify-center items-start  lg:items-center w-screen lg:justify-between border-b-[0.5px] border-[#494747] transition-all duration-300 ${
@@ -137,9 +135,8 @@ function Navbar({ openSidebar, setOpenSidebar }) {
           <div className="flex gap-2">
             <p>Level:</p>
             <h1 className=" md:block hidden font-monte-1">
-              {loggedInUser.role?.account_type === "health_worker"
-                ? "health worker"
-                : loggedInUser.role?.account_type}
+              {
+                 loggedInUser.role?.account_type.split('_').slice().join(' ')}
             </h1>
           </div>
           {loggedInUser.region_id &&

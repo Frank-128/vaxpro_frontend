@@ -82,6 +82,7 @@ function UserManagement() {
   const TABLE_HEAD = React.useMemo(
     () => [
       {name:'N/C',accounts: ['default']},
+      {name:"Name", accounts:['branch_manager']},
       { name: "Role", accounts: ["default"] },
       { name: "Region", accounts: ["ministry"] },
       { name: "District", accounts: ["regional"] },
@@ -167,9 +168,9 @@ function UserManagement() {
   return (
     <main>
       <div>
-        <Card className="h-ful w-full font-monte p-6 border-t">
+        <Card className="h-screen w-full  font-monte md:p-6 border-t">
           <CardHeader floated={false} shadow={false} className="rounded-none">
-            <div className="mb-8 flex items-center justify-between gap-8">
+            <div className="mb-8 flex md:flex-row flex-col items-cente justify-between gap-8">
               <div>
                 <Typography
                   variant="h5"
@@ -178,7 +179,7 @@ function UserManagement() {
                 >
                   Accounts list
                 </Typography>
-                <Typography color="gray" className="mt-1 font-monte">
+                <Typography color="gray" className="mt-1 text-xs md:text-base font-monte">
                   Table for
                   <span className="font-monte-1 capitalize">
                     {subPathname === "regional" ? (
@@ -199,10 +200,8 @@ function UserManagement() {
                   </span>
                 </Typography>
               </div>
-              <div className="flex shrink-0 flex-col gap-2 sm:flex-row ">
-                {/*<Button variant="outlined" size="sm" className="font-monte-1">*/}
-                {/*  view all*/}
-                {/*</Button>*/}
+              <div className="flex self-end shrink-0 flex-col gap-2 sm:flex-row ">
+               
                 <Button
                   className="flex bg-blue-900 items-center gap-3 font-monte-1 "
                   size="sm"
@@ -223,7 +222,7 @@ function UserManagement() {
               </div>
             </div>
           </CardHeader>
-          <CardBody className="overflow-scroll px-0 ">
+          <CardBody className="overflow-scroll px-0 py-0">
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
@@ -266,9 +265,9 @@ function UserManagement() {
                     return true;
                   }
                 }).map(
-                  ({ id, role, contacts, ward, region, district },index) => {
+                  ({ id, role, contacts, ward, region, district, health_workers }, index) => {
                     return (
-                      <Fragment key={id}>
+                      <Fragment key={id} >
                         <tr className="border-b capitalize px-8 border-black">
                           <td className={""}>
                             <Typography
@@ -279,6 +278,17 @@ function UserManagement() {
                               {index+1}
                             </Typography>
                           </td>
+                          {loggedInUser.role.account_type === "branch_manager"  &&
+                             <td className={""}>
+                             <Typography
+                                 variant="small"
+                                 color="blue-gray"
+                                 className="font-monte"
+                             >
+                               {health_workers[0]?.first_name+"  "+ health_workers[0]?.last_name}
+                             </Typography>
+                           </td>
+                          }
                           <td className={""}>
                             <Typography
                                 variant="small"
