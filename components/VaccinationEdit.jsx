@@ -11,55 +11,70 @@ import {
 } from "@mui/material";
 import axios from "../axios";
 
-const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVaccine }) => {
+import globalAlert from "@/store/alert";
+
+const VaccinationEdit = ({
+  openEdit,
+  handleCloseEdit,
+  vaccineId,
+  notifyEditVaccine,
+}) => {
+  const setAlert = globalAlert((state) => state.setAlert);
 
   const [vaccineInputs, setVaccineInputs] = useState({
-    "name": '',
-    "frequency":'',
-    "vaccine_against":'',
-    "first_dose_after":'',
-    "second_dose_after":'',
-    "third_dose_after":'',
-    "fourth_dose_after":'',
-    "fifth_dose_after":'',
-    "administered_via":'',
-    "side_effects":''
+    name: "",
+    frequency: "",
+    abbrev: "",
+    first_dose_after: "",
+    second_dose_after: "",
+    third_dose_after: "",
+    fourth_dose_after: "",
+    fifth_dose_after: "",
   });
 
-
-
-  const handleChange = (e) =>{
-    const {name, value} = e.target;
-    setVaccineInputs((prevState) =>({
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setVaccineInputs((prevState) => ({
       ...prevState,
-      [name]:value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
-  useEffect(()=>{
-
-    axios.get(`getVaccine/` + vaccineId).then((res)=>{
-
-      if(res.data.status === 200){
+  useEffect(() => {
+    axios.get(`getVaccine/` + vaccineId).then((res) => {
+      if (res.data.status === 200) {
         console.log(res.data.vaccine);
         setVaccineInputs(res.data.vaccine);
       }
     });
-  },[vaccineId]);
+  }, [vaccineId]);
 
-  const updateVaccine = (e) =>{
+  const updateVaccine = (e) => {
     e.preventDefault();
 
-    axios.put(`updateVaccine/` + vaccineId, vaccineInputs).then((res)=>{
-
-      if(res.data.status === 200){
-        handleCloseEdit()
-        notifyEditVaccine(res.data.vaccine)
-        
-        
-      }
-    })
-  }
+    axios
+      .put(`updateVaccine/` + vaccineId, vaccineInputs)
+      .then((res) => {
+        if (res.data.status === 200) {
+          setAlert({
+            message: "Vaccine updated successfully!",
+            visible: true,
+            type: "success",
+          });
+          handleCloseEdit();
+          notifyEditVaccine(res.data.vaccine);
+        } else {
+          setAlert({
+            message: "An error occured!",
+            visible: true,
+            type: "error",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Dialog
@@ -74,13 +89,13 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
       </DialogTitle>
       <DialogContent className="scrollbar-hidden">
         <DialogContentText id="alert-dialog-description">
-          <form onSubmit={updateVaccine} >
+          <form onSubmit={updateVaccine}>
             <TextField
               label="Vaccine Name"
               variant="outlined"
               required
               onChange={handleChange}
-              value={vaccineInputs.name || ''}
+              value={vaccineInputs.name || ""}
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96 "
               fullWidth
               type="text"
@@ -93,22 +108,22 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
               fullWidth
               required
               onChange={handleChange}
-              value={vaccineInputs.frequency || ''}
+              value={vaccineInputs.frequency || ""}
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56  2xs:w-80 xs:w-96"
               name="frequency"
               type="number"
               margin="normal"
             />
             <TextField
-              label="Vaccine Against"
+              label="Abbreviation"
               variant="outlined"
               required
               onChange={handleChange}
-              value={vaccineInputs.vaccine_against || ''}
+              value={vaccineInputs.abbrev || ""}
               type="text"
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96"
               fullWidth
-              name="vaccine_against"
+              name="abbrev"
               margin="normal"
             />
 
@@ -118,7 +133,7 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
               required
               placeholder="In days"
               onChange={handleChange}
-              value={vaccineInputs.first_dose_after || ''}
+              value={vaccineInputs.first_dose_after || ""}
               type="number"
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96"
               fullWidth
@@ -131,7 +146,7 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
               variant="outlined"
               placeholder="In days"
               onChange={handleChange}
-              value={vaccineInputs.second_dose_after || ''}
+              value={vaccineInputs.second_dose_after || ""}
               type="number"
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96"
               fullWidth
@@ -142,10 +157,9 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
             <TextField
               label="Third Dose After"
               variant="outlined"
-           
               placeholder="In days"
               onChange={handleChange}
-              value={vaccineInputs.third_dose_after || ''}
+              value={vaccineInputs.third_dose_after || ""}
               type="number"
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96"
               fullWidth
@@ -155,9 +169,8 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
             <TextField
               label="Fourth Dose After"
               variant="outlined"
-          
               onChange={handleChange}
-              value={vaccineInputs.fourth_dose_after || ''}
+              value={vaccineInputs.fourth_dose_after || ""}
               placeholder="In days"
               type="number"
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96"
@@ -168,9 +181,8 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
             <TextField
               label="Fifth Dose After"
               variant="outlined"
-       
               onChange={handleChange}
-              value={vaccineInputs.fifth_dose_after || ''}
+              value={vaccineInputs.fifth_dose_after || ""}
               placeholder="In days"
               type="number"
               className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96"
@@ -178,29 +190,11 @@ const VaccinationEdit = ({ openEdit, handleCloseEdit, vaccineId, notifyEditVacci
               name="fifth_dose_after"
               margin="normal"
             />
-            <div>
-              <select
-                className="flex 4xs:w-40 self-center pl-3 xs:text-sm rounded-md h-16 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96 mb-8 mt-4"
-                required
-                name="administered_via"
-                onChange={handleChange}
-                value={vaccineInputs.administered_via || ''}
-                label="Administered Via:"
-              >
-                <option value="">Select</option>
-                <option value="Injection">Injection</option>
-                <option value="Orally">Orally</option>
-              </select>
-            </div>
-
-            <div className="flex 4xs:w-40 self-center 4xs:text-xs 3xs:w-56 2xs:w-80 xs:w-96 mt-4">
-              <Textarea onChange={handleChange} value={vaccineInputs.side_effects || ''}  name="side_effects" required label="Side Effects" />
-            </div>
 
             <Button
               variant="contained"
               type="submit"
-              className="w-56 self-center bg-[#212B36] mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
+              className="w-full self-center bg-blue-900 mt-5 4xs:w-40 3xs:w-56 2xs:w-80 xs:w-96 "
             >
               Submit
             </Button>

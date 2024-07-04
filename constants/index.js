@@ -125,5 +125,13 @@ export const navlinks = [
     role: ["default"],
     account_type: ["default"],
   },
+
+  {
+    name: "Feedback",
+    link: "/feedbacks",
+    icon: <Person />,
+    role: ["IT admin"],
+    account_type: ["district"],
+  },
 ];
 

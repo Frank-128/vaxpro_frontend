@@ -36,7 +36,7 @@ const Feedbacks = () => {
   return (
     <div>
       <div className="mt-10">
-        <Typography className="font-bold flex items-center justify-center">
+        <Typography className="font-monte-1 flex items-center justify-center">
           Children Feedback from Community Health Worker
         </Typography>
         <FeedBackView feedbacks={feedbacks} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Button,
@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 
 const FeedBackView = ({ feedbacks }) => {
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <div className="flex items-center justify-center mt-10">
@@ -36,6 +37,11 @@ const FeedBackView = ({ feedbacks }) => {
                 <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                   <p className="block font-sans text-sm antialiased font-bold leading-none text-blue-gray-900 opacity-70">
                     Facility Name
+                  </p>
+                </th>
+                <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                  <p className="block font-sans text-sm antialiased font-bold leading-none text-blue-gray-900 opacity-70">
+                    Ward
                   </p>
                 </th>
                 <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -70,6 +76,11 @@ const FeedBackView = ({ feedbacks }) => {
                     </p>
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                      {feedback.facility.ward.ward_name}
+                    </p>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
                     <button
                       onClick={() => setIsDialogOpen(true)}
                       className="items-center gap-3 font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 flex"
@@ -81,11 +92,9 @@ const FeedBackView = ({ feedbacks }) => {
                       <p className="font-bold italic">View Reason</p>
                     </button>
                   </td>
-                  <Dialog maxWidth="sm"  open={isDialogOpen}>
+                  <Dialog maxWidth="sm" open={isDialogOpen}>
                     <DialogHeader>Reason for Absence</DialogHeader>
-                    <DialogBody>
-                      {feedback.reason_for_absence}
-                    </DialogBody>
+                    <DialogBody>{feedback.reason_for_absence}</DialogBody>
                     <DialogFooter>
                       <Button
                         variant="text"

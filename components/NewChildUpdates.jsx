@@ -21,6 +21,8 @@ const NewChildUpdates = ({
       onClose={handleCloseVaccUpdate}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      maxWidth="sm" 
+      fullWidth
     >
       <DialogTitle id="alert-dialog-title" className="font-bold">
         {"Update Vaccines"}
