@@ -60,6 +60,8 @@ const InfoUpdate = () => {
 
   const [wards, setWards] = useState([]);
 
+  const setAlert = globalAlert((state) => state.setAlert);
+
 
   useEffect(() => {
     axios.get(`/getChildData/${card_number}`).then((res) => {
@@ -149,6 +151,7 @@ const InfoUpdate = () => {
   };
 
   const handleSubmitUpdates = (data) => {
+    clearErrors('invalid')
     axios
       .post(`/updateChildParentInfo`, {
         child_parent_data: data,
@@ -172,6 +175,13 @@ const InfoUpdate = () => {
       })
       .catch((err) => {
         console.log(err);
+
+        if(err.response.data.type == "card_no" && err.response.status == 400){
+          setError('invalid',{
+            message:err.response.data,
+            type:"400"
+          })
+        }
       });
   };
 
@@ -454,15 +464,15 @@ const InfoUpdate = () => {
                   onBlur: () => setIsFocused(false),
                   required: "This field is required",
                   maxLength: {
-                    value: 9,
-                    message: "Phone number should be exactly 9 digits",
+                    value: 13,
+                    message: "Phone number should be exactly 13 digits starting with +255",
                   },
                   minLength: {
                     value: 9,
-                    message: "Phone number should be exactly 9 digits",
+                    message: "Phone number should be exactly 9 digits starting with +255",
                   },
                   pattern: {
-                    value: /^[67][123456789][0-9]+$/,
+                    value: /^\+255[67][123456789][0-9]+$/,
                     message: "Please enter valid number",
                   },
                 })}
@@ -513,6 +523,11 @@ const InfoUpdate = () => {
           </div>
         </div>
       </div>
+      {errors.invalid && (
+            <span className="text-red-900 text-sm font-mono ">
+              {errors.invalid.message}
+            </span>
+          )}
       <button type="submit" className="p-2 rounded-md bg-[#212B36] text-white">
         Update
       </button>
