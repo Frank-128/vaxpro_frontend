@@ -77,11 +77,11 @@ const AddUser = ({ addUserForm, setAddUserForm, subPathname }) => {
         ...data2,
         facility_id: loggedInUser.facility_id,
       };
-    } else if (loggedInUser.role.account_type === "branch_manager") {
-      data2 = {
-        ...data2,
-        facility_id: loggedInUser.facility_id,
-      };
+    // } else if (loggedInUser.role.account_type === "branch_manager") {
+    //   data2 = {
+    //     ...data2,
+    //     facility_id: loggedInUser.facility_id,
+    //   };
     }
 
     // console.log(data2, "the data to be submitted");
@@ -456,7 +456,7 @@ console.log(errors)
                     message: "Phone number should be exactly 9 digits",
                   },
                   pattern: {
-                    value: /^[67][12345789][0-9]+$/,
+                    value: /^[67][123456789][0-9]+$/,
                     message: "Please enter valid number",
                   },
                 })}

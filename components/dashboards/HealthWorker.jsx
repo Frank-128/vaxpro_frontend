@@ -116,7 +116,7 @@ const HealthWorker = () => {
         { loggedUser &&
             <div className={'h-screen flex flex-col gap-6 md:gap-3'}>
                 <div className={'flex justify-between flex-col md:flex-row md:gap-3 gap-2'}>
-                    <div className={'bg-blue-500/15 p-1 md:p-2 rounded flex gap-2 items-center md:w-3/4 w-full'}>
+                    <div className={` ${loggedUser.role.account_type !== "health_worker" && 'md:w-full'} bg-blue-500/15 p-1 md:p-2 rounded flex gap-2 items-center md:w-3/4 w-full`}>
                         <span> Welcome Back</span>
                        {loggedUser.role.account_type === "health_worker" ?<>
                         <span
@@ -129,13 +129,13 @@ const HealthWorker = () => {
                             }
                         <span>!!</span>
                     </div>
-                    <Button className={'md:w-1/4 w-fit self-end rounded-[0.25rem] bg-blue-900 flex justify-center items-center gap-1 md:gap-3'}
+                   { loggedUser.role.account_type === "health_worker" && <Button className={'md:w-1/4 w-fit self-end rounded-[0.25rem] bg-blue-900 flex justify-center items-center gap-1 md:gap-3'}
                             onClick={() => {
                                 router.push("/children")
                             }}>
                         <Add/>
                         <span>Register Child</span>
-                    </Button>
+                    </Button>}
                 </div>
 
                 <div className={'flex flex-col md:flex-row w-full h-[35rem] gap-2'}>
