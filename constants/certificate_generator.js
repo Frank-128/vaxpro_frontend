@@ -49,7 +49,7 @@ export const CertificateGenerator = () => {
               <Image
                 style={styles.image}
                 alt={"Tanzania logo"}
-                src={"images/file.png"}
+                src={"/images/file.png"}
               />
             </View>
             <View style={styles.titleContainer}>
