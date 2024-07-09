@@ -28,7 +28,7 @@ const CHWlogin = () => {
     (state) => state.setAuthenticatedToken
   );
 
-  console.log(setLoggedInUser)
+
 
   const commHealthWorkerlogin = (data) => {
     setLoading({ loading: true });

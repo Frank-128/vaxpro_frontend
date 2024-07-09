@@ -32,7 +32,7 @@ export function AccordionCustomAnimation({name, doses}) {
             {doses.map((dose, index) => {
               const [doseType, date] = Object.entries(dose)[0];
               return (
-                <div className="flex flex-col mb-2">
+                <div key={index} className="flex flex-col mb-2">
                   <p
                     className="4xs:text-xs text-sm font-bold italic"
                     key={index}
