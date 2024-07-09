@@ -6,7 +6,7 @@ import globalUser from './store/user';
 //     (state) => state.authenticatedToken
 //   );
 
-axios.defaults.baseURL = "https://vaxpro.southafricanorth.cloudapp.azure.com:8001/api/";
+axios.defaults.baseURL = "https://vaxpro.southafricanorth.cloudapp.azure.com:8000/api/";
 // axios.defaults.baseURL = "http://localhost:8000/api/";
 
 
