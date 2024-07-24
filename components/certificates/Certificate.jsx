@@ -145,7 +145,7 @@ function Certificates({
         }}
       >
         <iframe
-          src={`http://localhost:8000/storage/${certificate}`}
+          src={`https://vaxpro.southafricanorth.cloudapp.azure.com/:8001/storage/${certificate}`}
           style={{ width: "100%", height: "85vh" }}
         />
       </Dialog>
